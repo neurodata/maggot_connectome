@@ -28,7 +28,7 @@ This will automatically push your build to the `gh-pages` branch. More informati
 
 ## Contributors
 
-We welcome and recognize all contributions. You can see a list of current contributors in the [contributors tab](https://github.com/bdpedigo/maggot_connectome/graphs/contributors).
+We welcome and recognize all contributions. You can see a list of current contributors in the [contributors tab](https://github.com/neurodata/maggot_connectome/graphs/contributors).
 
 ## Credits
 
