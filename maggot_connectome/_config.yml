@@ -10,7 +10,17 @@ author                      : NeuroData  # The author of the book
 copyright                   : "2021"  # Copyright year to be placed in the footer
 logo                        : logo.png  # A path to the book logo
 
-# added hypothesis support
+# Linking
 html:
   comments:
     hypothesis: true
+  use_repository_button: true
+  use_issues_button: true
+  use_edit_page_button: true
+  
+
+# Information about where the book exists on the web
+repository:
+  url: https://github.com/neurodata/maggot_connectome
+  path_to_book: maggot_connectome
+  branch: main
