@@ -139,3 +139,4 @@ cython_debug/
 
 # custom
 maggot_connectome/_build
+sandbox

@@ -2,7 +2,19 @@
 
 A paper exploring the connectome of a larval Drosophila
 
-## Usage
+## Repo structure 
+- ``.github``: Files specifying how the repo behaves on GitHub
+- ``data``: Directory to store the raw data. 
+- ``docs``: Files to build the documentation website in the form of a [Jupyter Book](https://jupyterbook.org/intro.html)
+- ``pkg``: A local Python package used for analysis in the Jupyter Notebooks
+
+## Building the book 
+*Coming soon*
+
+## Running the code
+*Coming soon*
+
+<!-- ## Usage
 
 ### Building the book
 
@@ -25,6 +37,8 @@ If you wish to disable this automation, you may remove the GitHub actions workfl
 - `ghp-import -n -p -f Maggot connectome/_build/html`
 
 This will automatically push your build to the `gh-pages` branch. More information on this hosting process can be found [here](https://jupyterbook.org/publish/gh-pages.html#manually-host-your-book-with-github-pages).
+
+-->
 
 ## Contributors
 
