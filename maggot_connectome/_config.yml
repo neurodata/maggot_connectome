@@ -5,7 +5,12 @@
 
 #######################################################################################
 # Book settings
-title                       : Maggot connectome  # The title of the book. Will be placed in the left navbar.
-author                      : Benjamin Pedigo  # The author of the book
+title                       : Maggot Connectome  # The title of the book. Will be placed in the left navbar.
+author                      : NeuroData  # The author of the book
 copyright                   : "2021"  # Copyright year to be placed in the footer
 logo                        : logo.png  # A path to the book logo
+
+# added hypothesis support
+html:
+  comments:
+    hypothesis: true
