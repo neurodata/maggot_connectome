@@ -1,5 +1,4 @@
-Welcome to Maggot Connectome
-============================
+# Welcome
 
 This website hosts a paper studying the connectome of the larval *Drosophila*.
 
