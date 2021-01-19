@@ -24,3 +24,7 @@ repository:
   url: https://github.com/neurodata/maggot_connectome
   path_to_book: maggot_connectome
   branch: main
+
+sphinx:
+  config:
+    language: en
