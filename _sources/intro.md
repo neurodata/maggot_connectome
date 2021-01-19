@@ -6,4 +6,4 @@ structured.
 
 Check out the content pages bundled with this sample book to get started.
 
-![network-viz](../images/temp-maggot-brain-umap-omni-hue_key=merge_class.png)
+![network-viz](./images/temp-maggot-brain-umap-omni-hue_key=merge_class.png)
