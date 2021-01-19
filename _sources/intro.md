@@ -1,9 +1,8 @@
 Welcome to Maggot Connectome
 ============================
 
-This is a small sample book to give you a feel for how book content is
-structured.
+This website hosts a paper studying the connectome of the larval *Drosophila*.
 
-Check out the content pages bundled with this sample book to get started.
+The website is generated using jupyter-book to render a series of Jupyter notebooks.
 
 ![network-viz](./images/temp-maggot-brain-umap-omni-hue_key=merge_class.png)
