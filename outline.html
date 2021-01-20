@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome &#8212; Maggot Connectome</title>
+    <title>Outline &#8212; Maggot Connectome</title>
     
   <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
 
@@ -55,7 +55,8 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Outline" href="outline.html" />
+    <link rel="next" title="Introduction" href="introduction.html" />
+    <link rel="prev" title="Welcome" href="landing.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -86,15 +87,15 @@
 </form>
 <nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
     <ul class="nav sidenav_l1">
- <li class="toctree-l1 current active">
-  <a class="reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="landing.html">
    Welcome
   </a>
  </li>
 </ul>
-<ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="outline.html">
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Outline
   </a>
  </li>
@@ -148,7 +149,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/landing.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/outline.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
@@ -168,10 +169,10 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/neurodata/maggot_connectome/issues/new?title=Issue%20on%20page%20%2Flanding.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/neurodata/maggot_connectome/issues/new?title=Issue%20on%20page%20%2Foutline.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        <a class="edit-button" href="https://github.com/neurodata/maggot_connectome/edit/main/maggot_connectome/landing.md"><button
+        <a class="edit-button" href="https://github.com/neurodata/maggot_connectome/edit/main/maggot_connectome/outline.md"><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
     </div>
@@ -191,6 +192,25 @@
     <!-- Table of contents -->
     <div class="d-none d-md-block col-md-2 bd-toc show">
         
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#figure-panels">
+   Figure Panels
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#code">
+   Code
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
     </div>
 </div>
     <div id="main-content" class="row">
@@ -198,12 +218,73 @@
         
               <div>
                 
-  <div class="section" id="welcome">
-<h1>Welcome<a class="headerlink" href="#welcome" title="Permalink to this headline">¶</a></h1>
-<p>This website hosts a paper studying the connectome of the larval <em>Drosophila</em>.</p>
-<p>The website is generated using jupyter-book to render a series of Jupyter notebooks.</p>
-<p><img alt="network-viz" src="_images/temp-maggot-brain-umap-omni-hue_key=merge_class.png" /></p>
-<div class="toctree-wrapper compound">
+  <div class="section" id="outline">
+<h1>Outline<a class="headerlink" href="#outline" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="figure-panels">
+<h2>Figure Panels<a class="headerlink" href="#figure-panels" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[BDP]</span></code> “show the data”</p>
+<ul>
+<li><p>What do the neurons look like? Plot the neurons in space, maybe show a few examples, etc.</p></li>
+<li><p>What does the graph look like? Can plot adjacencies as well as some kind of graph layout possibly.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[NDD?]</span></code> Some simple descripive statistics (# nodes, # edges, # synapses, degrees, weights, etc.)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[TL?]</span></code> A priori modeling: using prior knowledge like cell type labels, left right hemisphere, etc. Testing hypotheses about these models</p>
+<ul>
+<li><p>Homophillic/assortative</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[TL?]</span></code> A posteriori modeling</p>
+<ul>
+<li><p>Hierarchical SBM estimation</p></li>
+<li><p>Leiden hierarchical SBM estimation, how are these different/not different (do we want this?)</p></li>
+<li><p>Comparison of model complexity (dDCSBM, SBM, RDPG-d, etc.)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[ASE]</span></code> Graph matching methods figure (I don’t think these results from Youngser/Carey ever went to a paper anywhere? so I assume CEP would be okay with them here? And we should be able to replicate/improve in python now.)</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">[BDP]</span></code> Show some examples of pairs in space.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[ASE/YP?/CEP?]</span></code> Show results of vanilla GM, GM with some notion of similarity (maybe NBLAST and or spec sim?), GM with multigraph, GM with multigraph + similarity.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[ASE]</span></code> (Maybe) Seeded graph matching with the known pairs as seeds? I actually use this in my work… so it is useful.</p></li>
+<li><p>Some interesting inference about pairedness? Would be nice to show what this can be used for, or demonstrate which parts are more/less bilaterally similar?</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[BDP/ASE/TL/NDD?]</span></code> Bilateral symmetry/testing</p>
+<ul>
+<li><p>How similar are the SBM models?</p></li>
+<li><p>How similar are the RDPG models (nonpar/semipar)?</p></li>
+<li><p>Can we say anything about the correlation under these different models?</p></li>
+<li><p>Testing homotopic affinity</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[BDP/NDD-code?]</span></code> Feedforwardness: describing (and hopefully modeling) a feedforward pathway through the network, expanding to include multinetwork models.</p>
+<ul>
+<li><p>Some description of the chain predicted by signal flow or cascades or graph match flow etc.</p></li>
+<li><p>Comparisons of the flows for different network types (e.g. AA, AD, etc.)</p></li>
+<li><p>Testing for feedforwardness with spring rank model</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[BDP]</span></code> Directedness: testing for whether the graph or specific parts of it are meaningfully directed. (Do we know how to do this?)</p></li>
+</ul>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[NDD]</span></code> <a class="reference external" href="https://github.com/microsoft/graspologic/issues/636">Flow/hierarchy/ranking</a> into graspologic</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[TL]</span></code> Improve the estimation code to make it easier to fit to data in a useful way, examine the models, etc. (as necessary)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[NDD]</span></code> Adjacency with dendrogram for hierarchical clustering that is not complete</p>
+<ul>
+<li><p>I have code, not pretty, probably not generalizable yet</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[TL/NDD?]</span></code> Bar dendrogram plotting in general</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[TL/NDD?]</span></code> <a class="reference external" href="https://github.com/microsoft/graspologic/issues/570">Tests from statistical connectomics</a> into graspologic</p>
+<ul>
+<li><p>We should talk to Eric/decide what we actually want first</p></li>
+</ul>
+</li>
+</ul>
 </div>
 </div>
 
@@ -235,7 +316,8 @@
     
     <div class='prev-next-bottom'>
         
-    <a class='right-next' id="next-link" href="outline.html" title="next page">Outline</a>
+    <a class='left-prev' id="prev-link" href="landing.html" title="previous page">Welcome</a>
+    <a class='right-next' id="next-link" href="introduction.html" title="next page">Introduction</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
