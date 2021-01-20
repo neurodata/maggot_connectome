@@ -141,3 +141,6 @@ cython_debug/
 docs/_build
 sandbox
 pkg/pkg/pymaid/pymaid_credentials.json
+
+# not storing the data for now 
+data/processed/2020-09-23
