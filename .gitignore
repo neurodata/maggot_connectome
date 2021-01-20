@@ -138,5 +138,6 @@ dmypy.json
 cython_debug/
 
 # custom
-maggot_connectome/_build
+docs/_build
 sandbox
+pkg/pkg/pymaid/pymaid_credentials.json
