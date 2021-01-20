@@ -12,6 +12,7 @@ logo                        : ./images/nd_logo.png  # A path to the book logo
 
 # Linking
 html:
+  favicon: ./images/nd_logo_small.png
   comments:
     hypothesis: true
   use_repository_button: true
