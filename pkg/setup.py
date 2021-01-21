@@ -2,7 +2,8 @@ from setuptools import find_packages, setup
 
 REQUIRED_PACKAGES = [
     "colorcet",
-    "matplotlib>=3.3.3",
+    "graspologic",
+    "matplotlib",
     "networkx>=2.5",
     "numpy>=1.19",
     "pandas>=1.0",
@@ -10,6 +11,8 @@ REQUIRED_PACKAGES = [
     "scikit-learn>=0.24.0",
     "scipy>=1.6.0",
     "seaborn>=0.11.0",
+    "SpringRank @ git+https://github.com/LarremoreLab/SpringRank.git#egg=SpringRank",
+    "umap-learn>=0.5",
 ]
 
 setup(

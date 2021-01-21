@@ -4,4 +4,4 @@ from .manual_colors import (
     plot_class_colormap,
     plot_colors,
 )
-
+from .theme import set_theme
