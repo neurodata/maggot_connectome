@@ -1,3 +1,6 @@
+#%% [markdown]
+# Flow
+
 #%%
 
 import matplotlib.pyplot as plt
@@ -12,6 +15,7 @@ from pkg.plot import CLASS_COLOR_DICT, set_theme
 from src.visualization import adjplot  # TODO will be in graspologic
 
 set_theme()
+print("Done")
 
 #%%
 # get the joint (union) LCC across all graphs
