@@ -5,8 +5,14 @@
     - What do the neurons look like? Plot the neurons in space, maybe show a few examples, etc.
     - What does the graph look like? Can plot adjacencies as well as some kind of graph layout possibly.
     - `[NDD?]` Some simple descripive statistics (# nodes, # edges, # synapses, degrees, weights, etc.)
-- `[TL?]` A priori modeling: using prior knowledge like cell type labels, left right hemisphere, etc. Testing hypotheses about these models 
-    - Homophillic/assortative
+        - Table: number of nodes, number of edges, number of synapses
+        - Panel of edge weight distribution
+        - Panel of in vs out degree with marginals
+    - (Maybe) something describing the different edge types
+- `[TL?/NDD?]` A priori modeling: using prior knowledge like cell type labels, left right hemisphere, etc. Testing hypotheses about these models 
+    - Left/right hemisphere blockmodel  
+        - testing for homophillic/assortative, the different SBM block probability hypotheses
+        - Could do the above with the different 4 color graphs as well
 - `[TL?]` A posteriori modeling
     - Hierarchical SBM estimation
     - Leiden hierarchical SBM estimation, how are these different/not different (do we want this?)
@@ -20,7 +26,7 @@
     - How similar are the SBM models? 
     - How similar are the RDPG models (nonpar/semipar)? 
     - Can we say anything about the correlation under these different models?
-    - Testing homotopic affinity
+    - Testing homotopic affinity (by edge type)
 - `[BDP/NDD-code?]` Feedforwardness: describing (and hopefully modeling) a feedforward pathway through the network, expanding to include multinetwork models. 
     - Some description of the chain predicted by signal flow or cascades or graph match flow etc.
     - Comparisons of the flows for different network types (e.g. AA, AD, etc.) 
@@ -30,9 +36,9 @@
 
 ## Code
 - `[NDD]` [Flow/hierarchy/ranking](https://github.com/microsoft/graspologic/issues/636) into graspologic
-- `[TL]` Improve the estimation code to make it easier to fit to data in a useful way, examine the models, etc. (as necessary)
+- `[TL?]` Improve the estimation code to make it easier to fit to data in a useful way, examine the models, etc. (as necessary)
 - `[NDD]` Adjacency with dendrogram for hierarchical clustering that is not complete
     - I have code, not pretty, probably not generalizable yet
-- `[TL/NDD?]` Bar dendrogram plotting in general
 - `[TL/NDD?]` [Tests from statistical connectomics](https://github.com/microsoft/graspologic/issues/570) into graspologic
     - We should talk to Eric/decide what we actually want first
+- `[TL/NDD?]` Bar dendrogram plotting in general

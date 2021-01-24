@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Outline &#8212; Maggot Connectome</title>
     
-  <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
     
   <link rel="stylesheet"
@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.3da636dd464baa7582d2.js">
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
 
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -233,12 +233,24 @@
 <ul>
 <li><p>What do the neurons look like? Plot the neurons in space, maybe show a few examples, etc.</p></li>
 <li><p>What does the graph look like? Can plot adjacencies as well as some kind of graph layout possibly.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[NDD?]</span></code> Some simple descripive statistics (# nodes, # edges, # synapses, degrees, weights, etc.)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[NDD?]</span></code> Some simple descripive statistics (# nodes, # edges, # synapses, degrees, weights, etc.)</p>
+<ul>
+<li><p>Table: number of nodes, number of edges, number of synapses</p></li>
+<li><p>Panel of edge weight distribution</p></li>
+<li><p>Panel of in vs out degree with marginals</p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[TL?]</span></code> A priori modeling: using prior knowledge like cell type labels, left right hemisphere, etc. Testing hypotheses about these models</p>
+<li><p>(Maybe) something describing the different edge types</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[TL?/NDD?]</span></code> A priori modeling: using prior knowledge like cell type labels, left right hemisphere, etc. Testing hypotheses about these models</p>
 <ul>
-<li><p>Homophillic/assortative</p></li>
+<li><p>Left/right hemisphere blockmodel</p>
+<ul>
+<li><p>testing for homophillic/assortative, the different SBM block probability hypotheses</p></li>
+<li><p>Could do the above with the different 4 color graphs as well</p></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[TL?]</span></code> A posteriori modeling</p>
@@ -261,7 +273,7 @@
 <li><p>How similar are the SBM models?</p></li>
 <li><p>How similar are the RDPG models (nonpar/semipar)?</p></li>
 <li><p>Can we say anything about the correlation under these different models?</p></li>
-<li><p>Testing homotopic affinity</p></li>
+<li><p>Testing homotopic affinity (by edge type)</p></li>
 </ul>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[BDP/NDD-code?]</span></code> Feedforwardness: describing (and hopefully modeling) a feedforward pathway through the network, expanding to include multinetwork models.</p>
@@ -278,18 +290,18 @@
 <h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">[NDD]</span></code> <a class="reference external" href="https://github.com/microsoft/graspologic/issues/636">Flow/hierarchy/ranking</a> into graspologic</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[TL]</span></code> Improve the estimation code to make it easier to fit to data in a useful way, examine the models, etc. (as necessary)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[TL?]</span></code> Improve the estimation code to make it easier to fit to data in a useful way, examine the models, etc. (as necessary)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[NDD]</span></code> Adjacency with dendrogram for hierarchical clustering that is not complete</p>
 <ul>
 <li><p>I have code, not pretty, probably not generalizable yet</p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[TL/NDD?]</span></code> Bar dendrogram plotting in general</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[TL/NDD?]</span></code> <a class="reference external" href="https://github.com/microsoft/graspologic/issues/570">Tests from statistical connectomics</a> into graspologic</p>
 <ul>
 <li><p>We should talk to Eric/decide what we actually want first</p></li>
 </ul>
 </li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[TL/NDD?]</span></code> Bar dendrogram plotting in general</p></li>
 </ul>
 </div>
 </div>
@@ -343,7 +355,7 @@
     </div>
 
     
-  <script src="_static/js/index.3da636dd464baa7582d2.js"></script>
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
 
 
     
