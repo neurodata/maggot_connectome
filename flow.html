@@ -56,7 +56,7 @@
     <link rel="shortcut icon" href="_static/nd_logo_small.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Look at it" href="look.html" />
+    <link rel="prev" title="Simple summary statistics" href="simple_statistics.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -93,7 +93,12 @@
   </a>
  </li>
 </ul>
-<ul class="current nav sidenav_l1">
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="outline.html">
    Outline
@@ -104,11 +109,25 @@
    Introduction
   </a>
  </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Look at it
+ </span>
+</p>
+<ul class="nav sidenav_l1">
  <li class="toctree-l1">
-  <a class="reference internal" href="look.html">
-   Look at it
+  <a class="reference internal" href="simple_statistics.html">
+   Simple summary statistics
   </a>
  </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Flow
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    Flow
@@ -208,7 +227,8 @@
 <h1>Flow<a class="headerlink" href="#flow" title="Permalink to this headline">¶</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">SpringRank</span> <span class="k">as</span> <span class="nn">sr</span>
@@ -225,23 +245,31 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">f8613204d6bb</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">SpringRank</span> <span class="k">as</span> <span class="nn">sr</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">rankdata</span><span class="p">,</span> <span class="n">spearmanr</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;seaborn&#39;
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/miniconda3/envs/maggot-revamp/lib/python3.8/site-packages/umap/__init__.py:9: UserWarning: Tensorflow not installed; ParametricUMAP will be unavailable
+  warn(&quot;Tensorflow not installed; ParametricUMAP will be unavailable&quot;)
+Done
 </pre></div>
 </div>
-</div>
+<div class="output text_html"><script type="text/javascript">
+window.PlotlyConfig = {MathJaxConfig: 'local'};
+if (window.MathJax) {MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+if (typeof require !== 'undefined') {
+require.undef("plotly");
+requirejs.config({
+    paths: {
+        'plotly': ['https://cdn.plot.ly/plotly-latest.min']
+    }
+});
+require(['plotly'], function(Plotly) {
+    window._Plotly = Plotly;
+});
+}
+</script>
+</div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the joint (union) LCC across all graphs</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the joint (union) LCC across all graphs</span>
 <span class="c1"># this is just the LCC of the sum graph (G)</span>
 <span class="n">adj</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="n">load_adj_meta</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">)</span>
 <span class="n">lcc_adj</span><span class="p">,</span> <span class="n">keep_inds</span> <span class="o">=</span> <span class="n">get_lcc</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">return_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -252,7 +280,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">graph_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Gaa&quot;</span><span class="p">,</span> <span class="s2">&quot;Gad&quot;</span><span class="p">,</span> <span class="s2">&quot;Gda&quot;</span><span class="p">,</span> <span class="s2">&quot;Gdd&quot;</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">graph_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Gaa&quot;</span><span class="p">,</span> <span class="s2">&quot;Gad&quot;</span><span class="p">,</span> <span class="s2">&quot;Gda&quot;</span><span class="p">,</span> <span class="s2">&quot;Gdd&quot;</span><span class="p">]</span>
 <span class="n">graph_type_names</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;Gaa&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$A \rightarrow A$&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Gad&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$A \rightarrow D$&quot;</span><span class="p">,</span>
@@ -275,7 +303,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">graph_type</span> <span class="ow">in</span> <span class="n">graph_types</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">graph_type</span> <span class="ow">in</span> <span class="n">graph_types</span><span class="p">:</span>
     <span class="n">adj</span> <span class="o">=</span> <span class="n">graphs</span><span class="p">[</span><span class="n">graph_type</span><span class="p">]</span>
     <span class="n">adj_lcc</span><span class="p">,</span> <span class="n">inds</span> <span class="o">=</span> <span class="n">get_lcc</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">return_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">ranks</span> <span class="o">=</span> <span class="n">sr</span><span class="o">.</span><span class="n">get_ranks</span><span class="p">(</span><span class="n">adj_lcc</span><span class="p">)</span>
@@ -290,7 +318,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hue_key</span> <span class="o">=</span> <span class="s2">&quot;simple_class&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">hue_key</span> <span class="o">=</span> <span class="s2">&quot;simple_class&quot;</span>
 <span class="n">var</span> <span class="o">=</span> <span class="s2">&quot;sr_score&quot;</span>
 <span class="n">n_graphs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph_types</span><span class="p">)</span>
 
@@ -358,7 +386,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">graph_type</span> <span class="ow">in</span> <span class="n">graph_types</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">graph_type</span> <span class="ow">in</span> <span class="n">graph_types</span><span class="p">:</span>
     <span class="n">adj</span> <span class="o">=</span> <span class="n">graphs</span><span class="p">[</span><span class="n">graph_type</span><span class="p">]</span>
     <span class="n">adj_lcc</span><span class="p">,</span> <span class="n">inds</span> <span class="o">=</span> <span class="n">get_lcc</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">return_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">ranks</span> <span class="o">=</span> <span class="n">sr</span><span class="o">.</span><span class="n">get_ranks</span><span class="p">(</span><span class="n">adj_lcc</span><span class="p">)</span>
@@ -378,7 +406,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">adj_lcc</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">adj_lcc</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
 <span class="n">ranks</span> <span class="o">=</span> <span class="n">sr</span><span class="o">.</span><span class="n">get_ranks</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 <span class="n">beta</span> <span class="o">=</span> <span class="n">sr</span><span class="o">.</span><span class="n">get_inverse_temperature</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">ranks</span><span class="p">)</span>
@@ -391,13 +419,14 @@
     <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">beta</span> <span class="o">*</span> <span class="n">H</span><span class="p">)</span>
     <span class="n">P</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>  <span class="c1"># TODO I might be off by a constant here</span>
     <span class="k">return</span> <span class="n">P</span>
+
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">graph_type</span> <span class="ow">in</span> <span class="n">graph_types</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">graph_type</span> <span class="ow">in</span> <span class="n">graph_types</span><span class="p">:</span>
     <span class="n">adj</span> <span class="o">=</span> <span class="n">graphs</span><span class="p">[</span><span class="n">graph_type</span><span class="p">]</span>
     <span class="n">A</span><span class="p">,</span> <span class="n">inds</span> <span class="o">=</span> <span class="n">get_lcc</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">return_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">ranks</span> <span class="o">=</span> <span class="n">sr</span><span class="o">.</span><span class="n">get_ranks</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
@@ -455,7 +484,7 @@
     
     <div class='prev-next-bottom'>
         
-    <a class='left-prev' id="prev-link" href="look.html" title="previous page">Look at it</a>
+    <a class='left-prev' id="prev-link" href="simple_statistics.html" title="previous page">Simple summary statistics</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
