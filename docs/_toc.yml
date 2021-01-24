@@ -1,7 +1,13 @@
 # Table of contents
 # Learn more at https://jupyterbook.org/customize/toc.html
-- file: landing
-- file: outline
-- file: introduction
-- file: look
-- file: flow
+- part: Preliminaries
+  chapters:
+  - file: landing
+  - file: outline
+  - file: introduction
+- part: Look at it
+  chapters:
+  - file: simple statistics
+- part: Flow
+  chapters:
+  - file: flow

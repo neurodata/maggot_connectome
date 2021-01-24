@@ -2,6 +2,9 @@ from pathlib import Path
 
 import networkx as nx
 import pandas as pd
+from sklearn.utils import Bunch
+import numpy as np
+
 
 DATA_VERSION = "2020-09-23"  # set to whatever the most recent one is
 
@@ -20,7 +23,7 @@ def load_networkx(graph_type, base_path=None, version=DATA_VERSION):
     return graph
 
 
-def load_adj_meta(graph_type, base_path=None, version=None):
+def load_data(graph_type, base_path=None, version=None):
     if base_path is None:
         base_path = DATA_PATH
     if version is None:
@@ -37,4 +40,8 @@ def load_adj_meta(graph_type, base_path=None, version=None):
     )
     meta = pd.read_csv(meta_path, index_col=0)
     adj = nx.to_numpy_array(graph, nodelist=meta.index.values, dtype=float)
-    return adj, meta
+    missing_nodes = np.setdiff1d(meta.index, list(graph.nodes()))
+    for node in missing_nodes:
+        graph.add_node(node)
+
+    return Bunch(graph=graph, adj=adj, meta=meta)

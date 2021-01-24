@@ -1,1 +1,1 @@
-from .load_data import load_networkx, load_adj_meta
+from .load_data import load_networkx, load_data
