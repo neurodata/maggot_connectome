@@ -4,7 +4,7 @@
 -  `[BDP]` "show the data"
     - What do the neurons look like? Plot the neurons in space, maybe show a few examples, etc.
     - What does the graph look like? Can plot adjacencies as well as some kind of graph layout possibly.
-    - `[NDD?]` Some simple descripive statistics (# nodes, # edges, # synapses, degrees, weights, etc.)
+    - `[x]` Some simple descripive statistics (# nodes, # edges, # synapses, degrees, weights, etc.)
         - Table: number of nodes, number of edges, number of synapses
         - Panel of edge weight distribution
         - Panel of in vs out degree with marginals
