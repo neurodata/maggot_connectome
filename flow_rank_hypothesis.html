@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>What is flow ranking? &#8212; Maggot Connectome</title>
+    <title>Flow ranking and hypothesis testing &#8212; Maggot Connectome</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -58,6 +58,8 @@
     <link rel="shortcut icon" href="_static/nd_logo_small.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Flow" href="flow.html" />
+    <link rel="prev" title="Simple summary statistics" href="simple_statistics.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -128,9 +130,9 @@
   Flow
  </span>
 </p>
-<ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="flow_rank_hypothesis.html">
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Flow ranking and hypothesis testing
   </a>
  </li>
@@ -179,7 +181,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/what_is_flow_rank.ipynb"><button type="button"
+        <a class="dropdown-buttons" href="_sources/flow_rank_hypothesis.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
@@ -199,10 +201,10 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/neurodata/maggot_connectome/issues/new?title=Issue%20on%20page%20%2Fwhat_is_flow_rank.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/neurodata/maggot_connectome/issues/new?title=Issue%20on%20page%20%2Fflow_rank_hypothesis.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        <a class="edit-button" href="https://github.com/neurodata/maggot_connectome/edit/main/maggot_connectome/what_is_flow_rank.ipynb"><button
+        <a class="edit-button" href="https://github.com/neurodata/maggot_connectome/edit/main/maggot_connectome/flow_rank_hypothesis.ipynb"><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
     </div>
@@ -284,13 +286,15 @@
         
               <div>
                 
-  <div class="section" id="what-is-flow-ranking">
-<h1>What is flow ranking?<a class="headerlink" href="#what-is-flow-ranking" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="flow-ranking-and-hypothesis-testing">
+<h1>Flow ranking and hypothesis testing<a class="headerlink" href="#flow-ranking-and-hypothesis-testing" title="Permalink to this headline">¶</a></h1>
 <p>TODO: explain the goal of finding a latent ordering, comparing between graphs</p>
 <p>TODO: explain some of the math behind spring rank/signal flow</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
@@ -304,38 +308,22 @@
 <span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
 <span class="kn">from</span> <span class="nn">src.visualization</span> <span class="kn">import</span> <span class="n">adjplot</span>
 
+<span class="n">root_path</span> <span class="o">=</span> <span class="s2">&quot;/Users/bpedigo/JHU_code/maggot&quot;</span>
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">cwd</span> <span class="o">!=</span> <span class="n">root_path</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">root_path</span><span class="p">)</span>
+
+
 <span class="n">set_theme</span><span class="p">()</span>
 
 <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">8888</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">stashfig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">savefig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">foldername</span><span class="o">=</span><span class="s2">&quot;what_is_flow_rank&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
+    <span class="n">savefig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">foldername</span><span class="o">=</span><span class="s2">&quot;flow_rank_hypothesis&quot;</span><span class="p">,</span> <span class="n">print_out</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/miniconda3/envs/maggot-revamp/lib/python3.8/site-packages/umap/__init__.py:9: UserWarning: Tensorflow not installed; ParametricUMAP will be unavailable
-  warn(&quot;Tensorflow not installed; ParametricUMAP will be unavailable&quot;)
-</pre></div>
-</div>
-<div class="output text_html"><script type="text/javascript">
-window.PlotlyConfig = {MathJaxConfig: 'local'};
-if (window.MathJax) {MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
-if (typeof require !== 'undefined') {
-require.undef("plotly");
-requirejs.config({
-    paths: {
-        'plotly': ['https://cdn.plot.ly/plotly-latest.min']
-    }
-});
-require(['plotly'], function(Plotly) {
-    window._Plotly = Plotly;
-});
-}
-</script>
-</div></div>
 </div>
 <div class="section" id="creating-latent-ranks-or-orderings">
 <h2>Creating latent “ranks” or “orderings”<a class="headerlink" href="#creating-latent-ranks-or-orderings" title="Permalink to this headline">¶</a></h2>
@@ -343,7 +331,7 @@ require(['plotly'], function(Plotly) {
 from the original paper.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
 <span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;deep&quot;</span><span class="p">,</span> <span class="n">desat</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">palette</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">colors</span><span class="p">))</span>
 
@@ -376,12 +364,6 @@ from the original paper.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to maggot_connectome/results/figs/what_is_flow_rank/rank-distribution.png
-</pre></div>
-</div>
-<img alt="_images/what_is_flow_rank_4_1.png" src="_images/what_is_flow_rank_4_1.png" />
-</div>
 </div>
 </div>
 <div class="section" id="a-distribution-from-the-latent-ranks">
@@ -390,7 +372,7 @@ from the original paper.</p>
 the matrix of edge probabilities <span class="math notranslate nohighlight">\(P\)</span> and an adjacency matrix <span class="math notranslate nohighlight">\(A\)</span> from it.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">15</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">15</span>
 <span class="n">beta</span> <span class="o">=</span> <span class="mi">5</span>
 
 
@@ -417,18 +399,12 @@ the matrix of edge probabilities <span class="math notranslate nohighlight">\(P\
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to maggot_connectome/results/figs/what_is_flow_rank/p-and-adj.png
-</pre></div>
-</div>
-<img alt="_images/what_is_flow_rank_6_1.png" src="_images/what_is_flow_rank_6_1.png" />
-</div>
 </div>
 <p>If we change the parameters to be point masses for the 3 different groups, we get
 a specific kind of feedforward SBM model.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n_per_group</span> <span class="o">=</span> <span class="mi">100</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_per_group</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_per_group</span><span class="p">)</span>
 <span class="n">X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_per_group</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span>
 <span class="n">X3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_per_group</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
@@ -447,15 +423,8 @@ a specific kind of feedforward SBM model.</p>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">adjplot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$A$&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">plot_type</span><span class="o">=</span><span class="s2">&quot;scattermap&quot;</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;p-and-adj-point-mass&quot;</span><span class="p">)</span>
-
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to maggot_connectome/results/figs/what_is_flow_rank/p-and-adj-point-mass.png
-</pre></div>
-</div>
-<img alt="_images/what_is_flow_rank_8_1.png" src="_images/what_is_flow_rank_8_1.png" />
 </div>
 </div>
 </div>
@@ -502,7 +471,7 @@ of <span class="math notranslate nohighlight">\(\sigma\)</span>. I then run the 
 each realization, and examine the distribution of p-values.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
 
 <span class="k">def</span> <span class="nf">make_ranks</span><span class="p">(</span><span class="n">n_per_group</span><span class="o">=</span><span class="mi">34</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Based on simulations from original spring rank paper&quot;&quot;&quot;</span>
@@ -576,10 +545,10 @@ each realization, and examine the distribution of p-values.</p>
 
 
 <span class="n">n_per_group</span> <span class="o">=</span> <span class="mi">34</span>
-<span class="c1"># n_bootstraps = 200</span>
-<span class="c1"># n_repeats = 100</span>
-<span class="n">n_bootstraps</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">n_repeats</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">n_bootstraps</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">n_repeats</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="c1"># n_bootstraps = 10</span>
+<span class="c1"># n_repeats = 5</span>
 <span class="n">sigmas</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">]</span>
 <span class="n">experiments</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="n">p_value_distribution</span> <span class="o">=</span> <span class="p">[]</span>
@@ -628,38 +597,6 @@ each realization, and examine the distribution of p-values.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sigma = 0: 100%|██████████| 5/5 [00:01&lt;00:00,  4.57it/s]
-Sigma = 0.05:  20%|██        | 1/5 [00:00&lt;00:00,  5.56it/s]Saved figure to maggot_connectome/results/figs/what_is_flow_rank/compare-to-null-sigma=0.png
-Sigma = 0.05: 100%|██████████| 5/5 [00:00&lt;00:00,  5.20it/s]
-Sigma = 0.1:  20%|██        | 1/5 [00:00&lt;00:00,  5.85it/s]Saved figure to maggot_connectome/results/figs/what_is_flow_rank/compare-to-null-sigma=0.05.png
-Sigma = 0.1: 100%|██████████| 5/5 [00:00&lt;00:00,  5.62it/s]
-Sigma = 0.15:  20%|██        | 1/5 [00:00&lt;00:00,  5.70it/s]Saved figure to maggot_connectome/results/figs/what_is_flow_rank/compare-to-null-sigma=0.1.png
-Sigma = 0.15: 100%|██████████| 5/5 [00:00&lt;00:00,  5.55it/s]
-Sigma = 0.2:  20%|██        | 1/5 [00:00&lt;00:00,  6.40it/s]Saved figure to maggot_connectome/results/figs/what_is_flow_rank/compare-to-null-sigma=0.15.png
-Sigma = 0.2: 100%|██████████| 5/5 [00:00&lt;00:00,  6.22it/s]
-Sigma = 0.25:  20%|██        | 1/5 [00:00&lt;00:00,  5.75it/s]Saved figure to maggot_connectome/results/figs/what_is_flow_rank/compare-to-null-sigma=0.2.png
-Sigma = 0.25: 100%|██████████| 5/5 [00:00&lt;00:00,  5.78it/s]
-Sigma = 0.3:  20%|██        | 1/5 [00:00&lt;00:00,  5.77it/s]Saved figure to maggot_connectome/results/figs/what_is_flow_rank/compare-to-null-sigma=0.25.png
-Sigma = 0.3: 100%|██████████| 5/5 [00:00&lt;00:00,  5.64it/s]
-Sigma = 0.35:  20%|██        | 1/5 [00:00&lt;00:00,  5.18it/s]Saved figure to maggot_connectome/results/figs/what_is_flow_rank/compare-to-null-sigma=0.3.png
-Sigma = 0.35: 100%|██████████| 5/5 [00:00&lt;00:00,  5.58it/s]
-Saved figure to maggot_connectome/results/figs/what_is_flow_rank/compare-to-null-sigma=0.35.png
-Saved figure to maggot_connectome/results/figs/what_is_flow_rank/p-values.png
-Saved figure to maggot_connectome/results/figs/what_is_flow_rank/p-values-null.png
-</pre></div>
-</div>
-<img alt="_images/what_is_flow_rank_11_1.png" src="_images/what_is_flow_rank_11_1.png" />
-<img alt="_images/what_is_flow_rank_11_2.png" src="_images/what_is_flow_rank_11_2.png" />
-<img alt="_images/what_is_flow_rank_11_3.png" src="_images/what_is_flow_rank_11_3.png" />
-<img alt="_images/what_is_flow_rank_11_4.png" src="_images/what_is_flow_rank_11_4.png" />
-<img alt="_images/what_is_flow_rank_11_5.png" src="_images/what_is_flow_rank_11_5.png" />
-<img alt="_images/what_is_flow_rank_11_6.png" src="_images/what_is_flow_rank_11_6.png" />
-<img alt="_images/what_is_flow_rank_11_7.png" src="_images/what_is_flow_rank_11_7.png" />
-<img alt="_images/what_is_flow_rank_11_8.png" src="_images/what_is_flow_rank_11_8.png" />
-<img alt="_images/what_is_flow_rank_11_9.png" src="_images/what_is_flow_rank_11_9.png" />
-<img alt="_images/what_is_flow_rank_11_10.png" src="_images/what_is_flow_rank_11_10.png" />
-</div>
 </div>
 </div>
 <div class="section" id="valid-and-power-goes-to-1">
@@ -705,6 +642,8 @@ as those of <span class="math notranslate nohighlight">\(G_2\)</span>? z</p>
     
     <div class='prev-next-bottom'>
         
+    <a class='left-prev' id="prev-link" href="simple_statistics.html" title="previous page">Simple summary statistics</a>
+    <a class='right-next' id="next-link" href="flow.html" title="next page">Flow</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
