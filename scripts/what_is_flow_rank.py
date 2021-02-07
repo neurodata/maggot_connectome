@@ -26,7 +26,7 @@ rng = np.random.default_rng(seed=8888)
 
 
 def stashfig(name, **kwargs):
-    savefig(name, foldername="what_is_flow_rank", **kwargs)
+    savefig(name, foldername="what_is_flow_rank", print_out=False, **kwargs)
 
 
 #%% [markdown]
@@ -153,10 +153,10 @@ stashfig("p-and-adj-point-mass")
 # ranks $s_2 = s_1 + \epsilon$, where $\epsilon \sim N(0, \sigma^2 I)$, that is,
 # I perturb the ranks $s_1$ by independent normals for each rank, with some variance
 # $\sigma^2$.
-# 
-# This process is repeated, multiple times for each $\sigma$ and for increasing levels 
+#
+# This process is repeated, multiple times for each $\sigma$ and for increasing levels
 # of $\sigma$. I then run the bootstrap two sample testing procedure described above for
-# each realization, and examine the distribution of p-values. 
+# each realization, and examine the distribution of p-values.
 #%%
 
 
