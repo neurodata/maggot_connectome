@@ -1,5 +1,6 @@
 import nbformat as nbf
 from glob import glob
+import numpy as np
 
 # Collect a list of all notebooks in the content folder
 loc = "maggot_connectome/docs/**/*.ipynb"
@@ -20,7 +21,9 @@ for ipath in notebooks:
     print(ipath)
     for cell in ntbk.cells:
         cell_tags = cell.get("metadata", {}).get("tags", [])
-        cell_tags.append("hide-input")
+        cell_tags = list(np.unique(cell_tags))
+        if "hide-input" not in cell_tags:
+            cell_tags.append("hide-input")
         # for key, val in text_search_dict.items():
         #     if key in cell["source"]:
         #         if val not in cell_tags:
