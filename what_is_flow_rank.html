@@ -290,7 +290,7 @@
 <h1>What is flow ranking?<a class="headerlink" href="#what-is-flow-ranking" title="Permalink to this headline">¶</a></h1>
 <p>TODO: explain the goal of finding a latent ordering, comparing between graphs</p>
 <p>TODO: explain some of the math behind spring rank/signal flow</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -343,7 +343,7 @@ require(['plotly'], function(Plotly) {
 <h2>Creating latent “ranks” or “orderings”<a class="headerlink" href="#creating-latent-ranks-or-orderings" title="Permalink to this headline">¶</a></h2>
 <p>Here I sample some latent ranks that we’ll use for simulations, this distribution came
 from the original paper.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
 <span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;deep&quot;</span><span class="p">,</span> <span class="n">desat</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -390,7 +390,7 @@ from the original paper.</p>
 <h2>A distribution from the latent ranks<a class="headerlink" href="#a-distribution-from-the-latent-ranks" title="Permalink to this headline">¶</a></h2>
 <p>Using the ranks, we can create a distribution from which to sample graphs. Here I plot
 the matrix of edge probabilities <span class="math notranslate nohighlight">\(P\)</span> and an adjacency matrix <span class="math notranslate nohighlight">\(A\)</span> from it.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">15</span>
 <span class="n">beta</span> <span class="o">=</span> <span class="mi">5</span>
@@ -428,7 +428,7 @@ the matrix of edge probabilities <span class="math notranslate nohighlight">\(P\
 </div>
 <p>If we change the parameters to be point masses for the 3 different groups, we get
 a specific kind of feedforward SBM model.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n_per_group</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_per_group</span><span class="p">)</span>
@@ -502,7 +502,7 @@ I perturb the ranks <span class="math notranslate nohighlight">\(s_1\)</span> by
 <p>This process is repeated, multiple times for each <span class="math notranslate nohighlight">\(\sigma\)</span> and for increasing levels
 of <span class="math notranslate nohighlight">\(\sigma\)</span>. I then run the bootstrap two sample testing procedure described above for
 each realization, and examine the distribution of p-values.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
 

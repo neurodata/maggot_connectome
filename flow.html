@@ -232,7 +232,7 @@
                 
   <div class="section" id="flow">
 <h1>Flow<a class="headerlink" href="#flow" title="Permalink to this headline">¶</a></h1>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -274,7 +274,7 @@ require(['plotly'], function(Plotly) {
 </script>
 </div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the joint (union) LCC across all graphs</span>
 <span class="c1"># this is just the LCC of the sum graph (G)</span>
@@ -285,7 +285,7 @@ require(['plotly'], function(Plotly) {
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">graph_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Gaa&quot;</span><span class="p">,</span> <span class="s2">&quot;Gad&quot;</span><span class="p">,</span> <span class="s2">&quot;Gda&quot;</span><span class="p">,</span> <span class="s2">&quot;Gdd&quot;</span><span class="p">]</span>
 <span class="n">graph_type_names</span> <span class="o">=</span> <span class="p">{</span>
@@ -308,7 +308,7 @@ require(['plotly'], function(Plotly) {
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">graph_type</span> <span class="ow">in</span> <span class="n">graph_types</span><span class="p">:</span>
     <span class="n">adj</span> <span class="o">=</span> <span class="n">graphs</span><span class="p">[</span><span class="n">graph_type</span><span class="p">]</span>
@@ -323,7 +323,7 @@ require(['plotly'], function(Plotly) {
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">hue_key</span> <span class="o">=</span> <span class="s2">&quot;simple_class&quot;</span>
 <span class="n">var</span> <span class="o">=</span> <span class="s2">&quot;sr_score&quot;</span>
@@ -391,7 +391,7 @@ require(['plotly'], function(Plotly) {
 <img alt="_images/flow_5_0.png" src="_images/flow_5_0.png" />
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">graph_type</span> <span class="ow">in</span> <span class="n">graph_types</span><span class="p">:</span>
     <span class="n">adj</span> <span class="o">=</span> <span class="n">graphs</span><span class="p">[</span><span class="n">graph_type</span><span class="p">]</span>
@@ -411,7 +411,7 @@ require(['plotly'], function(Plotly) {
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">adj_lcc</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
@@ -431,7 +431,7 @@ require(['plotly'], function(Plotly) {
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">graph_type</span> <span class="ow">in</span> <span class="n">graph_types</span><span class="p">:</span>
     <span class="n">adj</span> <span class="o">=</span> <span class="n">graphs</span><span class="p">[</span><span class="n">graph_type</span><span class="p">]</span>

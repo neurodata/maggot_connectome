@@ -252,7 +252,7 @@
 <h1>Simple summary statistics<a class="headerlink" href="#simple-summary-statistics" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
 <h2><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
@@ -306,7 +306,7 @@ require(['plotly'], function(Plotly) {
 </script>
 </div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">)</span>
 <span class="n">adj</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">adj</span>
@@ -322,7 +322,7 @@ require(['plotly'], function(Plotly) {
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
 <span class="n">n_nodes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
@@ -342,7 +342,7 @@ Number of synaptic pairings: 338131
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nbunch</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
 <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;out_degree_unweighted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="n">nbunch</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">)))</span>
@@ -364,7 +364,7 @@ Number of synaptic pairings: 338131
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
 <span class="n">weights</span> <span class="o">=</span> <span class="n">adj</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># [inds]</span>
@@ -385,7 +385,7 @@ Number of synaptic pairings: 338131
 </div>
 <div class="section" id="id2">
 <h2><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">log_scale</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">distplot_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
