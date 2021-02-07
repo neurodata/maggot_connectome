@@ -1,9 +1,9 @@
 #%% [markdown]
 # # What is flow ranking?
-#
+# TODO: explain the goal of finding a latent ordering, comparing between graphs
 
 #%% [markdown]
-# ## TODO explain some of the math behind spring rank/signal flow
+# TODO: explain some of the math behind spring rank/signal flow
 
 #%%
 import matplotlib.pyplot as plt
@@ -29,10 +29,16 @@ def stashfig(name, **kwargs):
     savefig(name, foldername="what_is_flow_rank", **kwargs)
 
 
+#%% [markdown]
+# ## Creating latent "ranks" or "orderings"
+# Here I sample some latent ranks that we'll use for simulations, this distribution came
+# from the original paper.
 #%%
+
 colors = sns.color_palette("deep", desat=1)
 palette = dict(zip(range(3), colors))
-n_per_group = 100
+
+n_per_group = 100  # 34 in the paper
 ones = np.ones(n_per_group, dtype=int)
 
 X1 = rng.normal(-4, np.sqrt(2), size=n_per_group)
@@ -41,6 +47,7 @@ X3 = rng.normal(4, 1, size=n_per_group)
 X = np.concatenate((X1, X2, X3))
 labels = np.concatenate((0 * ones, 1 * ones, 2 * ones))
 
+# sort to help visualize
 sort_inds = np.argsort(-X)
 X = X[sort_inds]
 labels = labels[sort_inds]
@@ -58,6 +65,10 @@ sns.rugplot(
 )
 stashfig("rank-distribution")
 
+#%% [markdown]
+# ## A distribution from the latent ranks
+# Using the ranks, we can create a distribution from which to sample graphs. Here I plot
+# the matrix of edge probabilities $P$ and an adjacency matrix $A$ from it.
 #%%
 k = 15
 beta = 5
@@ -85,10 +96,39 @@ adjplot(A, ax=ax, title=r"$A$", color="darkred", plot_type="scattermap", sizes=(
 stashfig("p-and-adj")
 
 #%% [markdown]
+# If we change the parameters to be point masses for the 3 different groups, we get
+# a specific kind of feedforward SBM model.
+#%%
+n_per_group = 100
+X1 = np.ones(n_per_group)
+X2 = np.ones(n_per_group) * 0
+X3 = np.ones(n_per_group) * -1
+X = np.concatenate((X1, X2, X3))
+labels = np.concatenate((0 * ones, 1 * ones, 2 * ones))
+
+k = 15
+beta = 3
+
+P = construct_spring_rank_P(X, beta, k)
+A = rng.poisson(P)
+
+fig, axs = plt.subplots(1, 2, figsize=(15, 7.5))
+ax = axs[0]
+adjplot(P, ax=ax, title=r"$P$", cbar=False)
+ax = axs[1]
+adjplot(A, ax=ax, title=r"$A$", color="darkred", plot_type="scattermap", sizes=(2, 5))
+stashfig("p-and-adj-point-mass")
+
+
+#%% [markdown]
 # ## Are the ranks of $G_1$ "the same" as the ranks of $G_2$?
+# If we are given two graphs (with an alignment/matching between the nodes of the two
+# graphs) we may want to know whether the latent ranks $s$ of the two graphs are the same.
+#
 # $$ H_0: s_1 = s_2 $$
 # $$ H_a: s_1 \neq s_2 $$
-# One procedure:
+#
+# A boostrap procedure (welcome to feedback) to get at this question:
 # - Estimate the ranks from $G_1$, $G_2$
 # - Compute some test statistic ($T(s_1, s_2)$) measuring the distance between these
 # rankings. Examples include some notion of correlation between the ranks. The SpringRank
@@ -104,10 +144,24 @@ stashfig("p-and-adj")
 # - Compare $T(s_1, s_2)$ to null distribution to get a p-value.
 #
 # NB: there is a nonidentifiability in the notion of ranks that we don't care about.
+# shifting the ranks up or down by a constant does not affect the resulting distribution
+# on graphs. Here I've just chosen a test statistic (correlation) that happens to not
+# care about this, but it's worth being aware of.
+#%%[markdown]
+# ## Power simulations
+# Here I sample latent ranks $s_1$ from the distribution described/plotted above. The
+# ranks $s_2 = s_1 + \epsilon$, where $\epsilon \sim N(0, \sigma^2 I)$, that is,
+# I perturb the ranks $s_1$ by independent normals for each rank, with some variance
+# $\sigma^2$.
+# 
+# This process is repeated, multiple times for each $\sigma$ and for increasing levels 
+# of $\sigma$. I then run the bootstrap two sample testing procedure described above for
+# each realization, and examine the distribution of p-values. 
 #%%
 
 
 def make_ranks(n_per_group=34):
+    """Based on simulations from original spring rank paper"""
     X1 = rng.normal(-4, np.sqrt(2), size=n_per_group)
     X2 = rng.normal(0, np.sqrt(1 / 2), size=n_per_group)
     X3 = rng.normal(4, 1, size=n_per_group)
@@ -155,6 +209,7 @@ def bootstrap_two_sample_test(A1, A2, n_bootstraps=200):
         test_statistics = bootstrap_sample(Phat2)
         test_statistics["graph"] = "Sampled-2"
         rows.append(test_statistics)
+
     results = pd.DataFrame(rows)
 
     p_values = []
@@ -170,14 +225,17 @@ def bootstrap_two_sample_test(A1, A2, n_bootstraps=200):
         p_value2 = np.count_nonzero(null2 < observed_test_statistic) / len(null2)
         if p_value2 == 0:
             p_value2 = 1 / n_bootstraps
+        # use the max of the p-values, extra conservative
         p_value = max(p_value1, p_value2)
         p_values.append(p_value)
     return p_values, results
 
 
 n_per_group = 34
-n_bootstraps = 200
-n_repeats = 100
+# n_bootstraps = 200
+# n_repeats = 100
+n_bootstraps = 10
+n_repeats = 5
 sigmas = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35]
 experiments = {}
 p_value_distribution = []
@@ -224,8 +282,13 @@ ax.plot([0, 1], [0, 1], color="black", linestyle=":")
 ax.set(title="P-values under the null", ylabel="Cumulative density")
 stashfig("p-values-null")
 
+#%% [markdown]
+# ## Valid and power goes to 1?
+# At least from the above simulation, it looks like:
+# - The p-values are sub-uniform under the null
+# - The p-values go to 0 as the effect size goes up
 
 #%% [markdown]
 # ## If the ranks of $G_1$ and $G_2$ are not "the same", how are they related?
 # More specifically, do the ranks of $G_1$ point in a completely opposite direction
-# as those of $G_2$?
+# as those of $G_2$? z

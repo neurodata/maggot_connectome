@@ -13,4 +13,5 @@
 
 - part: Flow
   chapters:
+  - file: what_is_flow_rank
   - file: flow
