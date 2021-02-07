@@ -20,15 +20,16 @@ for ipath in notebooks:
     ntbk = nbf.read(ipath, nbf.NO_CONVERT)
     print(ipath)
     for cell in ntbk.cells:
-        cell_tags = cell.get("metadata", {}).get("tags", [])
-        cell_tags = list(np.unique(cell_tags))
-        if "hide-input" not in cell_tags:
-            cell_tags.append("hide-input")
-        # for key, val in text_search_dict.items():
-        #     if key in cell["source"]:
-        #         if val not in cell_tags:
-        #             cell_tags.append(val)
-        if len(cell_tags) > 0:
-            cell["metadata"]["tags"] = cell_tags
+        if cell.get("cell_type") == "code":
+            cell_tags = cell.get("metadata", {}).get("tags", [])
+            cell_tags = list(np.unique(cell_tags))
+            if "hide-input" not in cell_tags:
+                cell_tags.append("hide-input")
+            # for key, val in text_search_dict.items():
+            #     if key in cell["source"]:
+            #         if val not in cell_tags:
+            #             cell_tags.append(val)
+            if len(cell_tags) > 0:
+                cell["metadata"]["tags"] = cell_tags
 
     nbf.write(ntbk, ipath)

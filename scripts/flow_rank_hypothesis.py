@@ -1,11 +1,13 @@
 #%% [markdown]
-# # What is flow ranking?
+# # Flow ranking and hypothesis testing
 # TODO: explain the goal of finding a latent ordering, comparing between graphs
 
 #%% [markdown]
 # TODO: explain some of the math behind spring rank/signal flow
 
 #%%
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -20,13 +22,19 @@ from pkg.io import savefig
 from pkg.plot import set_theme
 from src.visualization import adjplot
 
+root_path = "/Users/bpedigo/JHU_code/maggot"
+cwd = os.getcwd()
+if cwd != root_path:
+    os.chdir(root_path)
+
+
 set_theme()
 
 rng = np.random.default_rng(seed=8888)
 
 
 def stashfig(name, **kwargs):
-    savefig(name, foldername="what_is_flow_rank", print_out=False, **kwargs)
+    savefig(name, foldername="flow_rank_hypothesis", print_out=False, **kwargs)
 
 
 #%% [markdown]
@@ -232,10 +240,10 @@ def bootstrap_two_sample_test(A1, A2, n_bootstraps=200):
 
 
 n_per_group = 34
-# n_bootstraps = 200
-# n_repeats = 100
-n_bootstraps = 10
-n_repeats = 5
+n_bootstraps = 200
+n_repeats = 100
+# n_bootstraps = 10
+# n_repeats = 5
 sigmas = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35]
 experiments = {}
 p_value_distribution = []

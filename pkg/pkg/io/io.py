@@ -23,7 +23,7 @@ def savefig(
     dpi=300,
     foldername=None,
     subfoldername=None,
-    pathname="./maggot_connectome/results/figs/",
+    pathname="maggot_connectome/results/figs/",
     bbox_inches="tight",
     pad_inches=0.5,
     save_on=True,
