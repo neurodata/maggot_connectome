@@ -13,7 +13,7 @@
     - Left/right hemisphere blockmodel  
         - testing for homophillic/assortative, the different SBM block probability hypotheses
         - Could do the above with the different 4 color graphs as well
-- `[TL?]` A posteriori modeling
+- `[TL?]` A posteriori modeling 
     - Hierarchical SBM estimation
     - Leiden hierarchical SBM estimation, how are these different/not different (do we want this?)
     - Comparison of model complexity (dDCSBM, SBM, RDPG-d, etc.)
