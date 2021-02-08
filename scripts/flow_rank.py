@@ -12,7 +12,7 @@ from scipy.stats import rankdata, spearmanr
 
 import SpringRank as sr
 from pkg.data import load_data
-from pkg.io import savefig
+from pkg.io import savefig, set_cwd
 from pkg.plot import CLASS_COLOR_DICT, set_theme
 from src.visualization import adjplot  # TODO will be in graspologic
 
@@ -412,27 +412,3 @@ fig.text(0.08, 0.43, "Source graph", rotation=90, fontsize="large")
 fig.text(0.51, 0.06, "Energy per edge", fontsize="large", ha="center")
 
 savefig("energy-densities", foldername="flow_rank")
-
-#%% [markdown]
-# ## Are the ranks of $G_1$ "the same" as the ranks of $G_2$?
-# $$ H_0: s_1 = s_2 $$
-# $$ H_a: s_1 \neq s_2 $$
-# One procedure:
-# - Estimate the ranks from $G_1$, $G_2$
-# - Compute some test statistic ($T(s_1, s_2)$) measuring the distance between these
-# rankings. Examples include some notion of correlation between the ranks. The SpringRank
-# paper also includes a metric based on the energy of the system they define, which is
-# a function of the ranks.
-# - For i in a bunch of times:
-#    - Sample 2 graphs from the same ranks, $s_1$, call them $\tilde{G^1_1}, \tilde{G_1^2}$.
-#    - Compute ranks of both, $\tilde{s_1^1}$ and $\tilde{s_1^2}$.
-#    - Compute $T(\tilde{s_1^1}, \tilde{s_1^2})$
-#    - Do the above 3 steps for $s_2$, yielding $T(\tilde{s_2^1}, \tilde{s_2^2})$
-#    - Append $max(T(\tilde{s_1^1}, \tilde{s_1^2}), T(\tilde{s_2^1}, \tilde{s_2^2}))$ to
-#      null distribution.
-# - Compare $T(s_1, s_2)$ to null distribution to get a p-value.
-
-#%% [markdown]
-# ## If the ranks of $G_1$ and $G_2$ are not "the same", how are they related?
-# More specifically, do the ranks of $G_1$ point in a completely opposite direction
-# as those of $G_2$?

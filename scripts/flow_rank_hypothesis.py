@@ -299,4 +299,4 @@ stashfig("p-values-null")
 #%% [markdown]
 # ## If the ranks of $G_1$ and $G_2$ are not "the same", how are they related?
 # More specifically, do the ranks of $G_1$ point in a completely opposite direction
-# as those of $G_2$? z
+# as those of $G_2$?
