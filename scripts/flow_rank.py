@@ -46,7 +46,7 @@ for graph_type in graph_types:
     temp_adj = temp_adj[np.ix_(keep_inds, keep_inds)]
     graphs[graph_type] = temp_adj
 
-meta = meta.iloc[keep_inds]
+meta = meta.iloc[keep_inds].copy()
 
 #%%
 for graph_type in graph_types:

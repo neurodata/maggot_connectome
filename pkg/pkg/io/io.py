@@ -33,7 +33,7 @@ def savefig(
     pad_inches=0.5,
     save_on=True,
     transparent=False,
-    print_out=True,
+    print_out=False,
     **kws,
 ):
     if save_on:
