@@ -306,7 +306,7 @@ require(['plotly'], function(Plotly) {
     <span class="n">temp_adj</span> <span class="o">=</span> <span class="n">temp_adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">keep_inds</span><span class="p">,</span> <span class="n">keep_inds</span><span class="p">)]</span>
     <span class="n">graphs</span><span class="p">[</span><span class="n">graph_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_adj</span>
 
-<span class="n">meta</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">keep_inds</span><span class="p">]</span>
+<span class="n">meta</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">keep_inds</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -323,105 +323,6 @@ require(['plotly'], function(Plotly) {
     <span class="n">meta</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">meta</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">inds</span><span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">graph_type</span><span class="si">}</span><span class="s2">_sr_score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ranks</span>
     <span class="n">spring_rank</span> <span class="o">=</span> <span class="n">rankdata</span><span class="p">(</span><span class="n">ranks</span><span class="p">)</span>
     <span class="n">meta</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">meta</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">inds</span><span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">graph_type</span><span class="si">}</span><span class="s2">_sr_rank&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spring_rank</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;ipython-input-4-548c2da7a7dd&gt;:6: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-&lt;ipython-input-4-548c2da7a7dd&gt;:7: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-/Users/bpedigo/miniconda3/envs/maggot-revamp/lib/python3.8/site-packages/pandas/core/indexing.py:1676: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-&lt;ipython-input-4-548c2da7a7dd&gt;:6: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-&lt;ipython-input-4-548c2da7a7dd&gt;:7: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-/Users/bpedigo/miniconda3/envs/maggot-revamp/lib/python3.8/site-packages/pandas/core/indexing.py:1676: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-&lt;ipython-input-4-548c2da7a7dd&gt;:6: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-&lt;ipython-input-4-548c2da7a7dd&gt;:7: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-/Users/bpedigo/miniconda3/envs/maggot-revamp/lib/python3.8/site-packages/pandas/core/indexing.py:1676: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-&lt;ipython-input-4-548c2da7a7dd&gt;:6: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-&lt;ipython-input-4-548c2da7a7dd&gt;:7: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-/Users/bpedigo/miniconda3/envs/maggot-revamp/lib/python3.8/site-packages/pandas/core/indexing.py:1676: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
 </pre></div>
 </div>
 </div>
@@ -663,13 +564,13 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>36366.577596313386
-29292.215734778983
-40628.44778838058
-34689.07750936479
+29401.08333698647
+40627.98293932192
+34908.35595505854
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;AxesSubplot:title={&#39;center&#39;:&#39;Sampled $A_{swap}$&#39;}&gt;,
- &lt;mpl_toolkits.axes_grid1.axes_divider.AxesDivider at 0x7fc378e53c10&gt;,
+ &lt;mpl_toolkits.axes_grid1.axes_divider.AxesDivider at 0x7fbffec456a0&gt;,
  &lt;AxesSubplot:title={&#39;center&#39;:&#39;Sampled $A_{swap}$&#39;}&gt;,
  &lt;AxesSubplot:title={&#39;center&#39;:&#39;Sampled $A_{swap}$&#39;}&gt;)
 </pre></div>
@@ -703,7 +604,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7fc34f7b3880&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7fbffe1b3cd0&gt;
 </pre></div>
 </div>
 <img alt="_images/flow_rank_10_1.png" src="_images/flow_rank_10_1.png" />
@@ -809,22 +710,22 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Gaa, Gaa: 100%|██████████| 100/100 [00:09&lt;00:00, 10.25it/s]
-Gaa, Gad: 100%|██████████| 100/100 [00:09&lt;00:00, 10.14it/s]
-Gaa, Gda: 100%|██████████| 100/100 [00:09&lt;00:00, 10.12it/s]
-Gaa, Gdd: 100%|██████████| 100/100 [00:09&lt;00:00, 10.25it/s]
-Gad, Gaa: 100%|██████████| 100/100 [00:09&lt;00:00, 10.12it/s]
-Gad, Gad: 100%|██████████| 100/100 [00:10&lt;00:00,  9.98it/s]
-Gad, Gda: 100%|██████████| 100/100 [00:09&lt;00:00, 10.38it/s]
-Gad, Gdd: 100%|██████████| 100/100 [00:09&lt;00:00, 10.35it/s]
-Gda, Gaa: 100%|██████████| 100/100 [00:03&lt;00:00, 25.57it/s]
-Gda, Gad: 100%|██████████| 100/100 [00:03&lt;00:00, 25.28it/s]
-Gda, Gda: 100%|██████████| 100/100 [00:03&lt;00:00, 26.62it/s]
-Gda, Gdd: 100%|██████████| 100/100 [00:03&lt;00:00, 26.69it/s]
-Gdd, Gaa: 100%|██████████| 100/100 [00:05&lt;00:00, 17.02it/s]
-Gdd, Gad: 100%|██████████| 100/100 [00:05&lt;00:00, 16.77it/s]
-Gdd, Gda: 100%|██████████| 100/100 [00:05&lt;00:00, 17.67it/s]
-Gdd, Gdd: 100%|██████████| 100/100 [00:05&lt;00:00, 17.57it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Gaa, Gaa: 100%|██████████| 100/100 [00:09&lt;00:00, 10.42it/s]
+Gaa, Gad: 100%|██████████| 100/100 [00:10&lt;00:00,  9.81it/s]
+Gaa, Gda: 100%|██████████| 100/100 [00:09&lt;00:00, 10.17it/s]
+Gaa, Gdd: 100%|██████████| 100/100 [00:09&lt;00:00, 10.22it/s]
+Gad, Gaa: 100%|██████████| 100/100 [00:10&lt;00:00,  9.97it/s]
+Gad, Gad: 100%|██████████| 100/100 [00:10&lt;00:00,  9.58it/s]
+Gad, Gda: 100%|██████████| 100/100 [00:10&lt;00:00,  9.76it/s]
+Gad, Gdd: 100%|██████████| 100/100 [00:10&lt;00:00,  9.87it/s]
+Gda, Gaa: 100%|██████████| 100/100 [00:04&lt;00:00, 24.03it/s]
+Gda, Gad: 100%|██████████| 100/100 [00:04&lt;00:00, 24.77it/s]
+Gda, Gda: 100%|██████████| 100/100 [00:03&lt;00:00, 26.84it/s]
+Gda, Gdd: 100%|██████████| 100/100 [00:03&lt;00:00, 26.10it/s]
+Gdd, Gaa: 100%|██████████| 100/100 [00:05&lt;00:00, 16.81it/s]
+Gdd, Gad: 100%|██████████| 100/100 [00:06&lt;00:00, 16.12it/s]
+Gdd, Gda: 100%|██████████| 100/100 [00:05&lt;00:00, 17.74it/s]
+Gdd, Gdd: 100%|██████████| 100/100 [00:05&lt;00:00, 17.72it/s]
 </pre></div>
 </div>
 </div>
@@ -867,10 +768,7 @@ Gdd, Gdd: 100%|██████████| 100/100 [00:05&lt;00:00, 17.57it/
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to /Users/bpedigo/JHU_code/maggot/maggot_connectome/results/figs/flow_rank/energy-densities.png
-</pre></div>
-</div>
-<img alt="_images/flow_rank_13_1.png" src="_images/flow_rank_13_1.png" />
+<img alt="_images/flow_rank_13_0.png" src="_images/flow_rank_13_0.png" />
 </div>
 </div>
 </div>
