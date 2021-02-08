@@ -478,11 +478,11 @@ a function of the ranks.</p></li>
 <li><p>Compute ranks of both, <span class="math notranslate nohighlight">\(\tilde{s_1^1}\)</span> and <span class="math notranslate nohighlight">\(\tilde{s_1^2}\)</span>.</p></li>
 <li><p>Compute <span class="math notranslate nohighlight">\(T(\tilde{s_1^1}, \tilde{s_1^2})\)</span></p></li>
 <li><p>Do the above 3 steps for <span class="math notranslate nohighlight">\(s_2\)</span>, yielding <span class="math notranslate nohighlight">\(T(\tilde{s_2^1}, \tilde{s_2^2})\)</span></p></li>
-<li><p>Append <span class="math notranslate nohighlight">\(max(T(\tilde{s_1^1}, \tilde{s_1^2}), T(\tilde{s_2^1}, \tilde{s_2^2}))\)</span> to
-null distribution.</p></li>
+<li><p>Append <span class="math notranslate nohighlight">\(T(\tilde{s_1^1}, \tilde{s_1^2})\)</span> to null distribution 1, <span class="math notranslate nohighlight">\(T(\tilde{s_2^1}, \tilde{s_2^2}))\)</span> to
+null distribution 2.</p></li>
 </ul>
 </li>
-<li><p>Compare <span class="math notranslate nohighlight">\(T(s_1, s_2)\)</span> to null distribution to get a p-value.</p></li>
+<li><p>Compare <span class="math notranslate nohighlight">\(T(s_1, s_2)\)</span> to null distribution 1 and 2, to get two p-values, take the max to get a single p-value.</p></li>
 </ul>
 <p>NB: there is a nonidentifiability in the notion of ranks that we don’t care about.
 shifting the ranks up or down by a constant does not affect the resulting distribution
@@ -659,7 +659,7 @@ Sigma = 0.35: 100%|██████████| 100/100 [03:37&lt;00:00,  2.1
 <div class="section" id="if-the-ranks-of-g-1-and-g-2-are-not-the-same-how-are-they-related">
 <h2>If the ranks of <span class="math notranslate nohighlight">\(G_1\)</span> and <span class="math notranslate nohighlight">\(G_2\)</span> are not “the same”, how are they related?<a class="headerlink" href="#if-the-ranks-of-g-1-and-g-2-are-not-the-same-how-are-they-related" title="Permalink to this headline">¶</a></h2>
 <p>More specifically, do the ranks of <span class="math notranslate nohighlight">\(G_1\)</span> point in a completely opposite direction
-as those of <span class="math notranslate nohighlight">\(G_2\)</span>? z</p>
+as those of <span class="math notranslate nohighlight">\(G_2\)</span>?</p>
 </div>
 </div>
 
