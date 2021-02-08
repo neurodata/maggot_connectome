@@ -292,7 +292,7 @@
 <p>TODO: explain some of the math behind spring rank/signal flow</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -324,6 +324,27 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/miniconda3/envs/maggot-revamp/lib/python3.8/site-packages/umap/__init__.py:9: UserWarning: Tensorflow not installed; ParametricUMAP will be unavailable
+  warn(&quot;Tensorflow not installed; ParametricUMAP will be unavailable&quot;)
+</pre></div>
+</div>
+<div class="output text_html"><script type="text/javascript">
+window.PlotlyConfig = {MathJaxConfig: 'local'};
+if (window.MathJax) {MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+if (typeof require !== 'undefined') {
+require.undef("plotly");
+requirejs.config({
+    paths: {
+        'plotly': ['https://cdn.plot.ly/plotly-latest.min']
+    }
+});
+require(['plotly'], function(Plotly) {
+    window._Plotly = Plotly;
+});
+}
+</script>
+</div></div>
 </div>
 <div class="section" id="creating-latent-ranks-or-orderings">
 <h2>Creating latent “ranks” or “orderings”<a class="headerlink" href="#creating-latent-ranks-or-orderings" title="Permalink to this headline">¶</a></h2>
@@ -331,8 +352,7 @@
 from the original paper.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-<span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;deep&quot;</span><span class="p">,</span> <span class="n">desat</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;deep&quot;</span><span class="p">,</span> <span class="n">desat</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">palette</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">colors</span><span class="p">))</span>
 
 <span class="n">n_per_group</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># 34 in the paper</span>
@@ -364,6 +384,9 @@ from the original paper.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/flow_rank_hypothesis_4_0.png" src="_images/flow_rank_hypothesis_4_0.png" />
+</div>
 </div>
 </div>
 <div class="section" id="a-distribution-from-the-latent-ranks">
@@ -372,7 +395,7 @@ from the original paper.</p>
 the matrix of edge probabilities <span class="math notranslate nohighlight">\(P\)</span> and an adjacency matrix <span class="math notranslate nohighlight">\(A\)</span> from it.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">15</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">15</span>
 <span class="n">beta</span> <span class="o">=</span> <span class="mi">5</span>
 
 
@@ -399,12 +422,15 @@ the matrix of edge probabilities <span class="math notranslate nohighlight">\(P\
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/flow_rank_hypothesis_6_0.png" src="_images/flow_rank_hypothesis_6_0.png" />
+</div>
 </div>
 <p>If we change the parameters to be point masses for the 3 different groups, we get
 a specific kind of feedforward SBM model.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_per_group</span> <span class="o">=</span> <span class="mi">100</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_per_group</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_per_group</span><span class="p">)</span>
 <span class="n">X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_per_group</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span>
 <span class="n">X3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_per_group</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
@@ -425,6 +451,9 @@ a specific kind of feedforward SBM model.</p>
 <span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;p-and-adj-point-mass&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/flow_rank_hypothesis_8_0.png" src="_images/flow_rank_hypothesis_8_0.png" />
 </div>
 </div>
 </div>
@@ -471,9 +500,7 @@ of <span class="math notranslate nohighlight">\(\sigma\)</span>. I then run the 
 each realization, and examine the distribution of p-values.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-
-<span class="k">def</span> <span class="nf">make_ranks</span><span class="p">(</span><span class="n">n_per_group</span><span class="o">=</span><span class="mi">34</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_ranks</span><span class="p">(</span><span class="n">n_per_group</span><span class="o">=</span><span class="mi">34</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Based on simulations from original spring rank paper&quot;&quot;&quot;</span>
     <span class="n">X1</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_per_group</span><span class="p">)</span>
     <span class="n">X2</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_per_group</span><span class="p">)</span>
@@ -596,6 +623,28 @@ each realization, and examine the distribution of p-values.</p>
 <span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;p-values-null&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sigma = 0: 100%|██████████| 100/100 [04:02&lt;00:00,  2.43s/it]
+Sigma = 0.05: 100%|██████████| 100/100 [03:46&lt;00:00,  2.26s/it]
+Sigma = 0.1: 100%|██████████| 100/100 [03:38&lt;00:00,  2.19s/it]
+Sigma = 0.15: 100%|██████████| 100/100 [03:33&lt;00:00,  2.14s/it]
+Sigma = 0.2: 100%|██████████| 100/100 [03:32&lt;00:00,  2.13s/it]
+Sigma = 0.25: 100%|██████████| 100/100 [03:33&lt;00:00,  2.14s/it]
+Sigma = 0.3: 100%|██████████| 100/100 [03:34&lt;00:00,  2.14s/it]
+Sigma = 0.35: 100%|██████████| 100/100 [03:37&lt;00:00,  2.17s/it]
+</pre></div>
+</div>
+<img alt="_images/flow_rank_hypothesis_10_1.png" src="_images/flow_rank_hypothesis_10_1.png" />
+<img alt="_images/flow_rank_hypothesis_10_2.png" src="_images/flow_rank_hypothesis_10_2.png" />
+<img alt="_images/flow_rank_hypothesis_10_3.png" src="_images/flow_rank_hypothesis_10_3.png" />
+<img alt="_images/flow_rank_hypothesis_10_4.png" src="_images/flow_rank_hypothesis_10_4.png" />
+<img alt="_images/flow_rank_hypothesis_10_5.png" src="_images/flow_rank_hypothesis_10_5.png" />
+<img alt="_images/flow_rank_hypothesis_10_6.png" src="_images/flow_rank_hypothesis_10_6.png" />
+<img alt="_images/flow_rank_hypothesis_10_7.png" src="_images/flow_rank_hypothesis_10_7.png" />
+<img alt="_images/flow_rank_hypothesis_10_8.png" src="_images/flow_rank_hypothesis_10_8.png" />
+<img alt="_images/flow_rank_hypothesis_10_9.png" src="_images/flow_rank_hypothesis_10_9.png" />
+<img alt="_images/flow_rank_hypothesis_10_10.png" src="_images/flow_rank_hypothesis_10_10.png" />
 </div>
 </div>
 </div>
