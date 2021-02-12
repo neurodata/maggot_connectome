@@ -1,7 +1,7 @@
 # Outline
 
 ## Figure Panels
--  `[BDP]` "show the data"
+- Show the data
     - What do the neurons look like? Plot the neurons in space, maybe show a few examples, etc.
     - What does the graph look like? Can plot adjacencies as well as some kind of graph layout possibly.
     - `[x]` Some simple descripive statistics (# nodes, # edges, # synapses, degrees, weights, etc.)
@@ -9,7 +9,7 @@
         - Panel of edge weight distribution
         - Panel of in vs out degree with marginals
     - (Maybe) something describing the different edge types
-- `[TL?/NDD?]` A priori SBM-family model comparison and selection
+- A priori SBM-family model comparison and selection
     - We have some A priori information: 
         - left/right hemisphere
         - ipsilateral, contralateral, bilateral
@@ -26,7 +26,7 @@
     - have lots of tools to evaluate.
         - with the DC stuff we don't quite know how to do it. with SBM jovo thinks we do know how.
     - point of this figure is lets evaluate how good our models are
-- `[TL?]` A posteriori modeling
+- A posteriori modeling
     - point of this one is what can we learn about the structure of the data that we dont have a priori
     - Hierarchical SBM estimation
         - should we revisit how this is estimated?
@@ -42,21 +42,21 @@
     - Maybe we just show?
     - Figure out how to evaluate?
 - (maybe) multigraph model selection
-- `[ASE]` Graph matching methods figure (I don't think these results from Youngser/Carey ever went to a paper anywhere? so I assume CEP would be okay with them here? And we should be able to replicate/improve in python now.)
-    - `[BDP]` Show some examples of pairs in space.
-    - `[ASE/YP?/CEP?]` Show results of vanilla GM, GM with some notion of similarity (maybe NBLAST and or spec sim?), GM with multigraph, GM with multigraph + similarity.
-    - `[ASE]` (Maybe) Seeded graph matching with the known pairs as seeds? I actually use this in my work... so it is useful.
+- Graph matching methods figure (I don't think these results from Youngser/Carey ever went to a paper anywhere? so I assume CEP would be okay with them here? And we should be able to replicate/improve in python now.)
+    - Show some examples of pairs in space.
+    - Show results of vanilla GM, GM with some notion of similarity (maybe NBLAST and or spec sim?), GM with multigraph, GM with multigraph + similarity.
+    - (Maybe) Seeded graph matching with the known pairs as seeds? I actually use this in my work... so it is useful.
     - Some interesting inference about pairedness? Would be nice to show what this can be used for, or demonstrate which parts are more/less bilaterally similar?
     - Maybe something about testing for homotypic connections? 
-- `[BDP/ASE/TL/NDD?]` Bilateral symmetry/testing
+- Bilateral symmetry/testing
     - How similar are the SBM models?
         - chi square test?
     - How similar are the RDPG models (nonpar/semipar)?
         - maybe select best model and compare left right on those
     - Can we say anything about the correlation under these different models?
     - Testing homotopic affinity (by edge type)
-- `[BDP]` Directedness: testing for whether the graph or specific parts of it are meaningfully directed. (Do we know how to do this?)
-- `[BDP/NDD-code?]` Feedforwardness: describing (and hopefully modeling) a feedforward pathway through the network, expanding to include multinetwork models. 
+- Directedness: testing for whether the graph or specific parts of it are meaningfully directed. (Do we know how to do this?)
+- Feedforwardness: describing (and hopefully modeling) a feedforward pathway through the network, expanding to include multinetwork models. 
     - Some description of the chain predicted by signal flow or cascades or graph match flow etc.
     - Comparisons of the flows for different network types (e.g. AA, AD, etc.) 
     - Testing for feedforwardness with spring rank model
