@@ -63,10 +63,10 @@
     - maybe goes in Cambridge paper?
 
 ## Code
-- `[NDD]` [Flow/hierarchy/ranking](https://github.com/microsoft/graspologic/issues/636) into graspologic
-- `[TL?]` Improve the estimation code to make it easier to fit to data in a useful way, examine the models, etc. (as necessary)
-- `[NDD]` Adjacency with dendrogram for hierarchical clustering that is not complete
+- [Flow/hierarchy/ranking](https://github.com/microsoft/graspologic/issues/636) into graspologic
+- Improve the estimation code to make it easier to fit to data in a useful way, examine the models, etc. (as necessary)
+- Adjacency with dendrogram for hierarchical clustering that is not complete
     - I have code, not pretty, probably not generalizable yet
-- `[TL/NDD?]` [Tests from statistical connectomics](https://github.com/microsoft/graspologic/issues/570) into graspologic
+- [Tests from statistical connectomics](https://github.com/microsoft/graspologic/issues/570) into graspologic
     - We should talk to Eric/decide what we actually want first
-- `[TL/NDD?]` Bar dendrogram plotting in general
+- Bar dendrogram plotting in general
