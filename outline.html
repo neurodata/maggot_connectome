@@ -269,9 +269,24 @@
 <li><p>(Maybe) something describing the different edge types</p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[TL?/NDD?]</span></code> A priori modeling: using prior knowledge like cell type labels, left right hemisphere, etc. Testing hypotheses about these models</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">[TL?/NDD?]</span></code> A priori SBM-family model comparison and selection</p>
 <ul>
-<li><p>Left/right hemisphere blockmodel</p>
+<li><p>We have some A priori information:</p>
+<ul>
+<li><p>left/right hemisphere</p></li>
+<li><p>ipsilateral, contralateral, bilateral</p></li>
+<li><p>loose cell types</p>
+<ul>
+<li><p>sensory/motor/interneuron</p></li>
+<li><p>other rough categories</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>We can fit a priori SBMs using all of the above. Some of them can even be nested (e.g. by left/right and then by ipsi/contra/bi)</p></li>
+<li><p>For each, calculate the number of free parameters.</p></li>
+<li><p>Do some kind of model selection/comparison and try to select the best one</p></li>
+<li><p>Left/right hemisphere blockmodel (<em>question: how does this relate to the above, even within a model class of 2 block SBMs there are a ton of different ways to parameterize</em>)</p>
 <ul>
 <li><p>testing for homophillic/assortative, the different SBM block probability hypotheses</p></li>
 <li><p>Could do the above with the different 4 color graphs as well</p></li>

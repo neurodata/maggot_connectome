@@ -9,8 +9,17 @@
         - Panel of edge weight distribution
         - Panel of in vs out degree with marginals
     - (Maybe) something describing the different edge types
-- `[TL?/NDD?]` A priori modeling: using prior knowledge like cell type labels, left right hemisphere, etc. Testing hypotheses about these models 
-    - Left/right hemisphere blockmodel  
+- `[TL?/NDD?]` A priori SBM-family model comparison and selection
+    - We have some A priori information: 
+        - left/right hemisphere
+        - ipsilateral, contralateral, bilateral
+        - loose cell types
+            - sensory/motor/interneuron
+            - other rough categories
+    - We can fit a priori SBMs using all of the above. Some of them can even be nested (e.g. by left/right and then by ipsi/contra/bi)
+    - For each, calculate the number of free parameters.
+    - Do some kind of model selection/comparison and try to select the best one
+    - Left/right hemisphere blockmodel (_question: how does this relate to the above, even within a model class of 2 block SBMs there are a ton of different ways to parameterize_)
         - testing for homophillic/assortative, the different SBM block probability hypotheses
         - Could do the above with the different 4 color graphs as well
 - `[TL?]` A posteriori modeling 
