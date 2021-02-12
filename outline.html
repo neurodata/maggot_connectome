@@ -288,43 +288,81 @@
 <li><p>Do some kind of model selection/comparison and try to select the best one</p></li>
 <li><p>Left/right hemisphere blockmodel (<em>question: how does this relate to the above, even within a model class of 2 block SBMs there are a ton of different ways to parameterize</em>)</p>
 <ul>
+<li><p>maybe framed less as a test, more as part of the model selection question</p></li>
 <li><p>testing for homophillic/assortative, the different SBM block probability hypotheses</p></li>
 <li><p>Could do the above with the different 4 color graphs as well</p></li>
 </ul>
 </li>
+<li><p>have lots of tools to evaluate.</p>
+<ul>
+<li><p>with the DC stuff we don’t quite know how to do it. with SBM jovo thinks we do know how.</p></li>
+</ul>
+</li>
+<li><p>point of this figure is lets evaluate how good our models are</p></li>
 </ul>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[TL?]</span></code> A posteriori modeling</p>
 <ul>
-<li><p>Hierarchical SBM estimation</p></li>
-<li><p>Leiden hierarchical SBM estimation, how are these different/not different (do we want this?)</p></li>
-<li><p>Comparison of model complexity (dDCSBM, SBM, RDPG-d, etc.)</p></li>
+<li><p>point of this one is what can we learn about the structure of the data that we dont have a priori</p></li>
+<li><p>Hierarchical SBM estimation</p>
+<ul>
+<li><p>should we revisit how this is estimated?</p></li>
+<li><p>we never tried initializing with a prior</p></li>
+<li><p>could use the best a priori as init for a posteriori</p></li>
 </ul>
 </li>
+<li><p>Leiden hierarchical SBM estimation, how are these different/not different (do we want this?)</p>
+<ul>
+<li><p>this is just another way of fitting an SBM, with different constraints.</p></li>
+</ul>
+</li>
+<li><p>Comparison of model complexity (dDCSBM, SBM, RDPG-d, etc.)</p></li>
+<li><p>Follow up with brain images labeling the neurons</p></li>
+<li><p>Want to justify by looking at the neurobiology</p></li>
+</ul>
+</li>
+<li><p>Ok, so maybe we should include vertex attributes</p>
+<ul>
+<li><p>Embedding with node covariates for example</p></li>
+<li><p>Maybe we just show?</p></li>
+<li><p>Figure out how to evaluate?</p></li>
+</ul>
+</li>
+<li><p>(maybe) multigraph model selection</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[ASE]</span></code> Graph matching methods figure (I don’t think these results from Youngser/Carey ever went to a paper anywhere? so I assume CEP would be okay with them here? And we should be able to replicate/improve in python now.)</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">[BDP]</span></code> Show some examples of pairs in space.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[ASE/YP?/CEP?]</span></code> Show results of vanilla GM, GM with some notion of similarity (maybe NBLAST and or spec sim?), GM with multigraph, GM with multigraph + similarity.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[ASE]</span></code> (Maybe) Seeded graph matching with the known pairs as seeds? I actually use this in my work… so it is useful.</p></li>
 <li><p>Some interesting inference about pairedness? Would be nice to show what this can be used for, or demonstrate which parts are more/less bilaterally similar?</p></li>
+<li><p>Maybe something about testing for homotypic connections?</p></li>
 </ul>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[BDP/ASE/TL/NDD?]</span></code> Bilateral symmetry/testing</p>
 <ul>
-<li><p>How similar are the SBM models?</p></li>
-<li><p>How similar are the RDPG models (nonpar/semipar)?</p></li>
+<li><p>How similar are the SBM models?</p>
+<ul>
+<li><p>chi square test?</p></li>
+</ul>
+</li>
+<li><p>How similar are the RDPG models (nonpar/semipar)?</p>
+<ul>
+<li><p>maybe select best model and compare left right on those</p></li>
+</ul>
+</li>
 <li><p>Can we say anything about the correlation under these different models?</p></li>
 <li><p>Testing homotopic affinity (by edge type)</p></li>
 </ul>
 </li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[BDP]</span></code> Directedness: testing for whether the graph or specific parts of it are meaningfully directed. (Do we know how to do this?)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[BDP/NDD-code?]</span></code> Feedforwardness: describing (and hopefully modeling) a feedforward pathway through the network, expanding to include multinetwork models.</p>
 <ul>
 <li><p>Some description of the chain predicted by signal flow or cascades or graph match flow etc.</p></li>
 <li><p>Comparisons of the flows for different network types (e.g. AA, AD, etc.)</p></li>
 <li><p>Testing for feedforwardness with spring rank model</p></li>
+<li><p>maybe goes in Cambridge paper?</p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[BDP]</span></code> Directedness: testing for whether the graph or specific parts of it are meaningfully directed. (Do we know how to do this?)</p></li>
 </ul>
 </div>
 <div class="section" id="code">
