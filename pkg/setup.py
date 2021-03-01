@@ -2,6 +2,7 @@ from setuptools import find_packages, setup
 
 REQUIRED_PACKAGES = [
     "colorcet",
+    "giskard @ https://github.com/bdpedigo/giskard.git#egg=giskard",
     "graspologic",
     "matplotlib",
     "networkx>=2.5",
