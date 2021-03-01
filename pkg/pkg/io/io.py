@@ -51,15 +51,3 @@ def savefig(
         )
         if print_out:
             print(f"Saved figure to {savename}")
-
-
-def set_environ():
-    os.environ["SAVEFIG_DIR"] = "./maggot_connectome/results"
-
-
-def set_cwd():
-    """Hack for some differences between VS code/jupyter notebook"""
-    root_path = "/Users/bpedigo/JHU_code/maggot"
-    cwd = os.getcwd()
-    if cwd != root_path:
-        os.chdir(root_path)
