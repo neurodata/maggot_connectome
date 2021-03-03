@@ -1,10 +1,10 @@
+import json
 from pathlib import Path
 
 import networkx as nx
+import numpy as np
 import pandas as pd
 from sklearn.utils import Bunch
-import numpy as np
-
 
 DATA_VERSION = "2021-03-02"  # set to whatever the most recent one is
 
@@ -57,9 +57,6 @@ def load_adjacency(
     elif output == "pandas":
         adj = nx.to_pandas_adjacency(g, nodelist=nodelist)
     return adj
-
-
-import json
 
 
 def load_palette(path=None, version=None):
