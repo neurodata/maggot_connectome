@@ -139,7 +139,6 @@ cython_debug/
 
 # custom
 docs/_build
-sandbox
 pkg/pkg/pymaid/pymaid_credentials.json
 
 # not storing the data for now 
