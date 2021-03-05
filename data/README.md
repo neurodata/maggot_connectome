@@ -72,8 +72,8 @@ Mushroom body
       - `-{claw number}`
 - `MBIN`: Mushroom body input neuron
    - subclasses
-      - `DAN`
-      - `OAN`
+      - `DAN`: dopaminergic
+      - `OAN`: octopaminergic
 - `MBON`: Mushroom body output neuron
    - subclasses
       - appetitive
