@@ -23,17 +23,24 @@ Sensory
          - Paper: https://elifesciences.org/articles/40247
          - In the antennal nerve but not odor receptors
          - Pharyngeal/internal organ info
+      - `AN2`
       - `MN`: maxillary nerve (anatomical)
          - Paper: https://elifesciences.org/articles/40247
          - Gustatory/somatosensory
+      - `MN2`
       - `PaN`: prothoracic accessory nerve (anatomical)
          - Paper: https://elifesciences.org/articles/40247
          - Gustatory/somatosensory
       - `Photo`: photoreceptor
          - Paper: https://elifesciences.org/articles/28387
+         - `photoRh5`
+         - `photoRh6`
       - `Temp`: temperature sensing
          - Paper: no paper
          - Come in as part of AN (I think)
+         - `thermo`
+      - `vtd`
+      - `vtd2`
 
 Output 
 --- 
@@ -50,6 +57,11 @@ Output
       - `CRZ` 
       - `DMS`
 - Motor neurons in SEZ
+- motor subclasses
+   - `AN`
+   - `MN`
+   - `PaN`
+   - `VAN`
 
 Mushroom body
 --- 
@@ -59,7 +71,23 @@ Mushroom body
    - Subclasses:
       - `-{claw number}`
 - `MBIN`: Mushroom body input neuron
+   - subclasses
+      - `DAN`
+      - `OAN`
 - `MBON`: Mushroom body output neuron
+   - subclasses
+      - appetitive
+      - aversive
+      - neither
+- Projection neurons
+   - `mPN`
+      - subclasses
+         - `multi`
+         - `olfactory`
+   - `tPN`
+   - `uPN`
+   - `vPN`
+- `APL`
 
 Antennal lobe
 --- 
@@ -72,12 +100,24 @@ Antennal lobe
    - `choosy`
    - `picky`
 - `keystone`
+- `pLN`
+- `preliminary_LN`?
+
 
 Lateral horn and convergence neurons
 ---
 - No paper
 - Defined based on normalized input thresholding
+- `LHN`
+- `LHN2`
 
 Feedback neurons
 ---
 - Claire's paper
+- `FB2N`
+- `FBN`
+- `FFN`
+- `FAN`
+
+### Undocumented keys:
+`LON`, `CN`, `CX`, `dUnk`, `A00c`
