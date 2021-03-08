@@ -314,10 +314,11 @@
 <div class="section" id="problem-statement">
 <h2>Problem statement<a class="headerlink" href="#problem-statement" title="Permalink to this headline">¶</a></h2>
 <p>We are given an adjacency matrix <span class="math notranslate nohighlight">\(A\)</span> with <span class="math notranslate nohighlight">\(n\)</span> nodes, and a set of node metadata.
-Consider the <span class="math notranslate nohighlight">\(p\)</span>th “column” of the node metadata to be an <span class="math notranslate nohighlight">\(n\)</span>-length vector:
-$<span class="math notranslate nohighlight">\(
+Consider the <span class="math notranslate nohighlight">\(p\)</span>th “column” of the node metadata to be an <span class="math notranslate nohighlight">\(n\)</span>-length vector:</p>
+<div class="math notranslate nohighlight">
+\[
 \tau^{(p)} \in \{0, 1, ... K^{(p)}\}
-\)</span>$</p>
+\]</div>
 <p>which represents a partition of the nodes into <span class="math notranslate nohighlight">\(K^{(p)}\)</span> groups.</p>
 <p>We aim to understand which of these partitions are “good” at describing the connectivity
 we see in the network - for our purposes (for now), we will understand “good” in terms
@@ -333,10 +334,11 @@ the data, the only parameters we need to estimate for the SBM are the elements o
 a <span class="math notranslate nohighlight">\(K^{(p)} \times K^{(p)}\)</span> matrix of block probabilities. If we make no other assumptions
 about <span class="math notranslate nohighlight">\(B\)</span> (e.g. low-rank, planned partition), then there are <span class="math notranslate nohighlight">\(K^{(p)}\)</span> parameters
 we have to estimate in <span class="math notranslate nohighlight">\(B\)</span>. Since we observe <span class="math notranslate nohighlight">\(n^2\)</span> edges/non-edges from <span class="math notranslate nohighlight">\(A\)</span>, then BIC
-takes the form:
-$<span class="math notranslate nohighlight">\(
+takes the form:</p>
+<div class="math notranslate nohighlight" id="equation-bic">
+<span class="eqno">(1)<a class="headerlink" href="#equation-bic" title="Permalink to this equation">¶</a></span>\[
 2 ln(\hat{L}) - 2 ln(n) (K^{(p)})^2
-\)</span>$</p>
+\]</div>
 <p>Below, we fit SBM models to the (unweighted) maggot connectome, using several
 metadata columns (as well as their intersections, explained below) as our partitions.
 We evaluate each in terms of BIC as described above.</p>
@@ -363,10 +365,6 @@ We evaluate each in terms of BIC as described above.</p>
 <span class="kn">from</span> <span class="nn">pkg.data</span> <span class="kn">import</span> <span class="n">load_adjacency</span><span class="p">,</span> <span class="n">load_networkx</span><span class="p">,</span> <span class="n">load_node_meta</span><span class="p">,</span> <span class="n">load_palette</span>
 <span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
 <span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">savefig</span>
-
-<span class="kn">import</span> <span class="nn">ipyparams</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">ipyparams</span><span class="o">.</span><span class="n">notebook_name</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">stashfig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -468,20 +466,6 @@ We evaluate each in terms of BIC as described above.</p>
 
 <span class="n">palette</span> <span class="o">=</span> <span class="n">load_palette</span><span class="p">()</span>
 <span class="n">set_theme</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<script type="application/javascript">
-console.log('Starting front end url_querystring_target comm target');
-const comm = Jupyter.notebook.kernel.comm_manager.new_comm('url_querystring_target', {'init': 1});
-comm.send({'ipyparams_browser_url': window.location.href});
-console.log('Sent window.location.href on url_querystring_target comm target');
-
-comm.on_msg(function(msg) {
-    console.log(msg.content.data);
-});
-</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
 </div>
@@ -661,7 +645,7 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">upset_stripplot</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;bic&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">stripplot_kws</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;BIC&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;symlog&quot;</span><span class="p">)</span>
 <span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;all-model-bic-logy&quot;</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
@@ -678,14 +662,10 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;ipython-input-7-01a5ef24ad6a&gt;:22: UserWarning: Data has no positive values, and therefore cannot be log-scaled.
-  ax.set_yscale(&quot;log&quot;)
-</pre></div>
-</div>
+<img alt="_images/a_priori_sbm_15_0.png" src="_images/a_priori_sbm_15_0.png" />
 <img alt="_images/a_priori_sbm_15_1.png" src="_images/a_priori_sbm_15_1.png" />
 <img alt="_images/a_priori_sbm_15_2.png" src="_images/a_priori_sbm_15_2.png" />
 <img alt="_images/a_priori_sbm_15_3.png" src="_images/a_priori_sbm_15_3.png" />
-<img alt="_images/a_priori_sbm_15_4.png" src="_images/a_priori_sbm_15_4.png" />
 </div>
 </div>
 </div>
