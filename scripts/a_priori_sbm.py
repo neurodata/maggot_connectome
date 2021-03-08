@@ -286,10 +286,16 @@ ax.set(ylabel="BIC")
 stashfig("all-model-bic")
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-upset_stripplot(results, y="bic", ax=ax, **stripplot_kws)
+upset_stripplot(results.iloc[:8], y="bic", ax=ax, **stripplot_kws)
 ax.set(ylabel="BIC")
-ax.set_yscale("symlog")
-stashfig("all-model-bic-logy")
+stashfig("first-8-model-bic")
+
+# looked bad after switching to "maximize BIC" version
+# fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+# upset_stripplot(results, y="bic", ax=ax, **stripplot_kws)
+# ax.set(ylabel="BIC")
+# ax.set_yscale("symlog")
+# stashfig("all-model-bic-logy")
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 upset_stripplot(results, y="lik", ax=ax, **stripplot_kws)
