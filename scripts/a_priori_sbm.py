@@ -5,7 +5,10 @@
 # ## Problem statement
 # We are given an adjacency matrix $A$ with $n$ nodes, and a set of node metadata.
 # Consider the $p$th "column" of the node metadata to be an $n$-length vector:
-# $$\tau^{(p)} \in \{0, 1, ... K^{(p)}\}$$
+# $$
+# \tau^{(p)} \in \{0, 1, ... K^{(p)}\}
+# $$
+#
 # which represents a partition of the nodes into $K^{(p)}$ groups.
 #
 # We aim to understand which of these partitions are "good" at describing the connectivity
@@ -24,7 +27,9 @@
 # about $B$ (e.g. low-rank, planned partition), then there are $K^{(p)}$ parameters
 # we have to estimate in $B$. Since we observe $n^2$ edges/non-edges from $A$, then BIC
 # takes the form:
-# $$2 ln(\hat{L}) - 2 ln(n) (K^{(p)})^2$$
+# $$
+# 2 ln(\hat{L}) - 2 ln(n) (K^{(p)})^2
+# $$
 #
 # Below, we fit SBM models to the (unweighted) maggot connectome, using several
 # metadata columns (as well as their intersections, explained below) as our partitions.
@@ -51,10 +56,6 @@ from graspologic.utils import binarize, remove_loops
 from pkg.data import load_adjacency, load_networkx, load_node_meta, load_palette
 from pkg.plot import set_theme
 from pkg.io import savefig
-
-import ipyparams
-
-print(ipyparams.notebook_name)
 
 
 def stashfig(name, **kwargs):
@@ -285,7 +286,7 @@ stashfig("all-model-bic")
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 upset_stripplot(results, y="bic", ax=ax, **stripplot_kws)
 ax.set(ylabel="BIC")
-ax.set_yscale("log")
+ax.set_yscale("symlog")
 stashfig("all-model-bic-logy")
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
