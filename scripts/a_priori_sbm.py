@@ -5,6 +5,7 @@
 # ## Problem statement
 # We are given an adjacency matrix $A$ with $n$ nodes, and a set of node metadata.
 # Consider the $p$th "column" of the node metadata to be an $n$-length vector:
+#
 # $$
 # \tau^{(p)} \in \{0, 1, ... K^{(p)}\}
 # $$
@@ -27,9 +28,10 @@
 # about $B$ (e.g. low-rank, planned partition), then there are $K^{(p)}$ parameters
 # we have to estimate in $B$. Since we observe $n^2$ edges/non-edges from $A$, then BIC
 # takes the form:
+#
 # $$
 # 2 ln(\hat{L}) - 2 ln(n) (K^{(p)})^2
-# $$
+# $$ (bic)
 #
 # Below, we fit SBM models to the (unweighted) maggot connectome, using several
 # metadata columns (as well as their intersections, explained below) as our partitions.
