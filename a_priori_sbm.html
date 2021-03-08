@@ -315,8 +315,10 @@
 <h2>Problem statement<a class="headerlink" href="#problem-statement" title="Permalink to this headline">¶</a></h2>
 <p>We are given an adjacency matrix <span class="math notranslate nohighlight">\(A\)</span> with <span class="math notranslate nohighlight">\(n\)</span> nodes, and a set of node metadata.
 Consider the <span class="math notranslate nohighlight">\(p\)</span>th “column” of the node metadata to be an <span class="math notranslate nohighlight">\(n\)</span>-length vector:
-$<span class="math notranslate nohighlight">\(\tau^{(p)} \in \{0, 1, ... K^{(p)}\}\)</span><span class="math notranslate nohighlight">\(
-which represents a partition of the nodes into \)</span>K^{(p)}$ groups.</p>
+$<span class="math notranslate nohighlight">\(
+\tau^{(p)} \in \{0, 1, ... K^{(p)}\}
+\)</span>$</p>
+<p>which represents a partition of the nodes into <span class="math notranslate nohighlight">\(K^{(p)}\)</span> groups.</p>
 <p>We aim to understand which of these partitions are “good” at describing the connectivity
 we see in the network - for our purposes (for now), we will understand “good” in terms
 of the stochastic block model. One natural notion of “good” is a high likelihood of the
@@ -332,7 +334,9 @@ a <span class="math notranslate nohighlight">\(K^{(p)} \times K^{(p)}\)</span> m
 about <span class="math notranslate nohighlight">\(B\)</span> (e.g. low-rank, planned partition), then there are <span class="math notranslate nohighlight">\(K^{(p)}\)</span> parameters
 we have to estimate in <span class="math notranslate nohighlight">\(B\)</span>. Since we observe <span class="math notranslate nohighlight">\(n^2\)</span> edges/non-edges from <span class="math notranslate nohighlight">\(A\)</span>, then BIC
 takes the form:
-$<span class="math notranslate nohighlight">\(2 ln(\hat{L}) - 2 ln(n) (K^{(p)})^2\)</span>$</p>
+$<span class="math notranslate nohighlight">\(
+2 ln(\hat{L}) - 2 ln(n) (K^{(p)})^2
+\)</span>$</p>
 <p>Below, we fit SBM models to the (unweighted) maggot connectome, using several
 metadata columns (as well as their intersections, explained below) as our partitions.
 We evaluate each in terms of BIC as described above.</p>
