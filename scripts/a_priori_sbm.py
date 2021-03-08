@@ -1,3 +1,6 @@
+#%% [markdown]
+# # A priori SBMs
+# Comparing connectivity models generated from biological node metadata
 #%%
 from itertools import chain, combinations
 
@@ -6,40 +9,20 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-from graspologic.models import DCSBMEstimator, SBMEstimator
+from graspologic.models import SBMEstimator
 from graspologic.plot import adjplot
 from graspologic.utils import binarize, remove_loops
 from pkg.data import load_adjacency, load_networkx, load_node_meta, load_palette
 from pkg.plot import set_theme
 
-palette = load_palette()
-
-meta = load_node_meta()
-meta = meta[meta["paper_clustered_neurons"]]
-
-#%%
-# make some new metadata columns
-assert (
-    meta[["ipsilateral_axon", "contralateral_axon", "bilateral_axon"]].sum(axis=1).max()
-    == 1
-)
-
-meta["axon_lat"] = "other"
-meta.loc[meta[meta["ipsilateral_axon"]].index, "axon_lat"] = "ipsi"
-meta.loc[meta[meta["contralateral_axon"]].index, "axon_lat"] = "contra"
-meta.loc[meta[meta["bilateral_axon"]].index, "axon_lat"] = "bi"
-
-
-#%%
-
-g = load_networkx(graph_type="G", node_meta=meta)
-adj = nx.to_numpy_array(g, nodelist=meta.index)
-adj = binarize(adj)
-
 
 def group_repr(group_keys):
-    if len(group_keys) == 1:
+    """Get a string representation of a list of group keys"""
+    if len(group_keys) == 0:
+        return "{}"
+    elif len(group_keys) == 1:
         return str(group_keys[0])
     else:
         out = f"{group_keys[0]}"
@@ -49,177 +32,13 @@ def group_repr(group_keys):
         return out
 
 
-#%%
-
-
 def powerset(iterable, ignore_empty=True):
     # REF: https://stackoverflow.com/questions/1482308/how-to-get-all-subsets-of-a-set-powerset
-    "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+    "powerset([1,2,3]) --> (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
     s = list(iterable)
     return list(
         chain.from_iterable(combinations(s, r) for r in range(ignore_empty, len(s) + 1))
     )
-
-
-powerset(["hemisphere", "simple_group", "lineage", "axon_lat"])
-
-#%%
-
-single_group_keys = ["hemisphere", "simple_group", "lineage", "axon_lat"]
-all_group_keys = powerset(single_group_keys)
-
-rows = []
-for group_keys in all_group_keys:
-    group_keys = list(group_keys)
-    print(group_keys)
-
-    # this is essentially just grabbing the labels that are group_key1 cross group_key2
-    # etc. and then applying this as a column in the metadata
-    groupby = meta.groupby(group_keys)
-    groups = groupby.groups
-    unique_group_keys = list(sorted(groups.keys()))
-    group_map = dict(zip(unique_group_keys, range(len(unique_group_keys))))
-    if len(group_keys) > 1:
-        meta["_group"] = list(meta[group_keys].itertuples(index=False, name=None))
-    else:
-        meta["_group"] = meta[group_keys]
-    meta["_group_id"] = meta["_group"].map(group_map)
-
-    # fitting the simple SBM
-    Model = SBMEstimator
-    estimator = Model(directed=True, loops=False)
-    estimator.fit(adj, y=meta["_group_id"].values)
-
-    # evaluating and saving results
-    estimator.n_verts = len(adj)
-    bic = estimator.bic(adj)
-    lik = estimator.score(adj)
-    n_params = estimator._n_parameters()
-    penalty = 2 * np.log(len(adj)) * n_params
-    row = {
-        "bic": bic,
-        "lik": lik,
-        "group_keys": group_repr(group_keys),
-        "n_params": n_params,
-        "penalty": penalty,
-    }
-    for g in single_group_keys:
-        if g in group_keys:
-            row[g] = True
-        else:
-            row[g] = False
-    rows.append(row)
-
-#%%
-results = pd.DataFrame(rows)
-results.sort_values("bic", ascending=True, inplace=True)
-results["rank"] = np.arange(len(results), 0, -1)
-#%%
-
-set_theme()
-
-# colors = sns.color_palette("husl", n_colors=results["group_keys"].nunique())
-# colors = sns.color_palette("cubehelix", )
-colors = sns.cubehelix_palette(
-    start=0.5, rot=-0.5, n_colors=results["group_keys"].nunique()
-)[::-1]
-
-palette = dict(zip(results["group_keys"].unique(), colors))
-
-fig, axs = plt.subplots(1, 2, figsize=(12, 6))
-ax = axs[0]
-sns.stripplot(data=results, x="group_keys", y="bic", ax=ax, s=10, palette=palette)
-plt.setp(ax.get_xticklabels(), rotation=45, rotation_mode="anchor", ha="right")
-
-ax = axs[1]
-sns.stripplot(data=results, x="group_keys", y="bic", ax=ax, s=10, palette=palette)
-plt.setp(ax.get_xticklabels(), rotation=45, rotation_mode="anchor", ha="right")
-ax.set_yscale("log")
-
-fig, ax = plt.subplots(1, 1, figsize=(6, 6))
-sns.stripplot(
-    data=results.iloc[:6],
-    x="group_keys",
-    y="bic",
-    ax=ax,
-    s=10,
-    palette=palette,
-)
-plt.setp(ax.get_xticklabels(), rotation=45, rotation_mode="anchor", ha="right")
-
-
-fig, axs = plt.subplots(1, 2, figsize=(12, 6))
-ax = axs[0]
-sns.scatterplot(
-    data=results,
-    x="n_params",
-    y="lik",
-    hue="group_keys",
-    palette=palette,
-    legend=False,
-    size="rank",
-    ax=ax,
-)
-ax = axs[1]
-sns.scatterplot(
-    data=results.iloc[:6],
-    x="n_params",
-    y="lik",
-    hue="group_keys",
-    palette=palette,
-    legend=False,
-    size="rank",
-    ax=ax,
-)
-
-#%%
-# adjplot(
-#     adj,
-#     meta=meta,
-#     plot_type="scattermap",
-#     group="simple_group",
-#     ticks=False,
-#     color="simple_group",
-#     palette=palette,
-#     sizes=(1, 2),
-# )
-
-# adjplot(
-#     adj,
-#     meta=meta,
-#     plot_type="scattermap",
-#     group=["hemisphere", "simple_group"],
-#     ticks=False,
-#     color="simple_group",
-#     palette=palette,
-#     sizes=(1, 2),
-# )
-
-#%%
-from upsetplot import plot, UpSet
-
-
-intersections = results.set_index(single_group_keys)
-fig, axs = plt.subplots(
-    2,
-    1,
-    figsize=(8, 6),
-    gridspec_kw=dict(height_ratios=[0.75, 0.4], hspace=0),
-    sharex=True,
-)
-ax = axs[0]
-sns.stripplot(
-    data=results, jitter=0, x="group_keys", y="bic", ax=ax, s=10, palette=palette
-)
-ax.set(xticks=[], xticklabels=[], xlabel="")
-# plt.setp(ax.get_xticklabels(), rotation=45, rotation_mode="anchor", ha="right")
-ax = axs[1]
-plot_upset_indicators(intersections, ax=ax)
-ax.set_xlabel("Grouping")
-
-#%%
-
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 def plot_upset_indicators(
@@ -272,7 +91,6 @@ def plot_upset_indicators(
 
 
 def upset_stripplot(data, x=None, y=None, ax=None, upset_ratio=0.3, **kwargs):
-
     divider = make_axes_locatable(ax)
 
     sns.stripplot(data=data, x=x, y=y, ax=ax, **kwargs)
@@ -282,17 +100,165 @@ def upset_stripplot(data, x=None, y=None, ax=None, upset_ratio=0.3, **kwargs):
         "bottom", size=f"{upset_ratio*100}%", pad=0, sharex=ax
     )
     plot_upset_indicators(data, ax=upset_ax)
+    upset_ax.set_xlabel("Grouping")
     return ax, upset_ax
 
 
-fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-upset_stripplot(
-    intersections,
+palette = load_palette()
+set_theme()
+
+#%% [markdown]
+# ## Load the node metadata
+#%%
+meta = load_node_meta()
+meta = meta[meta["paper_clustered_neurons"]]
+
+#%%[markdown]
+# ## Create some new metadata columns from existing information
+#%%
+# make some new metadata columns
+assert (
+    meta[["ipsilateral_axon", "contralateral_axon", "bilateral_axon"]].sum(axis=1).max()
+    == 1
+)
+
+meta["axon_lat"] = "other"
+meta.loc[meta[meta["ipsilateral_axon"]].index, "axon_lat"] = "ipsi"
+meta.loc[meta[meta["contralateral_axon"]].index, "axon_lat"] = "contra"
+meta.loc[meta[meta["bilateral_axon"]].index, "axon_lat"] = "bi"
+
+# TODO:
+# io: input/"interneuron"/output
+# probably others, need to think...
+
+#%% [markdown]
+# ## Load the graph
+#%%
+g = load_networkx(graph_type="G", node_meta=meta)
+adj = nx.to_numpy_array(g, nodelist=meta.index)
+adj = binarize(adj)
+
+
+#%% [markdown]
+# ## Fit a series of *a priori* SBMs
+# Here I use these known groupings of neurons to fit different *a priori* SBMs. As an
+# example, consider the groupings `hemisphere` and `axon_lat`. `hemisphere` indicates
+# whether a neuron is on the left, right, or center. `axon_lat` indicates whether a
+# neuron's axon is ipsilateral, bilateral, or contralateral. We could fit an SBM
+# using either of these groupings as our partition of the nodes, but we could also use
+# `hemisphere` *cross* `axon_lat` to get categories like `(left, ipsilateral)`,
+# `(left, contralateral)`, etc.
+#
+# Below, I fit SBMs using a variety of these different groupings. I evaluate each model
+# in terms of log-likelihood, the number of parameters, and BIC.
+#%%
+single_group_keys = ["hemisphere", "simple_group", "lineage", "axon_lat"]
+all_group_keys = powerset(single_group_keys, ignore_empty=False)
+
+rows = []
+for group_keys in all_group_keys:
+    group_keys = list(group_keys)
+    print(group_keys)
+
+    if len(group_keys) > 0:
+        # this is essentially just grabbing the labels that are group_key1 cross group_key2
+        # etc. and then applying this as a column in the metadata
+        groupby = meta.groupby(group_keys)
+        groups = groupby.groups
+        unique_group_keys = list(sorted(groups.keys()))
+        group_map = dict(zip(unique_group_keys, range(len(unique_group_keys))))
+        if len(group_keys) > 1:
+            meta["_group"] = list(meta[group_keys].itertuples(index=False, name=None))
+        else:
+            meta["_group"] = meta[group_keys]
+        meta["_group_id"] = meta["_group"].map(group_map)
+    else:  # then this is the ER model...
+        meta["_group_id"] = np.zeros(len(meta))
+
+    # fitting the simple SBM
+    Model = SBMEstimator
+    estimator = Model(directed=True, loops=False)
+    estimator.fit(adj, y=meta["_group_id"].values)
+
+    # evaluating and saving results
+    estimator.n_verts = len(adj)
+    bic = estimator.bic(adj)
+    lik = estimator.score(adj)
+    n_params = estimator._n_parameters()
+    penalty = 2 * np.log(len(adj)) * n_params
+    row = {
+        "bic": bic,
+        "lik": lik,
+        "group_keys": group_repr(group_keys),
+        "n_params": n_params,
+        "penalty": penalty,
+    }
+    for g in single_group_keys:
+        if g in group_keys:
+            row[g] = True
+        else:
+            row[g] = False
+    rows.append(row)
+
+#%%
+results = pd.DataFrame(rows)
+results.sort_values("bic", ascending=True, inplace=True)
+results["rank"] = np.arange(len(results), 0, -1)
+results = results.set_index(single_group_keys)
+#%%[markdown]
+# ## Evaluating the model fits with BIC, likelihood, and number of parameters
+#%%
+colors = sns.cubehelix_palette(
+    start=0.5, rot=-0.5, n_colors=results["group_keys"].nunique()
+)[::-1]
+palette = dict(zip(results["group_keys"].unique(), colors))
+
+stripplot_kws = dict(
     jitter=0,
     x="group_keys",
-    y="bic",
-    ax=ax,
     s=10,
     palette=palette,
     upset_ratio=0.35,
 )
+
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+upset_stripplot(results, y="bic", ax=ax, **stripplot_kws)
+
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+upset_stripplot(results, y="bic", ax=ax, **stripplot_kws)
+ax.set_yscale("log")
+
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+upset_stripplot(results, y="lik", ax=ax, **stripplot_kws)
+
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+upset_stripplot(results, y="n_params", ax=ax, **stripplot_kws)
+ax.set_yscale("log")
+
+#%%[markdown]
+# ## Looking at the tradeoff between complexity and fit
+#%%
+fig, ax = plt.subplots(1, 1, figsize=(8, 8))
+sns.scatterplot(
+    data=results,
+    x="n_params",
+    y="lik",
+    hue="group_keys",
+    palette=palette,
+    legend=False,
+    size="rank",
+    ax=ax,
+)
+
+fig, ax = plt.subplots(1, 1, figsize=(8, 8))
+sns.scatterplot(
+    data=results,
+    x="n_params",
+    y="lik",
+    hue="group_keys",
+    palette=palette,
+    legend=False,
+    size="rank",
+    ax=ax,
+)
+ax.set_xscale("log")
