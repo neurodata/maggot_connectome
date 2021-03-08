@@ -7,7 +7,9 @@ from pkg.utils import set_warnings
 set_warnings()
 
 from itertools import chain, combinations
+import os
 
+import ipynb_path
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
@@ -20,6 +22,18 @@ from graspologic.plot import adjplot
 from graspologic.utils import binarize, remove_loops
 from pkg.data import load_adjacency, load_networkx, load_node_meta, load_palette
 from pkg.plot import set_theme
+from pkg.io import savefig
+
+
+def stashfig(name, **kwargs):
+    # get name of current script
+    # try:
+    #     filename = __file__
+    # except:
+    #     filename = ipynb_path.get()
+    # foldername = os.path.basename(filename)[:-3]
+    foldername = "a_priori_sbm"
+    savefig(name, foldername=foldername, **kwargs)
 
 
 def group_repr(group_keys):
@@ -234,21 +248,24 @@ stripplot_kws = dict(
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 upset_stripplot(results, y="bic", ax=ax, **stripplot_kws)
 ax.set(ylabel="BIC")
+stashfig("all-model-bic")
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 upset_stripplot(results, y="bic", ax=ax, **stripplot_kws)
 ax.set(ylabel="BIC")
 ax.set_yscale("log")
-
+stashfig("all-model-bic-logy")
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 upset_stripplot(results, y="lik", ax=ax, **stripplot_kws)
 ax.set(ylabel="Log likelihood")
+stashfig("all-model-lik")
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 upset_stripplot(results, y="n_params", ax=ax, **stripplot_kws)
 ax.set(ylabel="# parameters")
 ax.set_yscale("log")
+stashfig("all-model-n_params")
 
 #%% [markdown]
 # ### Look at the tradeoff between complexity and fit
@@ -265,6 +282,7 @@ sns.scatterplot(
     ax=ax,
 )
 ax.set(xlabel="# parameters", ylabel="Log likelihood")
+stashfig("all-model-n_params-vs-lik")
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 8))
 sns.scatterplot(
@@ -279,3 +297,4 @@ sns.scatterplot(
 )
 ax.set(xlabel="# parameters", ylabel="Log likelihood")
 ax.set_xscale("log")
+stashfig("all-model-n_params-vs-lik-logx")
