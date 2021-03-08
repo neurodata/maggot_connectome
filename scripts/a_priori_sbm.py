@@ -1,6 +1,34 @@
 #%% [markdown]
 # # A priori SBMs
 # Comparing connectivity models generated from biological node metadata
+#%% [markdown]
+# ## Problem statement
+# We are given an adjacency matrix $A$ with $n$ nodes, and a set of node metadata.
+# Consider the $p$th "column" of the node metadata to be an $n$-length vector:
+# $$\tau^{(p)} \in \{0, 1, ... K^{(p)}\}$$
+# which represents a partition of the nodes into $K^{(p)}$ groups.
+#
+# We aim to understand which of these partitions are "good" at describing the connectivity
+# we see in the network - for our purposes (for now), we will understand "good" in terms
+# of the stochastic block model. One natural notion of "good" is a high likelihood of the
+# observed network under the parameters fit for the stochastic block model using partition
+# $\tau^{(p)}$. However, using the likelihood alone would not balance how well our model
+# fits the network with the complexity of the model - note that for a partition where
+# each node is in its own partition, we could fit the data perfectly.
+#
+# Thus, we consider notions of a tradeoff between model fit (likelihood) and complexity
+# (the dimension of the parameter space associated with the model). Here we will use
+# the Bayesian Information Criterion (BIC). Since $\tau$ is fixed and not estimated from
+# the data, the only parameters we need to estimate for the SBM are the elements of $B$,
+# a $K^{(p)} \times K^{(p)}$ matrix of block probabilities. If we make no other assumptions
+# about $B$ (e.g. low-rank, planned partition), then there are $K^{(p)}$ parameters
+# we have to estimate in $B$. Since we observe $n^2$ edges/non-edges from $A$, then BIC
+# takes the form:
+# $$2 ln(\hat{L}) - 2 ln(n) (K^{(p)})^2$$
+#
+# Below, we fit SBM models to the (unweighted) maggot connectome, using several
+# metadata columns (as well as their intersections, explained below) as our partitions.
+# We evaluate each in terms of BIC as described above.
 #%%
 from pkg.utils import set_warnings
 
@@ -23,6 +51,10 @@ from graspologic.utils import binarize, remove_loops
 from pkg.data import load_adjacency, load_networkx, load_node_meta, load_palette
 from pkg.plot import set_theme
 from pkg.io import savefig
+
+import ipyparams
+
+print(ipyparams.notebook_name)
 
 
 def stashfig(name, **kwargs):
@@ -161,7 +193,7 @@ adj = binarize(adj)
 
 #%% [markdown]
 # ## Fit a series of *a priori* SBMs
-# Here I use these known groupings of neurons to fit different *a priori* SBMs. As an
+# Here we use these known groupings of neurons to fit different *a priori* SBMs. As an
 # example, consider the groupings `hemisphere` and `axon_lat`. `hemisphere` indicates
 # whether a neuron is on the left, right, or center. `axon_lat` indicates whether a
 # neuron's axon is ipsilateral, bilateral, or contralateral. We could fit an SBM
@@ -169,7 +201,7 @@ adj = binarize(adj)
 # `hemisphere` *cross* `axon_lat` to get categories like `(left, ipsilateral)`,
 # `(left, contralateral)`, etc.
 #
-# Below, I fit SBMs using a variety of these different groupings. I evaluate each model
+# Below, we fit SBMs using a variety of these different groupings. We evaluate each model
 # in terms of log-likelihood, the number of parameters, and BIC.
 #%%
 single_group_keys = ["hemisphere", "simple_group", "lineage", "axon_lat"]
@@ -207,7 +239,7 @@ for group_keys in all_group_keys:
     n_params = estimator._n_parameters()
     penalty = 2 * np.log(len(adj)) * n_params
     row = {
-        "bic": bic,
+        "bic": -bic,
         "lik": lik,
         "group_keys": group_repr(group_keys),
         "n_params": n_params,
@@ -224,7 +256,7 @@ for group_keys in all_group_keys:
 # ### Collect experimental results
 #%%
 results = pd.DataFrame(rows)
-results.sort_values("bic", ascending=True, inplace=True)
+results.sort_values("bic", ascending=False, inplace=True)
 results["rank"] = np.arange(len(results), 0, -1)
 results = results.set_index(single_group_keys)
 #%% [markdown]
