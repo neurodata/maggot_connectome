@@ -324,6 +324,11 @@
 <span class="kn">from</span> <span class="nn">graspologic.utils</span> <span class="kn">import</span> <span class="n">binarize</span><span class="p">,</span> <span class="n">remove_loops</span>
 <span class="kn">from</span> <span class="nn">pkg.data</span> <span class="kn">import</span> <span class="n">load_adjacency</span><span class="p">,</span> <span class="n">load_networkx</span><span class="p">,</span> <span class="n">load_node_meta</span><span class="p">,</span> <span class="n">load_palette</span>
 <span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
+<span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">savefig</span>
+
+
+<span class="k">def</span> <span class="nf">stashfig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">foldername</span><span class="o">=</span><span class="s2">&quot;a_priori_sbm&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">group_repr</span><span class="p">(</span><span class="n">group_keys</span><span class="p">):</span>
@@ -587,21 +592,24 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">upset_stripplot</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;bic&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">stripplot_kws</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;BIC&quot;</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;all-model-bic&quot;</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">upset_stripplot</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;bic&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">stripplot_kws</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;BIC&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
-
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;all-model-bic-logy&quot;</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">upset_stripplot</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;lik&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">stripplot_kws</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Log likelihood&quot;</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;all-model-lik&quot;</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">upset_stripplot</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;n_params&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">stripplot_kws</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;# parameters&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;all-model-n_params&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -629,6 +637,7 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
     <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;# parameters&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Log likelihood&quot;</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;all-model-n_params-vs-lik&quot;</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span>
@@ -643,6 +652,7 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
 <span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;# parameters&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Log likelihood&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;all-model-n_params-vs-lik-logx&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
