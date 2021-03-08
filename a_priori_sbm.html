@@ -131,10 +131,7 @@
 <ul class="current nav sidenav_l1">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   <em>
-    A priori
-   </em>
-   SBMs
+   A priori SBMs
   </a>
  </li>
 </ul>
@@ -243,14 +240,21 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#load-the-node-metadata">
-   Load the node metadata
+  <a class="reference internal nav-link" href="#load-the-data">
+   Load the data
   </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#load-the-graph">
-   Load the graph
-  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#load-node-metadata-and-select-the-graph-of-interest">
+     Load node metadata and select the graph of interest
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#load-the-graph">
+     Load the graph
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#fit-a-series-of-a-priori-sbms">
@@ -260,6 +264,30 @@
    </em>
    SBMs
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#collect-experimental-results">
+     Collect experimental results
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#evaluate-model-fits">
+   Evaluate model fits
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-bic-likelihood-and-the-number-of-parameters-for-each-model">
+     Plot BIC, likelihood, and the number of parameters for each model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#look-at-the-tradeoff-between-complexity-and-fit">
+     Look at the tradeoff between complexity and fit
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -274,11 +302,15 @@
               <div>
                 
   <div class="section" id="a-priori-sbms">
-<h1><em>A priori</em> SBMs<a class="headerlink" href="#a-priori-sbms" title="Permalink to this headline">¶</a></h1>
+<h1>A priori SBMs<a class="headerlink" href="#a-priori-sbms" title="Permalink to this headline">¶</a></h1>
 <p>Comparing connectivity models generated from biological node metadata</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">combinations</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">set_warnings</span>
+
+<span class="n">set_warnings</span><span class="p">()</span>
+
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">combinations</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
@@ -385,22 +417,18 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/miniconda3/envs/maggot-revamp/lib/python3.8/site-packages/umap/__init__.py:9: UserWarning: Tensorflow not installed; ParametricUMAP will be unavailable
-  warn(&quot;Tensorflow not installed; ParametricUMAP will be unavailable&quot;)
-</pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="load-the-node-metadata">
-<h2>Load the node metadata<a class="headerlink" href="#load-the-node-metadata" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="load-the-data">
+<h2>Load the data<a class="headerlink" href="#load-the-data" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="load-node-metadata-and-select-the-graph-of-interest">
+<h3>Load node metadata and select the graph of interest<a class="headerlink" href="#load-node-metadata-and-select-the-graph-of-interest" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meta</span> <span class="o">=</span> <span class="n">load_node_meta</span><span class="p">()</span>
 <span class="n">meta</span> <span class="o">=</span> <span class="n">meta</span><span class="p">[</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;paper_clustered_neurons&quot;</span><span class="p">]]</span>
 
 <span class="c1">#%%[markdown]</span>
-<span class="c1"># ## Create some new metadata columns from existing information</span>
+<span class="c1"># ### Create some new metadata columns from existing information</span>
 </pre></div>
 </div>
 </div>
@@ -427,13 +455,14 @@
 </div>
 </div>
 <div class="section" id="load-the-graph">
-<h2>Load the graph<a class="headerlink" href="#load-the-graph" title="Permalink to this headline">¶</a></h2>
+<h3>Load the graph<a class="headerlink" href="#load-the-graph" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">load_networkx</span><span class="p">(</span><span class="n">graph_type</span><span class="o">=</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="n">node_meta</span><span class="o">=</span><span class="n">meta</span><span class="p">)</span>
 <span class="n">adj</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">to_numpy_array</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="n">meta</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 <span class="n">adj</span> <span class="o">=</span> <span class="n">binarize</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
 </pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -522,18 +551,24 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
 </div>
 </div>
 </div>
+<div class="section" id="collect-experimental-results">
+<h3>Collect experimental results<a class="headerlink" href="#collect-experimental-results" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
 <span class="n">results</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;bic&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">results</span><span class="p">[</span><span class="s2">&quot;rank&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">single_group_keys</span><span class="p">)</span>
-<span class="c1">#%%[markdown]</span>
-<span class="c1"># ## Evaluating the model fits with BIC, likelihood, and number of parameters</span>
 </pre></div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="section" id="evaluate-model-fits">
+<h2>Evaluate model fits<a class="headerlink" href="#evaluate-model-fits" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="plot-bic-likelihood-and-the-number-of-parameters-for-each-model">
+<h3>Plot BIC, likelihood, and the number of parameters for each model<a class="headerlink" href="#plot-bic-likelihood-and-the-number-of-parameters-for-each-model" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">cubehelix_palette</span><span class="p">(</span>
@@ -551,30 +586,35 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">upset_stripplot</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;bic&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">stripplot_kws</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;BIC&quot;</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">upset_stripplot</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;bic&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">stripplot_kws</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;BIC&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">upset_stripplot</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;lik&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">stripplot_kws</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Log likelihood&quot;</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">upset_stripplot</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;n_params&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">stripplot_kws</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;# parameters&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
-
-<span class="c1">#%%[markdown]</span>
-<span class="c1"># ## Looking at the tradeoff between complexity and fit</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/a_priori_sbm_10_0.png" src="_images/a_priori_sbm_10_0.png" />
-<img alt="_images/a_priori_sbm_10_1.png" src="_images/a_priori_sbm_10_1.png" />
-<img alt="_images/a_priori_sbm_10_2.png" src="_images/a_priori_sbm_10_2.png" />
-<img alt="_images/a_priori_sbm_10_3.png" src="_images/a_priori_sbm_10_3.png" />
+<img alt="_images/a_priori_sbm_14_0.png" src="_images/a_priori_sbm_14_0.png" />
+<img alt="_images/a_priori_sbm_14_1.png" src="_images/a_priori_sbm_14_1.png" />
+<img alt="_images/a_priori_sbm_14_2.png" src="_images/a_priori_sbm_14_2.png" />
+<img alt="_images/a_priori_sbm_14_3.png" src="_images/a_priori_sbm_14_3.png" />
 </div>
 </div>
+</div>
+<div class="section" id="look-at-the-tradeoff-between-complexity-and-fit">
+<h3>Look at the tradeoff between complexity and fit<a class="headerlink" href="#look-at-the-tradeoff-between-complexity-and-fit" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
@@ -588,6 +628,7 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
     <span class="n">size</span><span class="o">=</span><span class="s2">&quot;rank&quot;</span><span class="p">,</span>
     <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;# parameters&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Log likelihood&quot;</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span>
@@ -600,13 +641,15 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
     <span class="n">size</span><span class="o">=</span><span class="s2">&quot;rank&quot;</span><span class="p">,</span>
     <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;# parameters&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Log likelihood&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/a_priori_sbm_11_0.png" src="_images/a_priori_sbm_11_0.png" />
-<img alt="_images/a_priori_sbm_11_1.png" src="_images/a_priori_sbm_11_1.png" />
+<img alt="_images/a_priori_sbm_16_0.png" src="_images/a_priori_sbm_16_0.png" />
+<img alt="_images/a_priori_sbm_16_1.png" src="_images/a_priori_sbm_16_1.png" />
+</div>
 </div>
 </div>
 </div>
