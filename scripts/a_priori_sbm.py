@@ -2,6 +2,10 @@
 # # A priori SBMs
 # Comparing connectivity models generated from biological node metadata
 #%%
+from pkg.utils import set_warnings
+
+set_warnings()
+
 from itertools import chain, combinations
 
 import matplotlib.pyplot as plt
@@ -108,13 +112,15 @@ palette = load_palette()
 set_theme()
 
 #%% [markdown]
-# ## Load the node metadata
+# ## Load the data
+#%% [markdown]
+# ### Load node metadata and select the graph of interest
 #%%
 meta = load_node_meta()
 meta = meta[meta["paper_clustered_neurons"]]
 
 #%%[markdown]
-# ## Create some new metadata columns from existing information
+# ### Create some new metadata columns from existing information
 #%%
 # make some new metadata columns
 assert (
@@ -132,7 +138,7 @@ meta.loc[meta[meta["bilateral_axon"]].index, "axon_lat"] = "bi"
 # probably others, need to think...
 
 #%% [markdown]
-# ## Load the graph
+# ### Load the graph
 #%%
 g = load_networkx(graph_type="G", node_meta=meta)
 adj = nx.to_numpy_array(g, nodelist=meta.index)
@@ -200,13 +206,17 @@ for group_keys in all_group_keys:
             row[g] = False
     rows.append(row)
 
+#%% [markdown]
+# ### Collect experimental results
 #%%
 results = pd.DataFrame(rows)
 results.sort_values("bic", ascending=True, inplace=True)
 results["rank"] = np.arange(len(results), 0, -1)
 results = results.set_index(single_group_keys)
-#%%[markdown]
-# ## Evaluating the model fits with BIC, likelihood, and number of parameters
+#%% [markdown]
+# ## Evaluate model fits
+#%% [markdown]
+# ### Plot BIC, likelihood, and the number of parameters for each model
 #%%
 colors = sns.cubehelix_palette(
     start=0.5, rot=-0.5, n_colors=results["group_keys"].nunique()
@@ -223,20 +233,25 @@ stripplot_kws = dict(
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 upset_stripplot(results, y="bic", ax=ax, **stripplot_kws)
+ax.set(ylabel="BIC")
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 upset_stripplot(results, y="bic", ax=ax, **stripplot_kws)
+ax.set(ylabel="BIC")
 ax.set_yscale("log")
+
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 upset_stripplot(results, y="lik", ax=ax, **stripplot_kws)
+ax.set(ylabel="Log likelihood")
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 upset_stripplot(results, y="n_params", ax=ax, **stripplot_kws)
+ax.set(ylabel="# parameters")
 ax.set_yscale("log")
 
-#%%[markdown]
-# ## Looking at the tradeoff between complexity and fit
+#%% [markdown]
+# ### Look at the tradeoff between complexity and fit
 #%%
 fig, ax = plt.subplots(1, 1, figsize=(8, 8))
 sns.scatterplot(
@@ -249,6 +264,7 @@ sns.scatterplot(
     size="rank",
     ax=ax,
 )
+ax.set(xlabel="# parameters", ylabel="Log likelihood")
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 8))
 sns.scatterplot(
@@ -261,4 +277,5 @@ sns.scatterplot(
     size="rank",
     ax=ax,
 )
+ax.set(xlabel="# parameters", ylabel="Log likelihood")
 ax.set_xscale("log")
