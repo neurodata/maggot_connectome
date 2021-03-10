@@ -96,6 +96,7 @@ print(f"Number of pairs after taking LCC intersection: {n_pairs}")
 # ### Plotting the aligned adjacency matrices
 # At a high level, we see that the left-left and right-right induced subgraphs look
 # quite similar when aligned by the known neuron pairs.
+#%%
 fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 adjplot(
     ll_adj,
@@ -169,6 +170,7 @@ right_out_latent, right_in_latent, right_sing_vals, right_elbow_inds = embed(
 
 #%% [markdown]
 # ### Plot the screeplots
+#%%
 fig, ax = plt.subplots(1, 1, figsize=(8, 4))
 screeplot(left_sing_vals, left_elbow_inds, color=palette["Left"], ax=ax, label="Left")
 screeplot(
@@ -245,8 +247,8 @@ op_left_out_latent, sp_left_out_latent = run_alignments(
 op_diff_norm = calc_diff_norm(op_left_out_latent, right_out_latent[:, :n_components])
 sp_diff_norm = calc_diff_norm(sp_left_out_latent, right_out_latent[:, :n_components])
 
-print(f"Procrustes diff. norm using true pairs: {op_diff_norm}")
-print(f"Seedless Procrustes diff. norm using true pairs: {sp_diff_norm}")
+print(f"Procrustes diff. norm using true pairs: {op_diff_norm:0.3f}")
+print(f"Seedless Procrustes diff. norm using true pairs: {sp_diff_norm:0.3f}")
 
 plot_latents(
     op_left_out_latent,
@@ -266,6 +268,7 @@ stashfig(f"out-latent-o-sp-n_components={n_components}-preprocess={preprocess}")
 
 #%% [markdown]
 # ### Plot the alignment for d=7 dimensions
+#%%
 n_components = 7
 op_left_out_latent, sp_left_out_latent = run_alignments(
     left_out_latent[:, :n_components], right_out_latent[:, :n_components]
@@ -273,8 +276,8 @@ op_left_out_latent, sp_left_out_latent = run_alignments(
 op_diff_norm = calc_diff_norm(op_left_out_latent, right_out_latent[:, :n_components])
 sp_diff_norm = calc_diff_norm(sp_left_out_latent, right_out_latent[:, :n_components])
 
-print(f"Procrustes diff. norm using true pairs: {op_diff_norm}")
-print(f"Seedless Procrustes diff. norm using true pairs: {sp_diff_norm}")
+print(f"Procrustes diff. norm using true pairs: {op_diff_norm:0.3f}")
+print(f"Seedless Procrustes diff. norm using true pairs: {sp_diff_norm:0.3f}")
 
 plot_latents(
     op_left_out_latent,
@@ -388,7 +391,10 @@ results = pd.DataFrame(rows)
 def plot_pvalues(results, line_locs=[0.05, 0.005, 0.0005]):
     results = results.copy()
     # jitter so we can see op vs o-sp
-    results["n_components"] += np.random.uniform(-0.2, 0.2, size=len(results))
+    op_results = results[results["alignment"] == "OP"]
+    sp_results = results[results["alignment"] == "O-SP"]
+    results.loc[op_results.index, "n_components"] += -0.15
+    results.loc[sp_results.index, "n_components"] += 0.15
 
     styles = ["-", "--", ":"]
     line_kws = dict(color="black", alpha=0.7, linewidth=1.5, zorder=-1)
@@ -410,9 +416,14 @@ def plot_pvalues(results, line_locs=[0.05, 0.005, 0.0005]):
     for loc, style in zip(line_locs, styles):
         ax.axhline(loc, linestyle=style, **line_kws)
         ax.text(ax.get_xlim()[-1] + 0.1, loc, loc, ha="left", va="center")
-    ax.set(xlabel="Dimension")
+    ax.set(xlabel="Dimension", ylabel="p-value")
     ax.get_legend().remove()
-    ax.legend(bbox_to_anchor=(1.15, 1), loc="upper left", title="alignment")
+    ax.legend(bbox_to_anchor=(1.15, 1), loc="upper left", title="Alignment")
+
+    xlim = ax.get_xlim()
+    for x in range(1, int(xlim[1]), 2):
+        ax.axvspan(x - 0.5, x + 0.5, color="lightgrey", alpha=0.2, linewidth=0)
+
     plt.tight_layout()
 
 
@@ -484,16 +495,16 @@ dcorr_results_8d_align = run_test(op_left_out_latent[:, :1], right_out_latent[:,
 ks_results_8d_align = ks_2samp(op_left_out_latent[:, 0], right_out_latent[:, 0])
 
 print("DCorr 2-sample test on first out dimension, aligned in 8D:")
-print(f"p-value = {dcorr_results_1d_align['pvalue']:0.4f}")
+print(f"p-value = {dcorr_results_8d_align['pvalue']:0.4f}")
 
 print("KS 2-sample test on first out dimension, aligned in 8D:")
-print(f"p-value = {ks_results_1d_align[1]:0.4f}")
+print(f"p-value = {ks_results_8d_align[1]:0.4f}")
 
 #%% [markdown]
 # ### Plot the results for testing on the first dimension only
 # Below are empirical CDFs for the first dimension, in both of the cases described above.
-# Note that in either case, the right embedding is the same, because we aligned left to
-# right.
+# Note that in either case, the right embedding (blue line) is the same, because we
+# aligned left to right.
 #%%
 fig, axs = plt.subplots(1, 2, figsize=(10, 6), sharey=True)
 histplot_kws = dict(
@@ -533,16 +544,22 @@ title = "OP d=8 alignment"
 title += f"\nDCorr p-value = {dcorr_results_8d_align['pvalue']:0.4f}"
 title += f"\nKS p-value = {ks_results_8d_align[1]:0.4f}"
 ax.set(title=title, xlabel="First dimension")
-stashfig(f"dim1-focus-test={test}-n_bootstraps={n_bootstraps}-preprocess={preprocess}")
+stashfig(
+    f"dim1-focus-cdf-test={test}-n_bootstraps={n_bootstraps}-preprocess={preprocess}"
+)
 
 
 #%% [markdown]
 # ## A "corrected" version of this test
 # We saw above that the alignment makes a huge difference in the outcome of the test.
-# One possible way to "fix" this is to use a higher embedding dimension whether the
+# One possible way to fix this is to use a higher embedding dimension where the
 # alignment is good, and then perform our test for varying numbers of kept dimensions
 # (just like we did above where we aligned in $d=8$ and tested the first $d=1$
 # dimensions).
+#
+# In this case, I use $d=12$ as the alignment dimension, and test for $d=1$, $d=2$ etc.
+# Note that testing at $d=2$ means testing on the first 2 dimensions, not the second
+# dimension alone.
 #%%
 align_n_components = (
     12  # this is one of the dimensions where we failed to reject before
@@ -568,6 +585,17 @@ for n_components in np.arange(1, align_n_components + 1):
         right_composite_latent,
         rows,
         info={"alignment": "OP", "n_components": n_components},
+    )
+
+    left_out = sp_left_out_latent.copy()[:, :n_components]
+    left_in = sp_left_in_latent.copy()[:, :n_components]
+    left_composite_latent = np.concatenate((left_out, left_in), axis=1)
+
+    run_test(
+        left_composite_latent,
+        right_composite_latent,
+        rows,
+        info={"alignment": "O-SP", "n_components": n_components},
     )
 
 corrected_results = pd.DataFrame(rows)

@@ -17,8 +17,8 @@ html:
     hypothesis: true
   use_repository_button: true
   use_issues_button: true
-  use_edit_page_button: true
-  home_page_in_navbar: true 
+  use_edit_page_button: false
+  home_page_in_navbar: true
   
 
 # Information about where the book exists on the web
@@ -32,4 +32,4 @@ sphinx:
     language: en
 
 execute: 
-  execute_notebooks: off # TODO turn back on
+  execute_notebooks: off # TODO turn back on someday
