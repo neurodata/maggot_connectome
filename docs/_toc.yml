@@ -15,6 +15,10 @@
   chapters:
   - file: a_priori_sbm
 
+- part: Bilateral symmetry
+  chapters:
+  - file: bilateral_symmetry
+
 - part: Flow
   chapters:
   - file: flow_rank_hypothesis

@@ -66,6 +66,8 @@ def load_palette(path=None, version=None):
     return palette
 
 
+
+
 # def load_networkx(graph_type, base_path=None, version=DATA_VERSION):
 #     if base_path is None:
 #         base_path = DATA_PATH
@@ -77,6 +79,7 @@ def load_palette(path=None, version=None):
 
 
 def load_data(graph_type, base_path=None, version=None):
+    # TODO deprecate this and pull out of old scripts
     if base_path is None:
         base_path = DATA_PATH
     if version is None:
