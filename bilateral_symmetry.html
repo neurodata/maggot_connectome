@@ -1,0 +1,1197 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Testing bilateral symmetry &#8212; Maggot Connectome</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.c441f2ba0852f4cabcb80105e3a46ae6.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.7d483ff0a819d6edff12ce0b1ead3928.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="shortcut icon" href="_static/nd_logo_small.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Flow ranking and hypothesis testing" href="flow_rank_hypothesis.html" />
+    <link rel="prev" title="A priori SBMs" href="a_priori_sbm.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/nd_logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Maggot Connectome</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="landing.html">
+   Welcome
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="outline.html">
+   Outline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="introduction.html">
+   Introduction
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Look at it
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="simple_statistics.html">
+   Simple summary statistics
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  A priori modeling
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="a_priori_sbm.html">
+   A priori SBMs
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Bilateral symmetry
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Testing bilateral symmetry
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Flow
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="flow_rank_hypothesis.html">
+   Flow ranking and hypothesis testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="flow_rank.html">
+   Flow
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/bilateral_symmetry.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/neurodata/maggot_connectome"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/neurodata/maggot_connectome/issues/new?title=Issue%20on%20page%20%2Fbilateral_symmetry.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        <a class="edit-button" href="https://github.com/neurodata/maggot_connectome/edit/main/maggot_connectome/bilateral_symmetry.ipynb"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
+    </div>
+</div>
+
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+            <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                    data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                    title="Fullscreen mode"><i
+                        class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i>
+            Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preliminaries">
+   Preliminaries
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-the-data">
+   Load the data
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#load-node-metadata-and-select-the-subgraphs-of-interest">
+     Load node metadata and select the subgraphs of interest
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plotting-the-aligned-adjacency-matrices">
+     Plotting the aligned adjacency matrices
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#embedding-the-graphs">
+   Embedding the graphs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#run-the-embedding">
+     Run the embedding
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-screeplots">
+     Plot the screeplots
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculating-the-frobenius-norm-of-the-adjacency-matrices">
+     Calculating the Frobenius norm of the adjacency matrices
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-latent-positions-of-both-graphs-before-alignment">
+     Plot the latent positions of both graphs before alignment
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#align-the-embeddings">
+   Align the embeddings
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-alignment-for-d-8-dimensions">
+     Plot the alignment for d=8 dimensions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-alignment-for-d-7-dimensions">
+     Plot the alignment for d=7 dimensions
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#hypothesis-testing-on-the-embeddings">
+   Hypothesis testing on the embeddings
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#run-the-two-sample-test-for-varying-embedding-dimension">
+     Run the two-sample test for varying embedding dimension
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-2-sample-test-p-values-by-varying-dimension">
+     Plot the 2-sample test p-values by varying dimension
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#not-what-we-expected">
+     Not what we expected
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#focus-on-the-d-1-case">
+   Focus on the d=1 case
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#set-up-some-metadata-for-this-experiment">
+     Set up some metadata for this experiment
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#align-and-test-the-d-1-out-embedding">
+     Align and test the d=1, out embedding
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#align-the-d-8-out-embedding-test-on-the-first-dimension">
+     Align the
+     <span class="math notranslate nohighlight">
+      \(d=8\)
+     </span>
+     out embedding, test on the first dimension
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-results-for-testing-on-the-first-dimension-only">
+     Plot the results for testing on the first dimension only
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-corrected-version-of-this-test">
+   A “corrected” version of this test
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-results-of-the-corrected-version-which-starts-from-a-good-alignment">
+     Plot the results of the corrected version which starts from a good alignment
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#end">
+   End
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="testing-bilateral-symmetry">
+<h1>Testing bilateral symmetry<a class="headerlink" href="#testing-bilateral-symmetry" title="Permalink to this headline">¶</a></h1>
+<p>This notebook describes a first pass at testing for some notion of bilateral symmetry.
+Here, we focus only on the left-left and right-right induced subgraphs for simplicity.
+We also use the unweighted version of the maggot connectomes. Also, for now, we
+restrict ourselves to the set of neurons for which we know a pairing between neuron A
+on the left hemisphere and neuron A on the right hemisphere.</p>
+<p>To summarize, this notebook presents a strange phenomena where depending on the
+dimension of the embedding that we use to test bilateral symmetry, we get vastly
+different results.</p>
+<p>We also present a modified proceedure that fails to reject the null that the latent
+positions of the left-left induced subgraph and the right-right induced subgraph have
+the same distribution over many embedding dimensions, suggesting that for the current
+setup we fail to reject bilateral symmetry.</p>
+<div class="section" id="preliminaries">
+<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">set_warnings</span>
+
+<span class="n">set_warnings</span><span class="p">()</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">hyppo.ksample</span> <span class="kn">import</span> <span class="n">KSample</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ks_2samp</span>
+
+<span class="kn">from</span> <span class="nn">graspologic.align</span> <span class="kn">import</span> <span class="n">OrthogonalProcrustes</span><span class="p">,</span> <span class="n">SeedlessProcrustes</span>
+<span class="kn">from</span> <span class="nn">graspologic.embed</span> <span class="kn">import</span> <span class="n">AdjacencySpectralEmbed</span><span class="p">,</span> <span class="n">select_dimension</span>
+<span class="kn">from</span> <span class="nn">graspologic.plot</span> <span class="kn">import</span> <span class="n">pairplot</span>
+<span class="kn">from</span> <span class="nn">graspologic.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">augment_diagonal</span><span class="p">,</span>
+    <span class="n">binarize</span><span class="p">,</span>
+    <span class="n">multigraph_lcc_intersection</span><span class="p">,</span>
+    <span class="n">pass_to_ranks</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pkg.data</span> <span class="kn">import</span> <span class="n">load_adjacency</span><span class="p">,</span> <span class="n">load_node_meta</span>
+<span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">savefig</span>
+<span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
+<span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">get_paired_inds</span><span class="p">,</span> <span class="n">get_paired_subgraphs</span>
+
+<span class="kn">from</span> <span class="nn">src.visualization</span> <span class="kn">import</span> <span class="n">adjplot</span>  <span class="c1"># TODO fix graspologic version and replace here</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">stashfig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">foldername</span> <span class="o">=</span> <span class="s2">&quot;bilateral_symmetry&quot;</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">foldername</span><span class="o">=</span><span class="n">foldername</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;Set1&quot;</span><span class="p">)</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="s2">&quot;Left&quot;</span><span class="p">,</span> <span class="s2">&quot;Right&quot;</span><span class="p">,</span> <span class="s2">&quot;OP&quot;</span><span class="p">,</span> <span class="s2">&quot;O-SP&quot;</span><span class="p">],</span> <span class="n">colors</span><span class="p">))</span>
+<span class="n">set_theme</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><script type="text/javascript">
+window.PlotlyConfig = {MathJaxConfig: 'local'};
+if (window.MathJax) {MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+if (typeof require !== 'undefined') {
+require.undef("plotly");
+requirejs.config({
+    paths: {
+        'plotly': ['https://cdn.plot.ly/plotly-latest.min']
+    }
+});
+require(['plotly'], function(Plotly) {
+    window._Plotly = Plotly;
+});
+}
+</script>
+</div></div>
+</div>
+</div>
+<div class="section" id="load-the-data">
+<h2>Load the data<a class="headerlink" href="#load-the-data" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="load-node-metadata-and-select-the-subgraphs-of-interest">
+<h3>Load node metadata and select the subgraphs of interest<a class="headerlink" href="#load-node-metadata-and-select-the-subgraphs-of-interest" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meta</span> <span class="o">=</span> <span class="n">load_node_meta</span><span class="p">()</span>
+<span class="n">meta</span> <span class="o">=</span> <span class="n">meta</span><span class="p">[</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;paper_clustered_neurons&quot;</span><span class="p">]]</span>
+
+<span class="n">adj</span> <span class="o">=</span> <span class="n">load_adjacency</span><span class="p">(</span><span class="n">graph_type</span><span class="o">=</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="n">meta</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+<span class="n">lp_inds</span><span class="p">,</span> <span class="n">rp_inds</span> <span class="o">=</span> <span class="n">get_paired_inds</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+<span class="n">left_meta</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">lp_inds</span><span class="p">]</span>
+<span class="n">right_meta</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">rp_inds</span><span class="p">]</span>
+
+<span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">,</span> <span class="n">lr_adj</span><span class="p">,</span> <span class="n">rl_adj</span> <span class="o">=</span> <span class="n">get_paired_subgraphs</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">lp_inds</span><span class="p">,</span> <span class="n">rp_inds</span><span class="p">)</span>
+
+<span class="c1"># TODO not sure what we wanna do about LCCs here</span>
+<span class="n">adjs</span><span class="p">,</span> <span class="n">lcc_inds</span> <span class="o">=</span> <span class="n">multigraph_lcc_intersection</span><span class="p">([</span><span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">],</span> <span class="n">return_inds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ll_adj</span> <span class="o">=</span> <span class="n">adjs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">rr_adj</span> <span class="o">=</span> <span class="n">adjs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lcc_inds</span><span class="p">)</span><span class="si">}</span><span class="s2"> in intersection of largest connected components.&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original number of valid pairs: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lp_inds</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">left_meta</span> <span class="o">=</span> <span class="n">left_meta</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">lcc_inds</span><span class="p">]</span>
+<span class="n">right_meta</span> <span class="o">=</span> <span class="n">right_meta</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">lcc_inds</span><span class="p">]</span>
+<span class="n">meta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">left_meta</span><span class="p">,</span> <span class="n">right_meta</span><span class="p">))</span>
+<span class="n">n_pairs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of pairs after taking LCC intersection: </span><span class="si">{</span><span class="n">n_pairs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1148 in intersection of largest connected components.
+Original number of valid pairs: 1149
+Number of pairs after taking LCC intersection: 1148
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="plotting-the-aligned-adjacency-matrices">
+<h3>Plotting the aligned adjacency matrices<a class="headerlink" href="#plotting-the-aligned-adjacency-matrices" title="Permalink to this headline">¶</a></h3>
+<p>At a high level, we see that the left-left and right-right induced subgraphs look
+quite similar when aligned by the known neuron pairs.
+fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+adjplot(
+ll_adj,
+plot_type=”scattermap”,
+sizes=(1, 2),
+ax=axs[0],
+title=r”Left <span class="math notranslate nohighlight">\(\to\)</span> left”,
+color=palette[“Left”],
+)
+adjplot(
+rr_adj,
+plot_type=”scattermap”,
+sizes=(1, 2),
+ax=axs[1],
+title=r”Right <span class="math notranslate nohighlight">\(\to\)</span> right”,
+color=palette[“Right”],
+)
+stashfig(“left-right-induced-adjs”)</p>
+</div>
+</div>
+<div class="section" id="embedding-the-graphs">
+<h2>Embedding the graphs<a class="headerlink" href="#embedding-the-graphs" title="Permalink to this headline">¶</a></h2>
+<p>Here I embed the unweighted, directed graphs using ASE.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_latents</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">n_show</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">plot_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;Left&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Right&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
+    <span class="n">pg</span> <span class="o">=</span> <span class="n">pairplot</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_show</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pg</span>
+
+
+<span class="k">def</span> <span class="nf">screeplot</span><span class="p">(</span><span class="n">sing_vals</span><span class="p">,</span> <span class="n">elbow_inds</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sing_vals</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">sing_vals</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+        <span class="n">elbow_inds</span><span class="p">,</span> <span class="n">sing_vals</span><span class="p">[</span><span class="n">elbow_inds</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Singular value&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Index&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span>
+
+
+<span class="k">def</span> <span class="nf">embed</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">ptr</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ptr</span><span class="p">:</span>
+        <span class="n">adj</span> <span class="o">=</span> <span class="n">pass_to_ranks</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+    <span class="n">elbow_inds</span><span class="p">,</span> <span class="n">elbow_vals</span> <span class="o">=</span> <span class="n">select_dimension</span><span class="p">(</span><span class="n">augment_diagonal</span><span class="p">(</span><span class="n">adj</span><span class="p">),</span> <span class="n">n_elbows</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">elbow_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">elbow_inds</span><span class="p">)</span>
+    <span class="n">ase</span> <span class="o">=</span> <span class="n">AdjacencySpectralEmbed</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">)</span>
+    <span class="n">out_latent</span><span class="p">,</span> <span class="n">in_latent</span> <span class="o">=</span> <span class="n">ase</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out_latent</span><span class="p">,</span> <span class="n">in_latent</span><span class="p">,</span> <span class="n">ase</span><span class="o">.</span><span class="n">singular_values_</span><span class="p">,</span> <span class="n">elbow_inds</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="run-the-embedding">
+<h3>Run the embedding<a class="headerlink" href="#run-the-embedding" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_components</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">max_n_components</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="n">preprocess</span> <span class="o">=</span> <span class="s2">&quot;binarize&quot;</span>
+
+<span class="k">if</span> <span class="n">preprocess</span> <span class="o">==</span> <span class="s2">&quot;binarize&quot;</span><span class="p">:</span>
+    <span class="n">ll_adj</span> <span class="o">=</span> <span class="n">binarize</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">)</span>
+    <span class="n">rr_adj</span> <span class="o">=</span> <span class="n">binarize</span><span class="p">(</span><span class="n">rr_adj</span><span class="p">)</span>
+
+<span class="n">left_out_latent</span><span class="p">,</span> <span class="n">left_in_latent</span><span class="p">,</span> <span class="n">left_sing_vals</span><span class="p">,</span> <span class="n">left_elbow_inds</span> <span class="o">=</span> <span class="n">embed</span><span class="p">(</span>
+    <span class="n">ll_adj</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">max_n_components</span>
+<span class="p">)</span>
+<span class="n">right_out_latent</span><span class="p">,</span> <span class="n">right_in_latent</span><span class="p">,</span> <span class="n">right_sing_vals</span><span class="p">,</span> <span class="n">right_elbow_inds</span> <span class="o">=</span> <span class="n">embed</span><span class="p">(</span>
+    <span class="n">rr_adj</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">max_n_components</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-screeplots">
+<h3>Plot the screeplots<a class="headerlink" href="#plot-the-screeplots" title="Permalink to this headline">¶</a></h3>
+<p>fig, ax = plt.subplots(1, 1, figsize=(8, 4))
+screeplot(left_sing_vals, left_elbow_inds, color=palette[“Left”], ax=ax, label=”Left”)
+screeplot(
+right_sing_vals, right_elbow_inds, color=palette[“Right”], ax=ax, label=”Right”
+)
+ax.legend()
+ax.axvline(n_components, color=”black”, linewidth=1.5, linestyle=”–”)
+stashfig(f”screeplot-preprocess={preprocess}”)</p>
+</div>
+<div class="section" id="calculating-the-frobenius-norm-of-the-adjacency-matrices">
+<h3>Calculating the Frobenius norm of the adjacency matrices<a class="headerlink" href="#calculating-the-frobenius-norm-of-the-adjacency-matrices" title="Permalink to this headline">¶</a></h3>
+<p>Note that in the screeplot above, the singular values of the right-right subgraph
+are always above those of the left-left subgraph (at least for this range of <span class="math notranslate nohighlight">\(d\)</span>).
+This hints as the “scale” of the two graphs. We’ve noticed that the left-left subgraph
+is slightly less dense than the right-right.</p>
+<p>It is perhaps worth investigating whether to use the “scaled” version of the
+hypothesis test.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Norm of left-left adjacency: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">binarize</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Norm of right-right adjacency: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">binarize</span><span class="p">(</span><span class="n">rr_adj</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Norm of left-left adjacency: 163.6459593146131
+Norm of right-right adjacency: 170.35551062410633
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-latent-positions-of-both-graphs-before-alignment">
+<h3>Plot the latent positions of both graphs before alignment<a class="headerlink" href="#plot-the-latent-positions-of-both-graphs-before-alignment" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_latents</span><span class="p">(</span>
+    <span class="n">left_out_latent</span><span class="p">,</span> <span class="n">right_out_latent</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Out latent positions (no alignment)&quot;</span>
+<span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;out-latent-no-align-preprocess=</span><span class="si">{</span><span class="n">preprocess</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plot_latents</span><span class="p">(</span>
+    <span class="n">left_in_latent</span><span class="p">,</span> <span class="n">right_in_latent</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;In latent positions (no alignment)&quot;</span>
+<span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;in-latent-no-align-preprocess=</span><span class="si">{</span><span class="n">preprocess</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/bilateral_symmetry_15_0.png" src="_images/bilateral_symmetry_15_0.png" />
+<img alt="_images/bilateral_symmetry_15_1.png" src="_images/bilateral_symmetry_15_1.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="align-the-embeddings">
+<h2>Align the embeddings<a class="headerlink" href="#align-the-embeddings" title="Permalink to this headline">¶</a></h2>
+<p>Here we align first using orthogonal Procrustes (OP), and then using
+seedless Procrustes initialized at the orthogonal Procrustes solution (O-SP).</p>
+<p>I also calculate the Frobenius norm of the difference in the embeddings after
+performing the alignment.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_alignments</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">scale</span><span class="p">:</span>
+        <span class="n">X_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="s2">&quot;fro&quot;</span><span class="p">)</span>
+        <span class="n">Y_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="s2">&quot;fro&quot;</span><span class="p">)</span>
+        <span class="n">avg_norms</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_norm</span> <span class="o">+</span> <span class="n">Y_norm</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">*</span> <span class="p">(</span><span class="n">avg_norms</span> <span class="o">/</span> <span class="n">X_norm</span><span class="p">)</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span> <span class="o">*</span> <span class="p">(</span><span class="n">avg_norms</span> <span class="o">/</span> <span class="n">Y_norm</span><span class="p">)</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">OrthogonalProcrustes</span><span class="p">()</span>
+    <span class="n">X_trans_op</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="n">SeedlessProcrustes</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span> <span class="n">initial_Q</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="n">Q_</span><span class="p">)</span>
+    <span class="n">X_trans_sp</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">X_trans_op</span><span class="p">,</span> <span class="n">X_trans_sp</span>
+
+
+<span class="k">def</span> <span class="nf">calc_diff_norm</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">Y</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="s2">&quot;fro&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-alignment-for-d-8-dimensions">
+<h3>Plot the alignment for d=8 dimensions<a class="headerlink" href="#plot-the-alignment-for-d-8-dimensions" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_components</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">op_left_out_latent</span><span class="p">,</span> <span class="n">sp_left_out_latent</span> <span class="o">=</span> <span class="n">run_alignments</span><span class="p">(</span>
+    <span class="n">left_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">op_diff_norm</span> <span class="o">=</span> <span class="n">calc_diff_norm</span><span class="p">(</span><span class="n">op_left_out_latent</span><span class="p">,</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">])</span>
+<span class="n">sp_diff_norm</span> <span class="o">=</span> <span class="n">calc_diff_norm</span><span class="p">(</span><span class="n">sp_left_out_latent</span><span class="p">,</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Procrustes diff. norm using true pairs: </span><span class="si">{</span><span class="n">op_diff_norm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Seedless Procrustes diff. norm using true pairs: </span><span class="si">{</span><span class="n">sp_diff_norm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">plot_latents</span><span class="p">(</span>
+    <span class="n">op_left_out_latent</span><span class="p">,</span>
+    <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
+    <span class="s2">&quot;Out latent positions (Procrustes alignment)&quot;</span><span class="p">,</span>
+    <span class="n">n_show</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;out-latent-op-preprocess=</span><span class="si">{</span><span class="n">preprocess</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">plot_latents</span><span class="p">(</span>
+    <span class="n">sp_left_out_latent</span><span class="p">,</span>
+    <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
+    <span class="s2">&quot;Out latent positions (Seedless Procrustes alignment, oracle init)&quot;</span><span class="p">,</span>
+    <span class="n">n_show</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;out-latent-o-sp-n_components=</span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">-preprocess=</span><span class="si">{</span><span class="n">preprocess</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Procrustes diff. norm using true pairs: 4.731981560710599
+Seedless Procrustes diff. norm using true pairs: 4.7886788500197035
+</pre></div>
+</div>
+<img alt="_images/bilateral_symmetry_19_1.png" src="_images/bilateral_symmetry_19_1.png" />
+<img alt="_images/bilateral_symmetry_19_2.png" src="_images/bilateral_symmetry_19_2.png" />
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-alignment-for-d-7-dimensions">
+<h3>Plot the alignment for d=7 dimensions<a class="headerlink" href="#plot-the-alignment-for-d-7-dimensions" title="Permalink to this headline">¶</a></h3>
+<p>n_components = 7
+op_left_out_latent, sp_left_out_latent = run_alignments(
+left_out_latent[:, :n_components], right_out_latent[:, :n_components]
+)
+op_diff_norm = calc_diff_norm(op_left_out_latent, right_out_latent[:, :n_components])
+sp_diff_norm = calc_diff_norm(sp_left_out_latent, right_out_latent[:, :n_components])</p>
+<p>print(f”Procrustes diff. norm using true pairs: {op_diff_norm}”)
+print(f”Seedless Procrustes diff. norm using true pairs: {sp_diff_norm}”)</p>
+<p>plot_latents(
+op_left_out_latent,
+right_out_latent[:, :n_components],
+“Out latent positions (Procrustes alignment)”,
+n_show=n_components,
+)
+stashfig(f”out-latent-op-preprocess={preprocess}”)</p>
+<p>plot_latents(
+sp_left_out_latent,
+right_out_latent[:, :n_components],
+“Out latent positions (Seedless Procrustes alignment, oracle init)”,
+n_show=n_components,
+)
+stashfig(f”out-latent-o-sp-n_components={n_components}-preprocess={preprocess}”)</p>
+</div>
+</div>
+<div class="section" id="hypothesis-testing-on-the-embeddings">
+<h2>Hypothesis testing on the embeddings<a class="headerlink" href="#hypothesis-testing-on-the-embeddings" title="Permalink to this headline">¶</a></h2>
+<p>To test whether the distribution of latent positions is different, we use the approach
+of the “nonpar” test, also called the latent distribution test. Here, for the backend
+2-sample test, we use distance correlation (Dcorr).</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="s2">&quot;dcorr&quot;</span>
+<span class="n">workers</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">auto</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">if</span> <span class="n">auto</span><span class="p">:</span>
+    <span class="n">n_bootstraps</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">n_bootstraps</span> <span class="o">=</span> <span class="mi">500</span>
+
+
+<span class="k">def</span> <span class="nf">run_test</span><span class="p">(</span>
+    <span class="n">X1</span><span class="p">,</span>
+    <span class="n">X2</span><span class="p">,</span>
+    <span class="n">rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">info</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">auto</span><span class="o">=</span><span class="n">auto</span><span class="p">,</span>
+    <span class="n">n_bootstraps</span><span class="o">=</span><span class="n">n_bootstraps</span><span class="p">,</span>
+    <span class="n">workers</span><span class="o">=</span><span class="n">workers</span><span class="p">,</span>
+    <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">,</span>
+    <span class="n">print_out</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">currtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">test_obj</span> <span class="o">=</span> <span class="n">KSample</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+    <span class="n">tstat</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="n">test_obj</span><span class="o">.</span><span class="n">test</span><span class="p">(</span>
+        <span class="n">X1</span><span class="p">,</span>
+        <span class="n">X2</span><span class="p">,</span>
+        <span class="n">reps</span><span class="o">=</span><span class="n">n_bootstraps</span><span class="p">,</span>
+        <span class="n">workers</span><span class="o">=</span><span class="n">workers</span><span class="p">,</span>
+        <span class="n">auto</span><span class="o">=</span><span class="n">auto</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">currtime</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;pvalue&quot;</span><span class="p">:</span> <span class="n">pvalue</span><span class="p">,</span>
+        <span class="s2">&quot;tstat&quot;</span><span class="p">:</span> <span class="n">tstat</span><span class="p">,</span>
+        <span class="s2">&quot;elapsed&quot;</span><span class="p">:</span> <span class="n">elapsed</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">print_out</span><span class="p">:</span>
+        <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">row</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="run-the-two-sample-test-for-varying-embedding-dimension">
+<h3>Run the two-sample test for varying embedding dimension<a class="headerlink" href="#run-the-two-sample-test-for-varying-embedding-dimension" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">n_components</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">21</span><span class="p">):</span>
+    <span class="n">op_left_out_latent</span><span class="p">,</span> <span class="n">sp_left_out_latent</span> <span class="o">=</span> <span class="n">run_alignments</span><span class="p">(</span>
+        <span class="n">left_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">op_left_in_latent</span><span class="p">,</span> <span class="n">sp_left_in_latent</span> <span class="o">=</span> <span class="n">run_alignments</span><span class="p">(</span>
+        <span class="n">left_in_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">right_in_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">op_left_composite_latent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">op_left_out_latent</span><span class="p">,</span> <span class="n">op_left_in_latent</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+    <span class="n">sp_left_composite_latent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">sp_left_out_latent</span><span class="p">,</span> <span class="n">sp_left_in_latent</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+    <span class="n">right_composite_latent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">right_in_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+
+    <span class="n">run_test</span><span class="p">(</span>
+        <span class="n">op_left_composite_latent</span><span class="p">,</span>
+        <span class="n">right_composite_latent</span><span class="p">,</span>
+        <span class="n">rows</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;alignment&quot;</span><span class="p">:</span> <span class="s2">&quot;OP&quot;</span><span class="p">,</span> <span class="s2">&quot;n_components&quot;</span><span class="p">:</span> <span class="n">n_components</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">run_test</span><span class="p">(</span>
+        <span class="n">sp_left_composite_latent</span><span class="p">,</span>
+        <span class="n">right_composite_latent</span><span class="p">,</span>
+        <span class="n">rows</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;alignment&quot;</span><span class="p">:</span> <span class="s2">&quot;O-SP&quot;</span><span class="p">,</span> <span class="s2">&quot;n_components&quot;</span><span class="p">:</span> <span class="n">n_components</span><span class="p">},</span>
+    <span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-2-sample-test-p-values-by-varying-dimension">
+<h3>Plot the 2-sample test p-values by varying dimension<a class="headerlink" href="#plot-the-2-sample-test-p-values-by-varying-dimension" title="Permalink to this headline">¶</a></h3>
+<p>Note: these are on a log y-scale.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_pvalues</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">line_locs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.0005</span><span class="p">]):</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="c1"># jitter so we can see op vs o-sp</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;n_components&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">))</span>
+
+    <span class="n">styles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">]</span>
+    <span class="n">line_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># plot p-values by embedding dimension</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;n_components&quot;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;pvalue&quot;</span><span class="p">,</span>
+        <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;alignment&quot;</span><span class="p">,</span>
+        <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+        <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+    <span class="n">styles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">]</span>
+    <span class="n">line_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">loc</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">line_locs</span><span class="p">,</span> <span class="n">styles</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="o">**</span><span class="n">line_kws</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Dimension&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.15</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;alignment&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+
+<span class="n">plot_pvalues</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;naive-pvalues-test=</span><span class="si">{</span><span class="n">test</span><span class="si">}</span><span class="s2">-n_bootstraps=</span><span class="si">{</span><span class="n">n_bootstraps</span><span class="si">}</span><span class="s2">-preprocess=</span><span class="si">{</span><span class="n">preprocess</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/bilateral_symmetry_26_0.png" src="_images/bilateral_symmetry_26_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="not-what-we-expected">
+<h3>Not what we expected<a class="headerlink" href="#not-what-we-expected" title="Permalink to this headline">¶</a></h3>
+<p>It is worrisome that the p-values change drastically when the embedding dimension
+changes slightly.</p>
+<p>Below, we investigate what could be causing this phenomenon.</p>
+</div>
+</div>
+<div class="section" id="focus-on-the-d-1-case">
+<h2>Focus on the d=1 case<a class="headerlink" href="#focus-on-the-d-1-case" title="Permalink to this headline">¶</a></h2>
+<p>Note that in the testing above, even for <span class="math notranslate nohighlight">\(d=1\)</span>, the latent positions were significantly
+different. Is this a bug? Or how can we explain this?</p>
+<div class="section" id="set-up-some-metadata-for-this-experiment">
+<h3>Set up some metadata for this experiment<a class="headerlink" href="#set-up-some-metadata-for-this-experiment" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">left_arange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_pairs</span><span class="p">)</span>
+<span class="n">right_arange</span> <span class="o">=</span> <span class="n">left_arange</span> <span class="o">+</span> <span class="n">n_pairs</span>
+<span class="n">embedding_1d_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n_pairs</span><span class="p">))</span>
+<span class="n">embedding_1d_df</span><span class="p">[</span><span class="s2">&quot;pair_ind&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">left_arange</span><span class="p">,</span> <span class="n">left_arange</span><span class="p">))</span>
+<span class="n">embedding_1d_df</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Right&quot;</span>
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">left_arange</span><span class="p">,</span> <span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Left&quot;</span>
+<span class="n">embedding_1d_df</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">left_arange</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="align-and-test-the-d-1-out-embedding">
+<h3>Align and test the d=1, out embedding<a class="headerlink" href="#align-and-test-the-d-1-out-embedding" title="Permalink to this headline">¶</a></h3>
+<p>Just like in the 2-sample testing above, we take the <span class="math notranslate nohighlight">\(d=1\)</span> embedding, align the left
+to the right, and ask whether these embeddings are different. Here I only use the
+out latent positions.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_components</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">op_left_out_latent</span><span class="p">,</span> <span class="n">sp_left_out_latent</span> <span class="o">=</span> <span class="n">run_alignments</span><span class="p">(</span>
+    <span class="n">left_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">left_arange</span><span class="p">,</span> <span class="s2">&quot;out_1d_align&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">op_left_out_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">right_arange</span><span class="p">,</span> <span class="s2">&quot;out_1d_align&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="n">dcorr_results_1d_align</span> <span class="o">=</span> <span class="n">run_test</span><span class="p">(</span><span class="n">op_left_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ks_results_1d_align</span> <span class="o">=</span> <span class="n">ks_2samp</span><span class="p">(</span><span class="n">op_left_out_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DCorr 2-sample test on first out dimension, aligned in 1D:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;p-value = </span><span class="si">{</span><span class="n">dcorr_results_1d_align</span><span class="p">[</span><span class="s1">&#39;pvalue&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KS 2-sample test on first out dimension, aligned in 1D:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;p-value = </span><span class="si">{</span><span class="n">ks_results_1d_align</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DCorr 2-sample test on first out dimension, aligned in 1D:
+p-value = 0.0142
+KS 2-sample test on first out dimension, aligned in 1D:
+p-value = 0.0049
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="align-the-d-8-out-embedding-test-on-the-first-dimension">
+<h3>Align the <span class="math notranslate nohighlight">\(d=8\)</span> out embedding, test on the first dimension<a class="headerlink" href="#align-the-d-8-out-embedding-test-on-the-first-dimension" title="Permalink to this headline">¶</a></h3>
+<p>Now, we instead perform the alignment in the <span class="math notranslate nohighlight">\(d=8\)</span> embedding. Then, we again look at
+only the first dimension <em>of that aligned set of embeddings</em> and test whether those
+are different.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_components</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">op_left_out_latent</span><span class="p">,</span> <span class="n">sp_left_out_latent</span> <span class="o">=</span> <span class="n">run_alignments</span><span class="p">(</span>
+    <span class="n">left_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">left_arange</span><span class="p">,</span> <span class="s2">&quot;out_8d_align&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">op_left_out_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">right_arange</span><span class="p">,</span> <span class="s2">&quot;out_8d_align&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="n">dcorr_results_8d_align</span> <span class="o">=</span> <span class="n">run_test</span><span class="p">(</span><span class="n">op_left_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">ks_results_8d_align</span> <span class="o">=</span> <span class="n">ks_2samp</span><span class="p">(</span><span class="n">op_left_out_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DCorr 2-sample test on first out dimension, aligned in 8D:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;p-value = </span><span class="si">{</span><span class="n">dcorr_results_1d_align</span><span class="p">[</span><span class="s1">&#39;pvalue&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KS 2-sample test on first out dimension, aligned in 8D:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;p-value = </span><span class="si">{</span><span class="n">ks_results_1d_align</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DCorr 2-sample test on first out dimension, aligned in 8D:
+p-value = 0.0142
+KS 2-sample test on first out dimension, aligned in 8D:
+p-value = 0.0049
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-results-for-testing-on-the-first-dimension-only">
+<h3>Plot the results for testing on the first dimension only<a class="headerlink" href="#plot-the-results-for-testing-on-the-first-dimension-only" title="Permalink to this headline">¶</a></h3>
+<p>Below are empirical CDFs for the first dimension, in both of the cases described above.
+Note that in either case, the right embedding is the same, because we aligned left to
+right.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">histplot_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span>
+    <span class="n">cumulative</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">element</span><span class="o">=</span><span class="s2">&quot;poly&quot;</span><span class="p">,</span>
+    <span class="n">common_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2000</span><span class="p">),</span>
+    <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">embedding_1d_df</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;out_1d_align&quot;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">,</span>
+    <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">histplot_kws</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;OP d=1 alignment&quot;</span>
+<span class="n">title</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">DCorr p-value = </span><span class="si">{</span><span class="n">dcorr_results_1d_align</span><span class="p">[</span><span class="s1">&#39;pvalue&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">title</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">KS p-value = </span><span class="si">{</span><span class="n">ks_results_1d_align</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;First dimension&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">embedding_1d_df</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;out_8d_align&quot;</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">histplot_kws</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;OP d=8 alignment&quot;</span>
+<span class="n">title</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">DCorr p-value = </span><span class="si">{</span><span class="n">dcorr_results_8d_align</span><span class="p">[</span><span class="s1">&#39;pvalue&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">title</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">KS p-value = </span><span class="si">{</span><span class="n">ks_results_8d_align</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;First dimension&quot;</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dim1-focus-test=</span><span class="si">{</span><span class="n">test</span><span class="si">}</span><span class="s2">-n_bootstraps=</span><span class="si">{</span><span class="n">n_bootstraps</span><span class="si">}</span><span class="s2">-preprocess=</span><span class="si">{</span><span class="n">preprocess</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/bilateral_symmetry_36_0.png" src="_images/bilateral_symmetry_36_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="a-corrected-version-of-this-test">
+<h2>A “corrected” version of this test<a class="headerlink" href="#a-corrected-version-of-this-test" title="Permalink to this headline">¶</a></h2>
+<p>We saw above that the alignment makes a huge difference in the outcome of the test.
+One possible way to “fix” this is to use a higher embedding dimension whether the
+alignment is good, and then perform our test for varying numbers of kept dimensions
+(just like we did above where we aligned in <span class="math notranslate nohighlight">\(d=8\)</span> and tested the first <span class="math notranslate nohighlight">\(d=1\)</span>
+dimensions).</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">align_n_components</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="mi">12</span>  <span class="c1"># this is one of the dimensions where we failed to reject before</span>
+<span class="p">)</span>
+<span class="n">op_left_out_latent</span><span class="p">,</span> <span class="n">sp_left_out_latent</span> <span class="o">=</span> <span class="n">run_alignments</span><span class="p">(</span>
+    <span class="n">left_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">align_n_components</span><span class="p">],</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">align_n_components</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">op_left_in_latent</span><span class="p">,</span> <span class="n">sp_left_in_latent</span> <span class="o">=</span> <span class="n">run_alignments</span><span class="p">(</span>
+    <span class="n">left_in_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">align_n_components</span><span class="p">],</span> <span class="n">right_in_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">align_n_components</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">n_components</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">align_n_components</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">left_out</span> <span class="o">=</span> <span class="n">op_left_out_latent</span><span class="o">.</span><span class="n">copy</span><span class="p">()[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span>
+    <span class="n">left_in</span> <span class="o">=</span> <span class="n">op_left_in_latent</span><span class="o">.</span><span class="n">copy</span><span class="p">()[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span>
+    <span class="n">right_out</span> <span class="o">=</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">align_n_components</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span>
+    <span class="n">right_in</span> <span class="o">=</span> <span class="n">right_in_latent</span><span class="p">[:,</span> <span class="p">:</span><span class="n">align_n_components</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span>
+
+    <span class="n">left_composite_latent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">left_out</span><span class="p">,</span> <span class="n">left_in</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">right_composite_latent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">right_out</span><span class="p">,</span> <span class="n">right_in</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">run_test</span><span class="p">(</span>
+        <span class="n">left_composite_latent</span><span class="p">,</span>
+        <span class="n">right_composite_latent</span><span class="p">,</span>
+        <span class="n">rows</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;alignment&quot;</span><span class="p">:</span> <span class="s2">&quot;OP&quot;</span><span class="p">,</span> <span class="s2">&quot;n_components&quot;</span><span class="p">:</span> <span class="n">n_components</span><span class="p">},</span>
+    <span class="p">)</span>
+
+<span class="n">corrected_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-results-of-the-corrected-version-which-starts-from-a-good-alignment">
+<h3>Plot the results of the corrected version which starts from a good alignment<a class="headerlink" href="#plot-the-results-of-the-corrected-version-which-starts-from-a-good-alignment" title="Permalink to this headline">¶</a></h3>
+<p>Here I plot the results only for orthogonal Procrustes. The behavior of the p-values
+is much closer to what we would have expected.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_pvalues</span><span class="p">(</span><span class="n">corrected_results</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/bilateral_symmetry_40_0.png" src="_images/bilateral_symmetry_40_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="end">
+<h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2"> elapsed for whole script.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
+0:13:07.702549 elapsed for whole script.
+----
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+    <a class='left-prev' id="prev-link" href="a_priori_sbm.html" title="previous page">A priori SBMs</a>
+    <a class='right-next' id="next-link" href="flow_rank_hypothesis.html" title="next page">Flow ranking and hypothesis testing</a>
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By NeuroData<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>
