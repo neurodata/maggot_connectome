@@ -369,6 +369,18 @@
      Plot the results for testing on the first dimension only
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-projection-experiment">
+     A projection experiment
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#double-check-that-the-identical-pvalues-are-real">
+       Double check that the identical pvalues are real
+      </a>
+     </li>
+    </ul>
+   </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -422,7 +434,7 @@ setup we fail to reject bilateral symmetry.</p>
 
 <span class="n">set_warnings</span><span class="p">()</span>
 
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
@@ -432,7 +444,8 @@ setup we fail to reject bilateral symmetry.</p>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">from</span> <span class="nn">hyppo.ksample</span> <span class="kn">import</span> <span class="n">KSample</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ks_2samp</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">epps_singleton_2samp</span><span class="p">,</span> <span class="n">ks_2samp</span>
+
 
 <span class="kn">from</span> <span class="nn">graspologic.align</span> <span class="kn">import</span> <span class="n">OrthogonalProcrustes</span><span class="p">,</span> <span class="n">SeedlessProcrustes</span>
 <span class="kn">from</span> <span class="nn">graspologic.embed</span> <span class="kn">import</span> <span class="n">AdjacencySpectralEmbed</span><span class="p">,</span> <span class="n">select_dimension</span>
@@ -1103,6 +1116,142 @@ aligned left to right.</p>
 </div>
 </div>
 </div>
+<div class="section" id="a-projection-experiment">
+<h3>A projection experiment<a class="headerlink" href="#a-projection-experiment" title="Permalink to this headline">¶</a></h3>
+<p>Just to further put this issue of the first dimension to rest - here we look at what
+happens if we use the latent positions learned from the left to project the
+right-to-right adjacency matrix into the left latent space, and vice versa.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_projection_vector</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">v</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">v</span>
+
+
+<span class="n">y_l</span> <span class="o">=</span> <span class="n">get_projection_vector</span><span class="p">(</span><span class="n">left_in_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">y_r</span> <span class="o">=</span> <span class="n">get_projection_vector</span><span class="p">(</span><span class="n">right_in_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">x_l</span> <span class="o">=</span> <span class="n">get_projection_vector</span><span class="p">(</span><span class="n">left_out_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">x_r</span> <span class="o">=</span> <span class="n">get_projection_vector</span><span class="p">(</span><span class="n">right_out_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">right_arange</span><span class="p">,</span> <span class="s2">&quot;out_1d_proj&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rr_adj</span> <span class="o">@</span> <span class="n">y_l</span>
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">left_arange</span><span class="p">,</span> <span class="s2">&quot;out_1d_proj&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ll_adj</span> <span class="o">@</span> <span class="n">y_r</span>
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">right_arange</span><span class="p">,</span> <span class="s2">&quot;in_1d_proj&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rr_adj</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">x_l</span>
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">left_arange</span><span class="p">,</span> <span class="s2">&quot;in_1d_proj&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ll_adj</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">x_r</span>
+
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">right_arange</span><span class="p">,</span> <span class="s2">&quot;out_1d&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">right_out_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">left_arange</span><span class="p">,</span> <span class="s2">&quot;out_1d&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">left_out_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">right_arange</span><span class="p">,</span> <span class="s2">&quot;in_1d&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">right_in_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">embedding_1d_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">left_arange</span><span class="p">,</span> <span class="s2">&quot;in_1d&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">left_in_latent</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">histplot_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span>
+    <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">,</span>
+    <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span>
+    <span class="n">cumulative</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">element</span><span class="o">=</span><span class="s2">&quot;poly&quot;</span><span class="p">,</span>
+    <span class="n">common_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2000</span><span class="p">),</span>
+    <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">plot_dimension</span><span class="p">(</span><span class="n">proj</span><span class="p">,</span> <span class="n">in_out</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+    <span class="n">left_text</span> <span class="o">=</span> <span class="s2">&quot;Left&quot;</span>
+    <span class="n">right_text</span> <span class="o">=</span> <span class="s2">&quot;Right&quot;</span>
+    <span class="k">if</span> <span class="n">proj</span> <span class="o">==</span> <span class="s2">&quot;Left&quot;</span><span class="p">:</span>
+        <span class="n">x_left</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">in_out</span><span class="si">}</span><span class="s2">_1d_proj&quot;</span>
+        <span class="n">x_right</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">in_out</span><span class="si">}</span><span class="s2">_1d&quot;</span>
+        <span class="n">left_linestyle</span> <span class="o">=</span> <span class="s2">&quot;--&quot;</span>
+        <span class="n">right_linestyle</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+        <span class="n">left_text</span> <span class="o">+=</span> <span class="s2">&quot; projected by right&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x_right</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">in_out</span><span class="si">}</span><span class="s2">_1d_proj&quot;</span>
+        <span class="n">x_left</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">in_out</span><span class="si">}</span><span class="s2">_1d&quot;</span>
+        <span class="n">left_linestyle</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+        <span class="n">right_linestyle</span> <span class="o">=</span> <span class="s2">&quot;--&quot;</span>
+        <span class="n">right_text</span> <span class="o">+=</span> <span class="s2">&quot; projected by left&quot;</span>
+
+    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">embedding_1d_df</span><span class="p">[</span><span class="n">embedding_1d_df</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Left&quot;</span><span class="p">],</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">x_left</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="n">left_linestyle</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">histplot_kws</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">embedding_1d_df</span><span class="p">[</span><span class="n">embedding_1d_df</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Right&quot;</span><span class="p">],</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">x_right</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="n">right_linestyle</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">histplot_kws</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">left_text</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">palette</span><span class="p">[</span><span class="s2">&quot;Left&quot;</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">right_text</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">palette</span><span class="p">[</span><span class="s2">&quot;Right&quot;</span><span class="p">])</span>
+
+    <span class="n">left_data</span> <span class="o">=</span> <span class="n">embedding_1d_df</span><span class="p">[</span><span class="n">embedding_1d_df</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Left&quot;</span><span class="p">][</span><span class="n">x_left</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">right_data</span> <span class="o">=</span> <span class="n">embedding_1d_df</span><span class="p">[</span><span class="n">embedding_1d_df</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Right&quot;</span><span class="p">][</span>
+        <span class="n">x_right</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">stat</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="n">ks_2samp</span><span class="p">(</span><span class="n">left_data</span><span class="p">,</span> <span class="n">right_data</span><span class="p">)</span>
+    <span class="c1"># stat, pvalue = anderson_ksamp(left_data, right_data)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;KS pvalue = </span><span class="si">{</span><span class="n">pvalue</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Cumulative density&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">in_out</span> <span class="o">==</span> <span class="s2">&quot;in&quot;</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;In dimension 1&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Out dimension 1&quot;</span><span class="p">)</span>
+
+
+<span class="n">plot_dimension</span><span class="p">(</span><span class="s2">&quot;Left&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">plot_dimension</span><span class="p">(</span><span class="s2">&quot;Right&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plot_dimension</span><span class="p">(</span><span class="s2">&quot;Left&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">plot_dimension</span><span class="p">(</span><span class="s2">&quot;Right&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;projection-1d-comparison&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/bilateral_symmetry_41_0.png" src="_images/bilateral_symmetry_41_0.png" />
+</div>
+</div>
+<div class="section" id="double-check-that-the-identical-pvalues-are-real">
+<h4>Double check that the identical pvalues are real<a class="headerlink" href="#double-check-that-the-identical-pvalues-are-real" title="Permalink to this headline">¶</a></h4>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_left</span> <span class="o">=</span> <span class="s2">&quot;out_1d_proj&quot;</span>
+<span class="n">x_right</span> <span class="o">=</span> <span class="s2">&quot;out_1d&quot;</span>
+<span class="n">left_data</span> <span class="o">=</span> <span class="n">embedding_1d_df</span><span class="p">[</span><span class="n">embedding_1d_df</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Left&quot;</span><span class="p">][</span><span class="n">x_left</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">right_data</span> <span class="o">=</span> <span class="n">embedding_1d_df</span><span class="p">[</span><span class="n">embedding_1d_df</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Right&quot;</span><span class="p">][</span><span class="n">x_right</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Epps-Singleton 2-sample on left projected vs. right first out dimension:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;p-value = </span><span class="si">{</span><span class="n">epps_singleton_2samp</span><span class="p">(</span><span class="n">left_data</span><span class="p">,</span> <span class="n">right_data</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="n">x_left</span> <span class="o">=</span> <span class="s2">&quot;out_1d&quot;</span>
+<span class="n">x_right</span> <span class="o">=</span> <span class="s2">&quot;out_1d_proj&quot;</span>
+<span class="n">left_data</span> <span class="o">=</span> <span class="n">embedding_1d_df</span><span class="p">[</span><span class="n">embedding_1d_df</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Left&quot;</span><span class="p">][</span><span class="n">x_left</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">right_data</span> <span class="o">=</span> <span class="n">embedding_1d_df</span><span class="p">[</span><span class="n">embedding_1d_df</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Right&quot;</span><span class="p">][</span><span class="n">x_right</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Epps-Singleton 2-sample on left vs. right projected first out dimension:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;p-value = </span><span class="si">{</span><span class="n">epps_singleton_2samp</span><span class="p">(</span><span class="n">left_data</span><span class="p">,</span> <span class="n">right_data</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epps-Singleton 2-sample on left projected vs. right first out dimension:
+p-value = 0.1622046313983571
+
+Epps-Singleton 2-sample on left vs. right projected first out dimension:
+p-value = 0.6116909673886892
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div class="section" id="a-corrected-version-of-this-test">
 <h2>A “corrected” version of this test<a class="headerlink" href="#a-corrected-version-of-this-test" title="Permalink to this headline">¶</a></h2>
@@ -1169,7 +1318,7 @@ is much closer to what we would have expected.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/bilateral_symmetry_43_0.png" src="_images/bilateral_symmetry_43_0.png" />
+<img alt="_images/bilateral_symmetry_47_0.png" src="_images/bilateral_symmetry_47_0.png" />
 </div>
 </div>
 </div>
@@ -1179,16 +1328,18 @@ is much closer to what we would have expected.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
-<span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">)</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2"> elapsed for whole script.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completed at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-0:14:23.815299 elapsed for whole script.
+0:13:58.653639 elapsed for whole script.
+Completed at 2021-03-12 09:46:17.909105
 ----
 </pre></div>
 </div>
