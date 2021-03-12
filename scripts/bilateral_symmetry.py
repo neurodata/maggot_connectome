@@ -21,7 +21,7 @@ from pkg.utils import set_warnings
 
 set_warnings()
 
-from datetime import timedelta
+import datetime
 import pprint
 import time
 
@@ -31,7 +31,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from hyppo.ksample import KSample
-from scipy.stats import ks_2samp
+from scipy.stats import epps_singleton_2samp, ks_2samp
+
 
 from graspologic.align import OrthogonalProcrustes, SeedlessProcrustes
 from graspologic.embed import AdjacencySpectralEmbed, select_dimension
@@ -454,6 +455,7 @@ embedding_1d_df.loc[left_arange, "hemisphere"] = "Left"
 embedding_1d_df["x"] = 1
 embedding_1d_df.loc[left_arange, "x"] = 0
 
+
 #%% [markdown]
 # ### Align and test the d=1, out embedding
 # Just like in the 2-sample testing above, we take the $d=1$ embedding, align the left
@@ -548,6 +550,122 @@ stashfig(
     f"dim1-focus-cdf-test={test}-n_bootstraps={n_bootstraps}-preprocess={preprocess}"
 )
 
+#%% [markdown]
+# ### A projection experiment
+# Just to further put this issue of the first dimension to rest - here we look at what
+# happens if we use the latent positions learned from the left to project the
+# right-to-right adjacency matrix into the left latent space, and vice versa.
+
+#%%
+
+
+def get_projection_vector(v):
+    v = v.copy()
+    v /= np.linalg.norm(v) ** 2
+    return v
+
+
+y_l = get_projection_vector(left_in_latent[:, 0])
+y_r = get_projection_vector(right_in_latent[:, 0])
+x_l = get_projection_vector(left_out_latent[:, 0])
+x_r = get_projection_vector(right_out_latent[:, 0])
+
+embedding_1d_df.loc[right_arange, "out_1d_proj"] = rr_adj @ y_l
+embedding_1d_df.loc[left_arange, "out_1d_proj"] = ll_adj @ y_r
+embedding_1d_df.loc[right_arange, "in_1d_proj"] = rr_adj.T @ x_l
+embedding_1d_df.loc[left_arange, "in_1d_proj"] = ll_adj.T @ x_r
+
+embedding_1d_df.loc[right_arange, "out_1d"] = right_out_latent[:, 0]
+embedding_1d_df.loc[left_arange, "out_1d"] = left_out_latent[:, 0]
+embedding_1d_df.loc[right_arange, "in_1d"] = right_in_latent[:, 0]
+embedding_1d_df.loc[left_arange, "in_1d"] = left_in_latent[:, 0]
+
+fig, axs = plt.subplots(2, 2, figsize=(10, 10), sharey=True)
+histplot_kws = dict(
+    palette=palette,
+    hue="hemisphere",
+    legend=False,
+    stat="density",
+    cumulative=True,
+    element="poly",
+    common_norm=False,
+    bins=np.linspace(0, 1, 2000),
+    fill=False,
+)
+
+
+def plot_dimension(proj, in_out, ax):
+    left_text = "Left"
+    right_text = "Right"
+    if proj == "Left":
+        x_left = f"{in_out}_1d_proj"
+        x_right = f"{in_out}_1d"
+        left_linestyle = "--"
+        right_linestyle = "-"
+        left_text += " projected by right"
+    else:
+        x_right = f"{in_out}_1d_proj"
+        x_left = f"{in_out}_1d"
+        left_linestyle = "-"
+        right_linestyle = "--"
+        right_text += " projected by left"
+
+    sns.histplot(
+        data=embedding_1d_df[embedding_1d_df["hemisphere"] == "Left"],
+        x=x_left,
+        ax=ax,
+        linestyle=left_linestyle,
+        **histplot_kws,
+    )
+    sns.histplot(
+        data=embedding_1d_df[embedding_1d_df["hemisphere"] == "Right"],
+        x=x_right,
+        ax=ax,
+        linestyle=right_linestyle,
+        **histplot_kws,
+    )
+    ax.text(0.25, 0.5, left_text, color=palette["Left"])
+    ax.text(0.25, 0.4, right_text, color=palette["Right"])
+
+    left_data = embedding_1d_df[embedding_1d_df["hemisphere"] == "Left"][x_left].values
+    right_data = embedding_1d_df[embedding_1d_df["hemisphere"] == "Right"][
+        x_right
+    ].values
+
+    stat, pvalue = ks_2samp(left_data, right_data)
+    # stat, pvalue = anderson_ksamp(left_data, right_data)
+    ax.set(title=f"KS pvalue = {pvalue:0.2f}", ylabel="Cumulative density")
+
+    if in_out == "in":
+        ax.set_xlabel("In dimension 1")
+    else:
+        ax.set_xlabel("Out dimension 1")
+
+
+plot_dimension("Left", "out", axs[0, 0])
+plot_dimension("Right", "out", axs[0, 1])
+plot_dimension("Left", "in", axs[1, 0])
+plot_dimension("Right", "in", axs[1, 1])
+plt.tight_layout()
+stashfig("projection-1d-comparison")
+
+#%% [markdown]
+# #### Double check that the identical pvalues are real
+#%%
+x_left = "out_1d_proj"
+x_right = "out_1d"
+left_data = embedding_1d_df[embedding_1d_df["hemisphere"] == "Left"][x_left].values
+right_data = embedding_1d_df[embedding_1d_df["hemisphere"] == "Right"][x_right].values
+print("Epps-Singleton 2-sample on left projected vs. right first out dimension:")
+print(f"p-value = {epps_singleton_2samp(left_data, right_data)[1]}")
+print()
+
+x_left = "out_1d"
+x_right = "out_1d_proj"
+left_data = embedding_1d_df[embedding_1d_df["hemisphere"] == "Left"][x_left].values
+right_data = embedding_1d_df[embedding_1d_df["hemisphere"] == "Right"][x_right].values
+print("Epps-Singleton 2-sample on left vs. right projected first out dimension:")
+print(f"p-value = {epps_singleton_2samp(left_data, right_data)[1]}")
 
 #%% [markdown]
 # ## A "corrected" version of this test
@@ -611,7 +729,8 @@ plot_pvalues(corrected_results)
 # ## End
 #%%
 elapsed = time.time() - t0
-delta = timedelta(seconds=elapsed)
+delta = datetime.timedelta(seconds=elapsed)
 print("----")
 print(f"{delta} elapsed for whole script.")
+print(f"Completed at {datetime.datetime.now()}.")
 print("----")
