@@ -86,7 +86,6 @@ from src.visualization import adjplot  # TODO fix graspologic version and replac
 
 from graspologic.utils import largest_connected_component
 from matplotlib import cm
-import matplotlib.colors as colors
 
 
 t0 = time.time()
@@ -191,9 +190,9 @@ plot_latents(ipsi_out_latent, contra_out_latent, title="Out latents, no alignmen
 plot_latents(ipsi_in_latent, contra_in_latent, title="In latents, no alignment")
 
 #%% [markdown]
-# ## A modified orthogonal Procrustes procedure 
+# ## A modified orthogonal Procrustes procedure
 # Motivated by the above, we seek to minimize
-# 
+#
 # $$
 # W^* = \text{argmin}_Q \| B - X W Y^T \|_F^2
 # $$
@@ -201,26 +200,26 @@ plot_latents(ipsi_in_latent, contra_in_latent, title="In latents, no alignment")
 # $$
 # \text{argmin}_W \| B - X W Y^T \|_F^2 = \text{argmin}_W \; -2 \langle B, X W Y^T \rangle
 # $$
-# 
+#
 # which has the same solution as
-# 
+#
 # $$
 # \text{argmax}_W \; \langle B, X W Y^T \rangle
 # $$
 #
 # $$
-# \langle B, X W Y^T \rangle = tr(B^T X W Y^T) = tr(W Y^T B^T X) 
+# \langle B, X W Y^T \rangle = tr(B^T X W Y^T) = tr(W Y^T B^T X)
 # $$
-# 
-# By the Von Neumman trace theorem, 
+#
+# By the Von Neumman trace theorem,
 #
 # $$
 # tr(CD) \leq tr(\Sigma_C P \Sigma_D P^T)
 # $$
-# 
-# Here, we know that the singular values of $W$ are all one, so, letting 
+#
+# Here, we know that the singular values of $W$ are all one, so, letting
 # $Y^T B^T X = U \Sigma V^T$ be a singular value decomposition,
-# 
+#
 # $$
 # tr(W Y^T B^T X) \leq tr(\Sigma)
 # $$
@@ -244,6 +243,7 @@ def inner_procrustes(X, Y, A):
     U, Sigma, Vt = np.linalg.svd(product, full_matrices=False)
     W = Vt.T @ U.T
     return W
+
 
 #%% [markdown]
 # ### Test this procrustes

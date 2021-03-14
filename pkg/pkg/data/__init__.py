@@ -5,4 +5,5 @@ from .load_data import (
     load_edgelist,
     load_node_meta,
     load_palette,
+    load_maggot_graph,
 )

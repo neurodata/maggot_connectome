@@ -731,6 +731,6 @@ plot_pvalues(corrected_results)
 elapsed = time.time() - t0
 delta = datetime.timedelta(seconds=elapsed)
 print("----")
-print(f"{delta} elapsed for whole script.")
+print(f"Script took {delta}.")
 print(f"Completed at {datetime.datetime.now()}.")
 print("----")

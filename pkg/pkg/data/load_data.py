@@ -6,6 +6,9 @@ import numpy as np
 import pandas as pd
 from sklearn.utils import Bunch
 
+from ..graph import MaggotGraph
+from ..utils import to_pandas_edgelist
+
 DATA_VERSION = "2021-03-02"  # set to whatever the most recent one is
 
 DATA_PATH = Path(__file__).parent.parent.parent.parent  # don't judge me judge judy
@@ -66,6 +69,24 @@ def load_palette(path=None, version=None):
     return palette
 
 
+def load_maggot_graph(path=None, version=None):
+    nodes = load_node_meta()
+    g = nx.MultiDiGraph()
+    g.add_nodes_from(nodes.index)
+    nx.set_node_attributes(g, nodes.to_dict(orient="index"))
+    graph_types = ["Gaa", "Gad", "Gda", "Gdd"]
+    for graph_type in graph_types:
+        g_type = load_networkx(graph_type=graph_type)
+        for u, v, data in g_type.edges(data=True):
+            g.add_edge(u, v, key=graph_type[1:], edge_type=graph_type[1:], **data)
+
+    g_type = load_networkx(graph_type="G")
+    for u, v, data in g_type.edges(data=True):
+        g.add_edge(u, v, key="sum", edge_type="sum", **data)
+
+    edges = to_pandas_edgelist(g)
+
+    return MaggotGraph(g, nodes, edges)
 
 
 # def load_networkx(graph_type, base_path=None, version=DATA_VERSION):
