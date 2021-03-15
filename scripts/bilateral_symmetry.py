@@ -701,6 +701,7 @@ print(f"p-value = {epps_singleton_2samp(left_data, right_data)[1]}")
 
 #%% [markdown]
 # ### Run the projection experiment but without singular value scaling
+#%%
 fig, axs = plt.subplots(2, 2, figsize=(10, 10), sharey=True)
 histplot_kws["bins"] = np.linspace(0, 0.2, 2000)
 plot_dimension("Left", "out", axs[0, 0], unscale=True)
@@ -845,6 +846,6 @@ plot_pvalues(corrected_results)
 elapsed = time.time() - t0
 delta = datetime.timedelta(seconds=elapsed)
 print("----")
-print(f"Script took {delta}.")
-print(f"Completed at {datetime.datetime.now()}.")
+print(f"Script took {delta}")
+print(f"Completed at {datetime.datetime.now()}")
 print("----")

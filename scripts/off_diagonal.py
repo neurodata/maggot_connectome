@@ -314,11 +314,14 @@ adjplot(
 )
 
 #%%
+
+from matplotlib.colors import Normalize, SymLogNorm
+
 vmin = -1
 vmax = 1
 cmap = cm.get_cmap("RdBu_r")
-norm = colors.Normalize(vmin, vmax)
-norm = colors.SymLogNorm(linthresh=0.1, linscale=2, vmin=vmin, vmax=vmax, base=10)
+norm = Normalize(vmin, vmax)
+norm = SymLogNorm(linthresh=0.1, linscale=2, vmin=vmin, vmax=vmax, base=10)
 
 #%%
 fig, axs = plt.subplots(1, 2, figsize=(16, 9))
