@@ -58,7 +58,7 @@
     <link rel="shortcut icon" href="_static/nd_logo_small.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Flow ranking and hypothesis testing" href="flow_rank_hypothesis.html" />
+    <link rel="next" title="Off-diagonal and off-script" href="off_diagonal.html" />
     <link rel="prev" title="A priori SBMs" href="a_priori_sbm.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -146,6 +146,11 @@
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    Testing bilateral symmetry
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="off_diagonal.html">
+   Off-diagonal and off-script
   </a>
  </li>
 </ul>
@@ -1304,14 +1309,23 @@ p-value = 0.6116909673886892
 </div>
 <div class="section" id="run-the-projection-experiment-but-without-singular-value-scaling">
 <h3>Run the projection experiment but without singular value scaling<a class="headerlink" href="#run-the-projection-experiment-but-without-singular-value-scaling" title="Permalink to this headline">¶</a></h3>
-<p>fig, axs = plt.subplots(2, 2, figsize=(10, 10), sharey=True)
-histplot_kws[“bins”] = np.linspace(0, 0.2, 2000)
-plot_dimension(“Left”, “out”, axs[0, 0], unscale=True)
-plot_dimension(“Right”, “out”, axs[0, 1], unscale=True)
-plot_dimension(“Left”, “in”, axs[1, 0], unscale=True)
-plot_dimension(“Right”, “in”, axs[1, 1], unscale=True)
-plt.tight_layout()
-stashfig(“projection-1d-comparison-unscaled”)</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">histplot_kws</span><span class="p">[</span><span class="s2">&quot;bins&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+<span class="n">plot_dimension</span><span class="p">(</span><span class="s2">&quot;Left&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">unscale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plot_dimension</span><span class="p">(</span><span class="s2">&quot;Right&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">unscale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plot_dimension</span><span class="p">(</span><span class="s2">&quot;Left&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">unscale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plot_dimension</span><span class="p">(</span><span class="s2">&quot;Right&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">unscale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;projection-1d-comparison-unscaled&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/bilateral_symmetry_45_0.png" src="_images/bilateral_symmetry_45_0.png" />
+</div>
+</div>
 </div>
 <div class="section" id="test-the-2-dimensional-joint-distributions">
 <h3>Test the 2-dimensional joint distributions<a class="headerlink" href="#test-the-2-dimensional-joint-distributions" title="Permalink to this headline">¶</a></h3>
@@ -1376,7 +1390,7 @@ stashfig(“projection-1d-comparison-unscaled”)</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/bilateral_symmetry_46_0.png" src="_images/bilateral_symmetry_46_0.png" />
+<img alt="_images/bilateral_symmetry_47_0.png" src="_images/bilateral_symmetry_47_0.png" />
 </div>
 </div>
 </div>
@@ -1394,7 +1408,7 @@ stashfig(“projection-1d-comparison-unscaled”)</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/bilateral_symmetry_48_0.png" src="_images/bilateral_symmetry_48_0.png" />
+<img alt="_images/bilateral_symmetry_49_0.png" src="_images/bilateral_symmetry_49_0.png" />
 </div>
 </div>
 </div>
@@ -1464,7 +1478,7 @@ is much closer to what we would have expected.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/bilateral_symmetry_52_0.png" src="_images/bilateral_symmetry_52_0.png" />
+<img alt="_images/bilateral_symmetry_53_0.png" src="_images/bilateral_symmetry_53_0.png" />
 </div>
 </div>
 </div>
@@ -1476,16 +1490,16 @@ is much closer to what we would have expected.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
 <span class="n">delta</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Script took </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completed at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Script took </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completed at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:14:30.039210.
-Completed at 2021-03-15 10:46:17.783507.
+Script took 0:14:32.475558
+Completed at 2021-03-15 11:13:34.544446
 ----
 </pre></div>
 </div>
@@ -1520,7 +1534,7 @@ Completed at 2021-03-15 10:46:17.783507.
         <div class='prev-next-bottom'>
             
     <a class='left-prev' id="prev-link" href="a_priori_sbm.html" title="previous page">A priori SBMs</a>
-    <a class='right-next' id="next-link" href="flow_rank_hypothesis.html" title="next page">Flow ranking and hypothesis testing</a>
+    <a class='right-next' id="next-link" href="off_diagonal.html" title="next page">Off-diagonal and off-script</a>
 
         </div>
         
