@@ -575,12 +575,40 @@ embedding_1d_df.loc[left_arange, "out_1d_proj"] = ll_adj @ y_r
 embedding_1d_df.loc[right_arange, "in_1d_proj"] = rr_adj.T @ x_l
 embedding_1d_df.loc[left_arange, "in_1d_proj"] = ll_adj.T @ x_r
 
+embedding_1d_df.loc[right_arange, "out_1d_proj_unscale"] = embedding_1d_df.loc[
+    right_arange, "out_1d_proj"
+] / np.linalg.norm(embedding_1d_df.loc[right_arange, "out_1d_proj"])
+
+embedding_1d_df.loc[left_arange, "out_1d_proj_unscale"] = embedding_1d_df.loc[
+    left_arange, "out_1d_proj"
+] / np.linalg.norm(embedding_1d_df.loc[left_arange, "out_1d_proj"])
+
+embedding_1d_df.loc[right_arange, "in_1d_proj_unscale"] = embedding_1d_df.loc[
+    right_arange, "in_1d_proj"
+] / np.linalg.norm(embedding_1d_df.loc[right_arange, "in_1d_proj"])
+
+embedding_1d_df.loc[left_arange, "in_1d_proj_unscale"] = embedding_1d_df.loc[
+    left_arange, "in_1d_proj"
+] / np.linalg.norm(embedding_1d_df.loc[left_arange, "in_1d_proj"])
+
 embedding_1d_df.loc[right_arange, "out_1d"] = right_out_latent[:, 0]
 embedding_1d_df.loc[left_arange, "out_1d"] = left_out_latent[:, 0]
 embedding_1d_df.loc[right_arange, "in_1d"] = right_in_latent[:, 0]
 embedding_1d_df.loc[left_arange, "in_1d"] = left_in_latent[:, 0]
 
-fig, axs = plt.subplots(2, 2, figsize=(10, 10), sharey=True)
+embedding_1d_df.loc[right_arange, "out_1d_unscale"] = right_out_latent[
+    :, 0
+] / np.linalg.norm(right_out_latent[:, 0])
+embedding_1d_df.loc[left_arange, "out_1d_unscale"] = left_out_latent[
+    :, 0
+] / np.linalg.norm(left_out_latent[:, 0])
+embedding_1d_df.loc[right_arange, "in_1d_unscale"] = right_in_latent[
+    :, 0
+] / np.linalg.norm(right_in_latent[:, 0])
+embedding_1d_df.loc[left_arange, "in_1d_unscale"] = left_in_latent[
+    :, 0
+] / np.linalg.norm(left_in_latent[:, 0])
+
 histplot_kws = dict(
     palette=palette,
     hue="hemisphere",
@@ -594,7 +622,7 @@ histplot_kws = dict(
 )
 
 
-def plot_dimension(proj, in_out, ax):
+def plot_dimension(proj, in_out, ax, unscale=False):
     left_text = "Left"
     right_text = "Right"
     if proj == "Left":
@@ -602,38 +630,40 @@ def plot_dimension(proj, in_out, ax):
         x_right = f"{in_out}_1d"
         left_linestyle = "--"
         right_linestyle = "-"
-        left_text += " projected by right"
+        left_text += " projected"
     else:
         x_right = f"{in_out}_1d_proj"
         x_left = f"{in_out}_1d"
         left_linestyle = "-"
         right_linestyle = "--"
-        right_text += " projected by left"
+        right_text += " projected"
 
+    left_df = embedding_1d_df[embedding_1d_df["hemisphere"] == "Left"]
+    right_df = embedding_1d_df[embedding_1d_df["hemisphere"] == "Right"]
+    if unscale:
+        x_left = x_left + "_unscale"
+        x_right = x_right + "_unscale"
     sns.histplot(
-        data=embedding_1d_df[embedding_1d_df["hemisphere"] == "Left"],
+        data=left_df,
         x=x_left,
         ax=ax,
         linestyle=left_linestyle,
         **histplot_kws,
     )
     sns.histplot(
-        data=embedding_1d_df[embedding_1d_df["hemisphere"] == "Right"],
+        data=right_df,
         x=x_right,
         ax=ax,
         linestyle=right_linestyle,
         **histplot_kws,
     )
-    ax.text(0.25, 0.5, left_text, color=palette["Left"])
-    ax.text(0.25, 0.4, right_text, color=palette["Right"])
+    ax.text(0.25, 0.5, left_text, color=palette["Left"], transform=ax.transAxes)
+    ax.text(0.25, 0.4, right_text, color=palette["Right"], transform=ax.transAxes)
 
-    left_data = embedding_1d_df[embedding_1d_df["hemisphere"] == "Left"][x_left].values
-    right_data = embedding_1d_df[embedding_1d_df["hemisphere"] == "Right"][
-        x_right
-    ].values
+    left_data = left_df[x_left].values
+    right_data = right_df[x_right].values
 
     stat, pvalue = ks_2samp(left_data, right_data)
-    # stat, pvalue = anderson_ksamp(left_data, right_data)
     ax.set(title=f"KS pvalue = {pvalue:0.2f}", ylabel="Cumulative density")
 
     if in_out == "in":
@@ -642,12 +672,14 @@ def plot_dimension(proj, in_out, ax):
         ax.set_xlabel("Out dimension 1")
 
 
+fig, axs = plt.subplots(2, 2, figsize=(10, 10), sharey=True)
 plot_dimension("Left", "out", axs[0, 0])
 plot_dimension("Right", "out", axs[0, 1])
 plot_dimension("Left", "in", axs[1, 0])
 plot_dimension("Right", "in", axs[1, 1])
 plt.tight_layout()
 stashfig("projection-1d-comparison")
+
 
 #%% [markdown]
 # #### Double check that the identical pvalues are real
@@ -666,6 +698,88 @@ left_data = embedding_1d_df[embedding_1d_df["hemisphere"] == "Left"][x_left].val
 right_data = embedding_1d_df[embedding_1d_df["hemisphere"] == "Right"][x_right].values
 print("Epps-Singleton 2-sample on left vs. right projected first out dimension:")
 print(f"p-value = {epps_singleton_2samp(left_data, right_data)[1]}")
+
+#%% [markdown]
+# ### Run the projection experiment but without singular value scaling
+fig, axs = plt.subplots(2, 2, figsize=(10, 10), sharey=True)
+histplot_kws["bins"] = np.linspace(0, 0.2, 2000)
+plot_dimension("Left", "out", axs[0, 0], unscale=True)
+plot_dimension("Right", "out", axs[0, 1], unscale=True)
+plot_dimension("Left", "in", axs[1, 0], unscale=True)
+plot_dimension("Right", "in", axs[1, 1], unscale=True)
+plt.tight_layout()
+stashfig("projection-1d-comparison-unscaled")
+
+#%% [markdown]
+# ### Test the 2-dimensional joint distributions
+#%%
+
+scatter_kws = dict(hue="hemisphere", palette=palette, s=10, linewidth=0, alpha=0.5)
+
+
+def plot_paired_dimension(proj, ax, unscale=False):
+    left_text = "Left"
+    right_text = "Right"
+    x_left = "out_1d"
+    y_left = "in_1d"
+    x_right = "out_1d"
+    y_right = "in_1d"
+
+    if proj == "Left":
+        x_left += "_proj"
+        y_left += "_proj"
+        left_text += " projected"
+    else:
+        x_right += "_proj"
+        y_right += "_proj"
+        right_text += " projected"
+
+    if unscale:
+        x_left += "_unscale"
+        x_right += "_unscale"
+        y_left += "_unscale"
+        y_right += "_unscale"
+
+    left_df = embedding_1d_df[embedding_1d_df["hemisphere"] == "Left"]
+    right_df = embedding_1d_df[embedding_1d_df["hemisphere"] == "Right"]
+
+    sns.scatterplot(data=left_df, x=x_left, y=y_left, ax=ax, **scatter_kws)
+    sns.scatterplot(data=right_df, x=x_right, y=y_right, ax=ax, **scatter_kws)
+    ax.get_legend().remove()
+    xlim = ax.get_xlim()
+    ylim = ax.get_ylim()
+    maxlim = max(xlim[1], ylim[1])
+    minlim = min(xlim[0], ylim[0])
+    xlim = (minlim, maxlim)
+    ylim = (minlim, maxlim)
+    ax.set(xlabel="Out dimension 1", ylabel="In dimension 1", ylim=ylim, xlim=xlim)
+    ax.text(0.65, 0.95, left_text, color=palette["Left"], transform=ax.transAxes)
+    ax.text(0.65, 0.88, right_text, color=palette["Right"], transform=ax.transAxes)
+
+    left_data = left_df[[x_left, y_left]].values
+    right_data = right_df[[x_right, y_right]].values
+    test_results = run_test(left_data, right_data)
+    pvalue = test_results["pvalue"]
+    ax.set_title(f"DCorr 2S p-value = {pvalue:.3g}")
+
+
+fig, axs = plt.subplots(1, 2, figsize=(12, 6), sharex=True, sharey=True)
+plot_paired_dimension("Left", axs[0], unscale=False)
+plot_paired_dimension("Right", axs[1], unscale=False)
+plt.tight_layout()
+fig.suptitle("Projection comparisons", y=1.03)
+stashfig("projection-2d-comparison")
+
+
+#%% [markdown]
+# ### Test the 2-dimensional joints but without singular value scaling
+#%%
+fig, axs = plt.subplots(1, 2, figsize=(12, 6), sharex=True, sharey=True)
+plot_paired_dimension("Left", axs[0], unscale=True)
+plot_paired_dimension("Right", axs[1], unscale=True)
+plt.tight_layout()
+fig.suptitle("Projection comparisons, no scaling", y=1.03)
+stashfig("projection-2d-comparison-unscaled")
 
 #%% [markdown]
 # ## A "corrected" version of this test
