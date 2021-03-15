@@ -18,6 +18,7 @@
 - part: Bilateral symmetry
   chapters:
   - file: bilateral_symmetry
+  - file: off_diagonal
 
 - part: Flow
   chapters:
