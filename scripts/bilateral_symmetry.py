@@ -832,6 +832,7 @@ for n_components in np.arange(1, align_n_components + 1):
     )
 
 corrected_results = pd.DataFrame(rows)
+corrected_results
 
 # %% [markdown]
 # ### Plot the results of the corrected version which starts from a good alignment

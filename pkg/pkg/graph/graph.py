@@ -39,19 +39,19 @@ class MaggotGraph:
 
     @property
     def ad(self):
-        return self.to_edge_type_graph("aa")
+        return self.to_edge_type_graph("ad")
 
     @property
     def da(self):
-        return self.to_edge_type_graph("aa")
+        return self.to_edge_type_graph("da")
 
     @property
     def dd(self):
-        return self.to_edge_type_graph("aa")
+        return self.to_edge_type_graph("dd")
 
     @property
     def sum(self):
-        return self.to_edge_type_graph("aa")
+        return self.to_edge_type_graph("sum")
 
     @property
     def adj(self, edge_type=None):
@@ -74,8 +74,10 @@ class MaggotGraph:
         #     sub_edges = to_pandas_edgelist(sub_g)
         #     return MaggotGraph(sub_g, sub_nodes, sub_edges)
         # else:  # subgraph defined on a set of nodes, but not necessarily induced
+        induced = False
         if target_node_ids is None:
             target_node_ids = source_node_ids
+            induced = True
         edges = self.edges
         nodes = self.nodes
         source_edges = edges[edges.source.isin(source_node_ids)]
@@ -84,6 +86,9 @@ class MaggotGraph:
         sub_nodes = nodes[
             nodes.index.isin(source_node_ids) | nodes.index.isin(target_node_ids)
         ]
+        if induced:
+            sub_nodes = sub_nodes.reindex(source_node_ids)
+        # TODO what ordering makes sense when the subgraph is not induced
         return MaggotGraph(sub_g, sub_nodes, source_target_edges)
 
     def copy(self):

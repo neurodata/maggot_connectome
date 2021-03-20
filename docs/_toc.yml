@@ -20,6 +20,10 @@
   - file: bilateral_symmetry
   - file: off_diagonal
 
+- part: Matching
+  chapters: 
+  - file: matching_illustration
+
 - part: Flow
   chapters:
   - file: flow_rank_hypothesis
