@@ -1,0 +1,701 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matching the two sides of the brain &#8212; Maggot Connectome</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.e7340bb3dbd8dde6db86f25597f54a1b.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.7d483ff0a819d6edff12ce0b1ead3928.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="_static/nd_logo_small.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Flow ranking and hypothesis testing" href="flow_rank_hypothesis.html" />
+    <link rel="prev" title="Off-diagonal and off-script" href="off_diagonal.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/nd_logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Maggot Connectome</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="landing.html">
+   Welcome
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="outline.html">
+   Outline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="introduction.html">
+   Introduction
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Look at it
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="simple_statistics.html">
+   Simple summary statistics
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  A priori modeling
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="a_priori_sbm.html">
+   A priori SBMs
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Bilateral symmetry
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="bilateral_symmetry.html">
+   Testing bilateral symmetry
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="off_diagonal.html">
+   Off-diagonal and off-script
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Matching
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Matching the two sides of the brain
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Flow
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="flow_rank_hypothesis.html">
+   Flow ranking and hypothesis testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="flow_rank.html">
+   Flow
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/matching_illustration.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/neurodata/maggot_connectome"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/neurodata/maggot_connectome/issues/new?title=Issue%20on%20page%20%2Fmatching_illustration.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+            <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                    data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                    title="Fullscreen mode"><i
+                        class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i>
+            Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preliminaries">
+   Preliminaries
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-and-process-data">
+   Load and process data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#run-several-restarts-of-graph-matching-to-understand-the-variance-in-solutions">
+   Run several restarts of graph matching to understand the variance in solutions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#illustrate-graph-matching-progress-by-iteration">
+   Illustrate graph matching progress by iteration
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#start-graph-matching-from-the-known-pairs-to-see-if-we-can-improve">
+   Start graph matching from the known pairs to see if we can improve
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#end">
+   End
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="matching-the-two-sides-of-the-brain">
+<h1>Matching the two sides of the brain<a class="headerlink" href="#matching-the-two-sides-of-the-brain" title="Permalink to this headline">¶</a></h1>
+<p>Using techniques for graph matching, we can try to uncover a one-to-one correspondence
+between the nodes of the left side of the brain and the nodes of the right side.</p>
+<div class="section" id="preliminaries">
+<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">set_warnings</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+
+<span class="kn">from</span> <span class="nn">graspologic.match</span> <span class="kn">import</span> <span class="n">GraphMatch</span>
+
+<span class="kn">from</span> <span class="nn">pkg.data</span> <span class="kn">import</span> <span class="n">load_maggot_graph</span>
+<span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">savefig</span>
+<span class="kn">from</span> <span class="nn">pkg.match</span> <span class="kn">import</span> <span class="n">quadratic_assignment</span>
+<span class="kn">from</span> <span class="nn">pkg.match.qap</span> <span class="kn">import</span> <span class="n">_doubly_stochastic</span>
+<span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
+<span class="kn">from</span> <span class="nn">src.visualization</span> <span class="kn">import</span> <span class="n">adjplot</span>  <span class="c1"># TODO fix graspologic version and replace here</span>
+
+
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">stashfig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">foldername</span> <span class="o">=</span> <span class="s2">&quot;matching_illustration&quot;</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">foldername</span><span class="o">=</span><span class="n">foldername</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;Set1&quot;</span><span class="p">)</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="s2">&quot;Left&quot;</span><span class="p">,</span> <span class="s2">&quot;Right&quot;</span><span class="p">],</span> <span class="n">colors</span><span class="p">))</span>
+<span class="n">set_theme</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><script type="text/javascript">
+window.PlotlyConfig = {MathJaxConfig: 'local'};
+if (window.MathJax) {MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+if (typeof require !== 'undefined') {
+require.undef("plotly");
+requirejs.config({
+    paths: {
+        'plotly': ['https://cdn.plot.ly/plotly-latest.min']
+    }
+});
+require(['plotly'], function(Plotly) {
+    window._Plotly = Plotly;
+});
+}
+</script>
+</div></div>
+</div>
+</div>
+<div class="section" id="load-and-process-data">
+<h2>Load and process data<a class="headerlink" href="#load-and-process-data" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mg</span> <span class="o">=</span> <span class="n">load_maggot_graph</span><span class="p">()</span>
+<span class="n">mg</span> <span class="o">=</span> <span class="n">mg</span><span class="p">[</span><span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;paper_clustered_neurons&quot;</span><span class="p">]]</span>
+
+<span class="n">ll_mg</span><span class="p">,</span> <span class="n">rr_mg</span><span class="p">,</span> <span class="n">lr_mg</span><span class="p">,</span> <span class="n">rl_mg</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">bisect</span><span class="p">(</span><span class="n">paired</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">ll_adj</span> <span class="o">=</span> <span class="n">ll_mg</span><span class="o">.</span><span class="n">sum</span><span class="o">.</span><span class="n">adj</span>
+<span class="n">rr_adj</span> <span class="o">=</span> <span class="n">rr_mg</span><span class="o">.</span><span class="n">sum</span><span class="o">.</span><span class="n">adj</span>
+
+<span class="n">nodes</span> <span class="o">=</span> <span class="n">ll_mg</span><span class="o">.</span><span class="n">nodes</span>
+<span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;_inds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
+<span class="n">sorted_nodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;simple_group&quot;</span><span class="p">])</span>
+<span class="n">sort_inds</span> <span class="o">=</span> <span class="n">sorted_nodes</span><span class="p">[</span><span class="s2">&quot;_inds&quot;</span><span class="p">]</span>
+
+<span class="n">ll_adj</span> <span class="o">=</span> <span class="n">ll_adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">sort_inds</span><span class="p">,</span> <span class="n">sort_inds</span><span class="p">)]</span>
+<span class="n">rr_adj</span> <span class="o">=</span> <span class="n">rr_adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">sort_inds</span><span class="p">,</span> <span class="n">sort_inds</span><span class="p">)]</span>
+
+
+<span class="k">def</span> <span class="nf">plot_adjs</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="n">adjplot</span><span class="p">(</span>
+        <span class="n">left</span><span class="p">,</span>
+        <span class="n">plot_type</span><span class="o">=</span><span class="s2">&quot;scattermap&quot;</span><span class="p">,</span>
+        <span class="n">sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Left $\to$ left&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">palette</span><span class="p">[</span><span class="s2">&quot;Left&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">adjplot</span><span class="p">(</span>
+        <span class="n">right</span><span class="p">,</span>
+        <span class="n">plot_type</span><span class="o">=</span><span class="s2">&quot;scattermap&quot;</span><span class="p">,</span>
+        <span class="n">sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Right $\to$ right&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">palette</span><span class="p">[</span><span class="s2">&quot;Right&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">0.51</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span>
+
+
+<span class="n">plot_adjs</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Known alignment&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;Figure size 1080x504 with 2 Axes&gt;,
+ array([&lt;AxesSubplot:title={&#39;center&#39;:&#39;Left $\\to$ left&#39;}&gt;,
+        &lt;AxesSubplot:title={&#39;center&#39;:&#39;Right $\\to$ right&#39;}&gt;], dtype=object))
+</pre></div>
+</div>
+<img alt="_images/matching_illustration_4_1.png" src="_images/matching_illustration_4_1.png" />
+</div>
+</div>
+</div>
+<div class="section" id="run-several-restarts-of-graph-matching-to-understand-the-variance-in-solutions">
+<h2>Run several restarts of graph matching to understand the variance in solutions<a class="headerlink" href="#run-several-restarts-of-graph-matching-to-understand-the-variance-in-solutions" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_random_doubly_stochastic</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="n">J</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="c1"># Sinkhorn balancing</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">_doubly_stochastic</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">J</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">+</span> <span class="n">K</span> <span class="o">*</span> <span class="n">alpha</span>
+    <span class="k">return</span> <span class="n">P</span>
+
+
+<span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">maximize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">shuffle_input</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-14</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">)</span>
+<span class="n">n_restarts</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">initial_rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">best_res</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">best_fun</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_restarts</span><span class="p">):</span>
+    <span class="n">currtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">shuffle_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">unshuffle_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">shuffle_inds</span><span class="p">)</span>
+    <span class="n">P0</span> <span class="o">=</span> <span class="n">generate_random_doubly_stochastic</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+    <span class="n">options</span><span class="p">[</span><span class="s2">&quot;P0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">P0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">quadratic_assignment</span><span class="p">(</span>
+        <span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">[</span><span class="n">shuffle_inds</span><span class="p">][:,</span> <span class="n">shuffle_inds</span><span class="p">],</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span>
+    <span class="p">)</span>
+    <span class="n">res</span><span class="p">[</span><span class="s2">&quot;input_shuffle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shuffle_inds</span>
+    <span class="n">res</span><span class="p">[</span><span class="s2">&quot;P0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">P0</span>
+    <span class="n">initial_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;fun&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">best_fun</span><span class="p">:</span>
+        <span class="n">best_fun</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;fun&quot;</span><span class="p">]</span>
+        <span class="n">best_res</span> <span class="o">=</span> <span class="n">res</span>
+    <span class="n">match_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">unshuffle_inds</span> <span class="o">==</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;col_ind&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">currtime</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds elapsed for restart </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Restart </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> did </span><span class="si">{</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;nit&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> iterations.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final score: </span><span class="si">{</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;fun&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Match ratio: </span><span class="si">{</span><span class="n">match_ratio</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8.459 seconds elapsed for restart 1.
+Restart 1 did 30 iterations.
+Final score: 813586.0
+Match ratio: 0.8050478677110531
+
+8.645 seconds elapsed for restart 2.
+Restart 2 did 30 iterations.
+Final score: 769614.0
+Match ratio: 0.7597911227154047
+
+9.153 seconds elapsed for restart 3.
+Restart 3 did 30 iterations.
+Final score: 803520.0
+Match ratio: 0.8120104438642297
+
+9.254 seconds elapsed for restart 4.
+Restart 4 did 30 iterations.
+Final score: 806390.0
+Match ratio: 0.7771975630983464
+
+8.952 seconds elapsed for restart 5.
+Restart 5 did 24 iterations.
+Final score: 809333.0
+Match ratio: 0.793733681462141
+
+9.024 seconds elapsed for restart 6.
+Restart 6 did 28 iterations.
+Final score: 807318.0
+Match ratio: 0.7771975630983464
+
+10.208 seconds elapsed for restart 7.
+Restart 7 did 30 iterations.
+Final score: 815936.0
+Match ratio: 0.7989556135770235
+
+8.027 seconds elapsed for restart 8.
+Restart 8 did 23 iterations.
+Final score: 816904.0
+Match ratio: 0.8050478677110531
+
+9.839 seconds elapsed for restart 9.
+Restart 9 did 30 iterations.
+Final score: 811836.0
+Match ratio: 0.7919930374238469
+
+6.817 seconds elapsed for restart 10.
+Restart 10 did 21 iterations.
+Final score: 808854.0
+Match ratio: 0.7919930374238469
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="illustrate-graph-matching-progress-by-iteration">
+<h2>Illustrate graph matching progress by iteration<a class="headerlink" href="#illustrate-graph-matching-progress-by-iteration" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">currtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">max_iter</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;nit&quot;</span><span class="p">]</span>
+<span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">maximize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shuffle_input</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">)</span>
+<span class="n">max_iter</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">shuffle_inds</span> <span class="o">=</span> <span class="n">best_res</span><span class="p">[</span><span class="s2">&quot;input_shuffle&quot;</span><span class="p">]</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">best_res</span><span class="p">[</span><span class="s2">&quot;P0&quot;</span><span class="p">]</span>
+<span class="n">unshuffle_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">shuffle_inds</span><span class="p">)</span>
+<span class="n">plot_adjs</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">[</span><span class="n">shuffle_inds</span><span class="p">][:,</span> <span class="n">shuffle_inds</span><span class="p">])</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">fun</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">):</span>
+    <span class="n">options</span><span class="p">[</span><span class="s2">&quot;P0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">P</span>
+    <span class="n">rr_adj_shuffle</span> <span class="o">=</span> <span class="n">rr_adj</span><span class="p">[</span><span class="n">shuffle_inds</span><span class="p">][:,</span> <span class="n">shuffle_inds</span><span class="p">]</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">quadratic_assignment</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj_shuffle</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;P_final&quot;</span><span class="p">]</span>
+    <span class="n">res</span><span class="p">[</span><span class="s2">&quot;iteration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="n">perm_inds</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;col_ind&quot;</span><span class="p">]</span>
+    <span class="n">match_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">perm_inds</span> <span class="o">==</span> <span class="n">unshuffle_inds</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">res</span><span class="p">[</span><span class="s2">&quot;match_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">match_ratio</span>
+    <span class="n">plot_adjs</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj_shuffle</span><span class="p">[</span><span class="n">perm_inds</span><span class="p">][:,</span> <span class="n">perm_inds</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;fun&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">fun</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="n">fun</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;fun&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">currtime</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds elapsed.&quot;</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;iteration&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;fun&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;iteration&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;match_ratio&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9.678 seconds elapsed.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:xlabel=&#39;iteration&#39;, ylabel=&#39;match_ratio&#39;&gt;
+</pre></div>
+</div>
+<img alt="_images/matching_illustration_8_2.png" src="_images/matching_illustration_8_2.png" />
+<img alt="_images/matching_illustration_8_3.png" src="_images/matching_illustration_8_3.png" />
+<img alt="_images/matching_illustration_8_4.png" src="_images/matching_illustration_8_4.png" />
+<img alt="_images/matching_illustration_8_5.png" src="_images/matching_illustration_8_5.png" />
+<img alt="_images/matching_illustration_8_6.png" src="_images/matching_illustration_8_6.png" />
+<img alt="_images/matching_illustration_8_7.png" src="_images/matching_illustration_8_7.png" />
+<img alt="_images/matching_illustration_8_8.png" src="_images/matching_illustration_8_8.png" />
+<img alt="_images/matching_illustration_8_9.png" src="_images/matching_illustration_8_9.png" />
+<img alt="_images/matching_illustration_8_10.png" src="_images/matching_illustration_8_10.png" />
+<img alt="_images/matching_illustration_8_11.png" src="_images/matching_illustration_8_11.png" />
+<img alt="_images/matching_illustration_8_12.png" src="_images/matching_illustration_8_12.png" />
+<img alt="_images/matching_illustration_8_13.png" src="_images/matching_illustration_8_13.png" />
+<img alt="_images/matching_illustration_8_14.png" src="_images/matching_illustration_8_14.png" />
+<img alt="_images/matching_illustration_8_15.png" src="_images/matching_illustration_8_15.png" />
+</div>
+</div>
+</div>
+<div class="section" id="start-graph-matching-from-the-known-pairs-to-see-if-we-can-improve">
+<h2>Start graph matching from the known pairs to see if we can improve<a class="headerlink" href="#start-graph-matching-from-the-known-pairs-to-see-if-we-can-improve" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gm</span> <span class="o">=</span> <span class="n">GraphMatch</span><span class="p">(</span><span class="n">n_init</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">shuffle_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+<span class="n">gm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">)</span>
+<span class="n">perm_inds</span> <span class="o">=</span> <span class="n">gm</span><span class="o">.</span><span class="n">perm_inds_</span>
+<span class="n">match_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">perm_inds</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Match ratio when initializing from known pairs:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">match_ratio</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GMP objective function after initializing from known pairs:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">gm</span><span class="o">.</span><span class="n">score_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GMP objective function from known pairs:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">((</span><span class="n">ll_adj</span> <span class="o">*</span> <span class="n">rr_adj</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Match ratio when initializing from known pairs:
+0.8790252393385553
+GMP objective function after initializing from known pairs:
+850889.0
+GMP objective function from known pairs:
+846735.0
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="end">
+<h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Script took </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completed at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
+Script took 0:10:36.100451
+Completed at 2021-03-20 12:23:44.553720
+----
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+    <a class='left-prev' id="prev-link" href="off_diagonal.html" title="previous page">Off-diagonal and off-script</a>
+    <a class='right-next' id="next-link" href="flow_rank_hypothesis.html" title="next page">Flow ranking and hypothesis testing</a>
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By NeuroData<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>
