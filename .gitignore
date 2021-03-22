@@ -146,5 +146,5 @@ data/processed/2020-09-23
 data
 
 # not storing figures
-results/figs
+results
 scripts/light_speed.py
