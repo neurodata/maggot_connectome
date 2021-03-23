@@ -301,11 +301,13 @@
      The upset model
     </a>
    </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#a-test-for-feedforwardness">
-     A test for feedforwardness
-    </a>
-   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-test-for-feedforwardness">
+   A test for feedforwardness
+  </a>
+  <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#a-test-statistic-for-feedforwardness">
      A test statistic for feedforwardness
@@ -495,8 +497,9 @@ sets the overall density of the network.</p>
 </div>
 </div>
 </div>
+</div>
 <div class="section" id="a-test-for-feedforwardness">
-<h3>A test for feedforwardness<a class="headerlink" href="#a-test-for-feedforwardness" title="Permalink to this headline">¶</a></h3>
+<h2>A test for feedforwardness<a class="headerlink" href="#a-test-for-feedforwardness" title="Permalink to this headline">¶</a></h2>
 <p>We’ll use the simple model above to motivate a one-sided test for feedforwardness as
 follows:</p>
 <div class="math notranslate nohighlight">
@@ -507,7 +510,6 @@ H_0: p_{upper} = p_{lower} = p
 \[
 H_A: p_{upper} &gt; p_{lower}
 \]</div>
-</div>
 <div class="section" id="a-test-statistic-for-feedforwardness">
 <h3>A test statistic for feedforwardness<a class="headerlink" href="#a-test-statistic-for-feedforwardness" title="Permalink to this headline">¶</a></h3>
 <p>We aim to perform a 1-sample test for <span class="math notranslate nohighlight">\(H_0\)</span> vs <span class="math notranslate nohighlight">\(H_a\)</span>. The test statistic we use is
@@ -544,7 +546,7 @@ test statistics for our null distribution.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>31.290 seconds elapsed.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>31.918 seconds elapsed.
 </pre></div>
 </div>
 </div>
@@ -598,7 +600,7 @@ generate our null distribution, including degree-corrected ER.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>63.084 seconds elapsed.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>65.572 seconds elapsed.
 </pre></div>
 </div>
 </div>
@@ -657,7 +659,7 @@ generate our null distribution, including degree-corrected ER.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fbf6b7002e0&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fcb06ba3610&gt;]
 </pre></div>
 </div>
 <img alt="_images/feedforwardness_sims_17_1.png" src="_images/feedforwardness_sims_17_1.png" />
@@ -751,8 +753,8 @@ original permutation (which we of course wouldn’t know on real data).</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:01:37.093646
-Completed at 2021-03-22 21:42:48.900802
+Script took 0:01:40.243411
+Completed at 2021-03-22 21:59:20.625221
 ----
 </pre></div>
 </div>
