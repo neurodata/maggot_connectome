@@ -117,7 +117,7 @@ title += r"$p_{upper} = $" + f"{p_upper:0.2f}"
 heatmap(A[np.ix_(perm_inds, perm_inds)], cbar=False, ax=axs[1], title=title)
 
 #%% [markdown]
-# ### A test for feedforwardness
+# ## A test for feedforwardness
 # We'll use the simple model above to motivate a one-sided test for feedforwardness as
 # follows:
 #
