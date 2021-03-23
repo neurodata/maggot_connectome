@@ -3,8 +3,9 @@
 #%% [markdown]
 # ## Preliminaries
 #%%
+from pkg.utils import set_warnings
+
 import datetime
-import pprint
 import time
 
 import matplotlib.pyplot as plt
@@ -14,19 +15,10 @@ import seaborn as sns
 
 from graspologic.plot import heatmap
 from graspologic.simulations import sample_edges
-from graspologic.utils import (
-    augment_diagonal,
-    binarize,
-    multigraph_lcc_intersection,
-    pass_to_ranks,
-    remove_loops,
-)
-from pkg.data import load_adjacency, load_node_meta
+from graspologic.utils import remove_loops
 from pkg.flow import rank_graph_match_flow
 from pkg.io import savefig
 from pkg.plot import set_theme
-from pkg.utils import get_paired_inds, get_paired_subgraphs, set_warnings
-from src.visualization import adjplot  # TODO fix graspologic version and replace here
 
 set_warnings()
 
@@ -125,7 +117,7 @@ title += r"$p_{upper} = $" + f"{p_upper:0.2f}"
 heatmap(A[np.ix_(perm_inds, perm_inds)], cbar=False, ax=axs[1], title=title)
 
 #%% [markdown]
-# ### A test for a notion of feedforwardness
+# ### A test for feedforwardness
 # We'll use the simple model above to motivate a one-sided test for feedforwardness as
 # follows:
 #
@@ -138,7 +130,25 @@ heatmap(A[np.ix_(perm_inds, perm_inds)], cbar=False, ax=axs[1], title=title)
 # $$
 
 #%% [markdown]
+# ### A test statistic for feedforwardness
+# We aim to perform a 1-sample test for $H_0$ vs $H_a$. The test statistic we use is
+# simply $\hat{p}_{upper}$, the proportion of edges in the upper
+# triangle. To estimate this test statistic from a network, we use graph matching to
+# try to maximize the proportion of edges in the upper triangle (see [this notebook for
+# an application of this idea to team ranking](https://docs.neurodata.io/notebooks/pedigo/graspologic/graph-match/2021/03/05/ranking-via-gm.html)).
+
+#%% [markdown]
 # ### Simulate from the null
+# Here, we set
+#
+# $$
+# p = 0.5\\
+# n = 30\\
+# \delta = 0
+# $$
+#
+# After sampling each network we compute the test statistic above, and collect these
+# test statistics for our null distribution.
 #%%
 rows = []
 n_null_samples = 1000
@@ -153,12 +163,23 @@ for i in range(n_null_samples):
 print(f"{time.time() - currtime:.3f} seconds elapsed.")
 
 #%% [markdown]
-# ### Simulate from the alternative
-# Note that here I am calculating p-values using the null distribution from the above.
+# ### Simulate from the alternative and test for feedforwardness
+# Here, we let the "amount of feedforwardness", $\delta$, vary from 0 to 0.25. $\delta$
+# can be interpreted as the effect size. For each $\delta$ we sample 200 graphs, and run
+# a test for feedforwardness. The test computes the test statistic described above, and
+# then compares to the bootstrapped null distribution we computed above to calculate a
+# p-value.
+#
+# Note that here I am calculating p-values using the same null distribution for all of
+# these tests (for now, just for simplicity).
 # This assumes that the parameter $p$ is known, thus we only need to estimate $\delta$.
 # In real data we would have to use the plug in estimate of $\hat{p}$ which is the ER
 # global connection probability that we'd estimate from the data
-# (i.e. $\frac{M}{N (N - 1)}$).
+# (i.e. $\frac{M}{N (N - 1)}$), and then we'd sample networks from that model to
+# generate our bootstrap null distribution.
+#
+# Also note that there are plenty of other reasonable null models we could use to
+# generate our null distribution, including degree-corrected ER.
 #%%
 deltas = np.linspace(0, 0.25, num=11)
 n_samples = 200
@@ -199,17 +220,7 @@ for i, d in enumerate(str_deltas):
 # ### Plot the p-values from varying effect sizes
 #%%
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-sns.pointplot(
-    data=results,
-    x="str_delta",
-    y="pvalue",
-    zorder=1,
-    color="black",
-    ci=None,
-    join=False,
-    markers="_",
-    size=200,
-)
+
 sns.stripplot(
     data=results,
     x="str_delta",
@@ -217,8 +228,11 @@ sns.stripplot(
     hue="str_delta",
     palette=palette,
     zorder=2,
+    alpha=0.5,
+    jitter=0.3,
 )
-ax.set(xlabel="Effect size", ylabel="p-value")
+ax.get_legend().remove()
+ax.set(xlabel=r"Effect size ($\delta$)", ylabel="p-value")
 ax.xaxis.set_major_locator(plt.FixedLocator([0, 5, 10]))
 
 #%% [markdown]
@@ -244,11 +258,20 @@ power = power.to_frame().reset_index()
 power["delta"] = power["str_delta"].astype(float)
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 sns.lineplot(data=power, x="delta", y="power", ax=ax)
-ax.set(ylabel="Power", xlabel="Effect size")
+ax.set(ylabel="Power", xlabel=r"Effect size ($\delta$)")
 
 
 #%% [markdown]
 # ### Plot the "true" and estimated upper triangle probabilities
+# By true upper triangle probabilies, we mean the proportion of edges in the upper
+# triangle under the permutation that we sampled the graph from, $\phi$. The estimated
+# upper triangle probability is what we estimate after permuting the network using
+# graph matching.
+#
+# Note that it may be possible to permute a network from its starting permutation $\phi$
+# to make even more edges in the upper triangle. Conversely, it's possible that graph
+# matching fails to find a permutation with as many upper triangular edges as the
+# original permutation (which we of course wouldn't know on real data).
 #%%
 fig, ax = plt.subplots(1, 1, figsize=(8, 8))
 sns.scatterplot(
