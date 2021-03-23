@@ -421,7 +421,7 @@ parameterized by two probabilities and a ranking/permutation of a set of nodes.<
 integers <span class="math notranslate nohighlight">\(\phi \in \mathbb{R}^n\)</span>, where <span class="math notranslate nohighlight">\(n\)</span> is the number of nodes. Each element of
 <span class="math notranslate nohighlight">\(\phi\)</span> is the node’s “rank” in the network, which, along with the probabilities above,
 determine its probability of connecting to other nodes in the network. Thus, each
-element of <span class="math notranslate nohighlight">\(\phi\)</span> is a unique integer <span class="math notranslate nohighlight">\(\in \{ 1 ... n - 1\}\)</span>.</p>
+element of <span class="math notranslate nohighlight">\(\phi\)</span> is a unique integer <span class="math notranslate nohighlight">\(\in \{ 0 ... n - 1\}\)</span>.</p>
 <p>If we sort <span class="math notranslate nohighlight">\(P\)</span> according to <span class="math notranslate nohighlight">\(\phi\)</span> (largest to smallest) then <span class="math notranslate nohighlight">\(P\)</span> looks as follows:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -544,7 +544,7 @@ test statistics for our null distribution.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>37.834 seconds elapsed.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>31.290 seconds elapsed.
 </pre></div>
 </div>
 </div>
@@ -598,7 +598,7 @@ generate our null distribution, including degree-corrected ER.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>75.564 seconds elapsed.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>63.084 seconds elapsed.
 </pre></div>
 </div>
 </div>
@@ -657,7 +657,7 @@ generate our null distribution, including degree-corrected ER.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f8bed8d2b50&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fbf6b7002e0&gt;]
 </pre></div>
 </div>
 <img alt="_images/feedforwardness_sims_17_1.png" src="_images/feedforwardness_sims_17_1.png" />
@@ -751,8 +751,8 @@ original permutation (which we of course wouldn’t know on real data).</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:01:56.979773
-Completed at 2021-03-22 21:21:36.438907
+Script took 0:01:37.093646
+Completed at 2021-03-22 21:42:48.900802
 ----
 </pre></div>
 </div>
