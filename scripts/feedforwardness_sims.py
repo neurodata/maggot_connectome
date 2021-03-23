@@ -48,7 +48,7 @@ set_theme()
 # integers $\phi \in \mathbb{R}^n$, where $n$ is the number of nodes. Each element of
 # $\phi$ is the node's "rank" in the network, which, along with the probabilities above,
 # determine its probability of connecting to other nodes in the network. Thus, each
-# element of $\phi$ is a unique integer $\in \{ 1 ... n - 1\}$.
+# element of $\phi$ is a unique integer $\in \{ 0 ... n - 1\}$.
 #
 # If we sort $P$ according to $\phi$ (largest to smallest) then $P$ looks as follows:
 #
