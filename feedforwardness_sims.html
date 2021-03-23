@@ -1,0 +1,815 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>One-sample feedforwardness testing: simulation &#8212; Maggot Connectome</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.e7340bb3dbd8dde6db86f25597f54a1b.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.7d483ff0a819d6edff12ce0b1ead3928.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="shortcut icon" href="_static/nd_logo_small.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Flow ranking and hypothesis testing" href="flow_rank_hypothesis.html" />
+    <link rel="prev" title="Matching the two sides of the brain" href="matching_illustration.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/nd_logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Maggot Connectome</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="landing.html">
+   Welcome
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="outline.html">
+   Outline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="introduction.html">
+   Introduction
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Look at it
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="simple_statistics.html">
+   Simple summary statistics
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  A priori modeling
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="a_priori_sbm.html">
+   A priori SBMs
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Bilateral symmetry
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="bilateral_symmetry.html">
+   Testing bilateral symmetry
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="align_investigation.html">
+   Investigating alignment
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="off_diagonal.html">
+   Off-diagonal and off-script
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Matching
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="matching_illustration.html">
+   Matching the two sides of the brain
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Feedforwardness
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   One-sample feedforwardness testing: simulation
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Appendix
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="flow_rank_hypothesis.html">
+   Flow ranking and hypothesis testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="flow_rank.html">
+   Flow
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/feedforwardness_sims.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/neurodata/maggot_connectome"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/neurodata/maggot_connectome/issues/new?title=Issue%20on%20page%20%2Ffeedforwardness_sims.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+            <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                    data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                    title="Fullscreen mode"><i
+                        class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i>
+            Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preliminaries">
+   Preliminaries
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-model-of-feedforwardness">
+   A model of feedforwardness
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-upset-model">
+     The upset model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-test-for-a-notion-of-feedforwardness">
+     A test for a notion of feedforwardness
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#simulate-from-the-null">
+     Simulate from the null
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#simulate-from-the-alternative">
+     Simulate from the alternative
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-a-color-map">
+     Create a color map
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-p-values-from-varying-effect-sizes">
+     Plot the p-values from varying effect sizes
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-distribution-p-values-under-the-null">
+     Plot the distribution p-values under the null
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-power-for-alpha-0-05">
+     Plot power for
+     <span class="math notranslate nohighlight">
+      \(\alpha = 0.05\)
+     </span>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-true-and-estimated-upper-triangle-probabilities">
+     Plot the “true” and estimated upper triangle probabilities
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#end">
+   End
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="one-sample-feedforwardness-testing-simulation">
+<h1>One-sample feedforwardness testing: simulation<a class="headerlink" href="#one-sample-feedforwardness-testing-simulation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="preliminaries">
+<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="kn">from</span> <span class="nn">graspologic.plot</span> <span class="kn">import</span> <span class="n">heatmap</span>
+<span class="kn">from</span> <span class="nn">graspologic.simulations</span> <span class="kn">import</span> <span class="n">sample_edges</span>
+<span class="kn">from</span> <span class="nn">graspologic.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">augment_diagonal</span><span class="p">,</span>
+    <span class="n">binarize</span><span class="p">,</span>
+    <span class="n">multigraph_lcc_intersection</span><span class="p">,</span>
+    <span class="n">pass_to_ranks</span><span class="p">,</span>
+    <span class="n">remove_loops</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pkg.data</span> <span class="kn">import</span> <span class="n">load_adjacency</span><span class="p">,</span> <span class="n">load_node_meta</span>
+<span class="kn">from</span> <span class="nn">pkg.flow</span> <span class="kn">import</span> <span class="n">rank_graph_match_flow</span>
+<span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">savefig</span>
+<span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
+<span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">get_paired_inds</span><span class="p">,</span> <span class="n">get_paired_subgraphs</span><span class="p">,</span> <span class="n">set_warnings</span>
+<span class="kn">from</span> <span class="nn">src.visualization</span> <span class="kn">import</span> <span class="n">adjplot</span>  <span class="c1"># TODO fix graspologic version and replace here</span>
+
+<span class="n">set_warnings</span><span class="p">()</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">8888</span><span class="p">)</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">stashfig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">foldername</span> <span class="o">=</span> <span class="s2">&quot;feedforwardness_sims&quot;</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">foldername</span><span class="o">=</span><span class="n">foldername</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;Set1&quot;</span><span class="p">)</span>
+<span class="n">set_theme</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/miniconda3/envs/maggot-revamp/lib/python3.8/site-packages/umap/__init__.py:9: UserWarning: Tensorflow not installed; ParametricUMAP will be unavailable
+  warn(&quot;Tensorflow not installed; ParametricUMAP will be unavailable&quot;)
+</pre></div>
+</div>
+<div class="output text_html"><script type="text/javascript">
+window.PlotlyConfig = {MathJaxConfig: 'local'};
+if (window.MathJax) {MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+if (typeof require !== 'undefined') {
+require.undef("plotly");
+requirejs.config({
+    paths: {
+        'plotly': ['https://cdn.plot.ly/plotly-latest.min']
+    }
+});
+require(['plotly'], function(Plotly) {
+    window._Plotly = Plotly;
+});
+}
+</script>
+</div></div>
+</div>
+</div>
+<div class="section" id="a-model-of-feedforwardness">
+<h2>A model of feedforwardness<a class="headerlink" href="#a-model-of-feedforwardness" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-upset-model">
+<h3>The upset model<a class="headerlink" href="#the-upset-model" title="Permalink to this headline">¶</a></h3>
+<p>This model is one of the simplest feedforward models we can think of. This model is
+parameterized by two probabilities and a ranking/permutation of a set of nodes.</p>
+<p>Let the feedforward probability be <span class="math notranslate nohighlight">\(p_{fwd}\)</span>, and let the feedback probability be
+<span class="math notranslate nohighlight">\(p_{back}\)</span>. Assume we have a permutation of the nodes described by the vector of
+integers <span class="math notranslate nohighlight">\(\phi \in \mathbb{R}^n\)</span>, where <span class="math notranslate nohighlight">\(n\)</span> is the number of nodes. Each element of
+<span class="math notranslate nohighlight">\(\phi\)</span> is the node’s “rank” in the network, which, along with the probabilities above,
+determine its probability of connecting to other nodes in the network. Thus, each
+element of <span class="math notranslate nohighlight">\(\phi\)</span> is a unique integer <span class="math notranslate nohighlight">\(\in \{ 1 ... n - 1\}\)</span>.</p>
+<p>If we sort <span class="math notranslate nohighlight">\(P\)</span> according to <span class="math notranslate nohighlight">\(\phi\)</span> (largest to smallest) then <span class="math notranslate nohighlight">\(P\)</span> looks as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+P_{ij} = \begin{cases}
+p_{fwd} &amp; i &lt; j \\
+p_{back} &amp; i &gt; j \\
+0 &amp; i = j \\
+\end{cases}
+\end{split}\]</div>
+<p>Thus, <span class="math notranslate nohighlight">\(P\)</span> has all <span class="math notranslate nohighlight">\(p_{fwd}\)</span> on the upper triangle, and all <span class="math notranslate nohighlight">\(p_{back}\)</span> on the lower
+triangle. Note that this can equivalently be parameterized as</p>
+<div class="math notranslate nohighlight">
+\[
+p = \frac{p_{fwd} + p_{back}}{2} \quad
+\delta = \frac{p_{fwd} - p_{back}}{2}
+\]</div>
+<p>Under this parameterization, <span class="math notranslate nohighlight">\(\delta \in [0, 0.5]\)</span> can be thought of as how
+feedforward the network is - high values mean feedforward edges are far much more
+likely, and thus the network structure respects the ranking <span class="math notranslate nohighlight">\(\phi\)</span> more. <span class="math notranslate nohighlight">\(p\)</span> then just
+sets the overall density of the network.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calculate_p_upper</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">remove_loops</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">triu_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu_indices</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">upper_triu_sum</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">triu_inds</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">total_sum</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">upper_triu_p</span> <span class="o">=</span> <span class="n">upper_triu_sum</span> <span class="o">/</span> <span class="n">total_sum</span>
+    <span class="k">return</span> <span class="n">upper_triu_p</span>
+
+
+<span class="k">def</span> <span class="nf">construct_feedforward_P</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">triu_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu_indices</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">p_upper</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="n">delta</span>
+    <span class="n">p_lower</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">delta</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">P</span><span class="p">[</span><span class="n">triu_inds</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_upper</span>
+    <span class="n">P</span><span class="p">[</span><span class="n">triu_inds</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">p_lower</span>
+    <span class="k">return</span> <span class="n">P</span>
+
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="n">P</span> <span class="o">=</span> <span class="n">construct_feedforward_P</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">sample_edges</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loops</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">p_upper</span> <span class="o">=</span> <span class="n">calculate_p_upper</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;A (original permutation)</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="n">title</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;$p_</span><span class="si">{upper}</span><span class="s2"> = $&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p_upper</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">heatmap</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+
+<span class="n">perm_inds</span> <span class="o">=</span> <span class="n">rank_graph_match_flow</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">p_upper</span> <span class="o">=</span> <span class="n">calculate_p_upper</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">perm_inds</span><span class="p">,</span> <span class="n">perm_inds</span><span class="p">)])</span>
+
+<span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;A (estimated permutation)</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="n">title</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;$p_</span><span class="si">{upper}</span><span class="s2"> = $&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p_upper</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">heatmap</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">perm_inds</span><span class="p">,</span> <span class="n">perm_inds</span><span class="p">)],</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:title={&#39;center&#39;:&#39;A (estimated permutation)\n$p_{upper} = $0.65&#39;}&gt;
+</pre></div>
+</div>
+<img alt="_images/feedforwardness_sims_5_1.png" src="_images/feedforwardness_sims_5_1.png" />
+</div>
+</div>
+</div>
+<div class="section" id="a-test-for-a-notion-of-feedforwardness">
+<h3>A test for a notion of feedforwardness<a class="headerlink" href="#a-test-for-a-notion-of-feedforwardness" title="Permalink to this headline">¶</a></h3>
+<p>We’ll use the simple model above to motivate a one-sided test for feedforwardness as
+follows:</p>
+<div class="math notranslate nohighlight">
+\[
+H_0: p_{upper} = p_{lower} = p
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+H_A: p_{upper} &gt; p_{lower}
+\]</div>
+</div>
+<div class="section" id="simulate-from-the-null">
+<h3>Simulate from the null<a class="headerlink" href="#simulate-from-the-null" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">n_null_samples</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">null</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">currtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_null_samples</span><span class="p">):</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">construct_feedforward_P</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">sample_edges</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loops</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">perm_inds</span> <span class="o">=</span> <span class="n">rank_graph_match_flow</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">p_upper</span> <span class="o">=</span> <span class="n">calculate_p_upper</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">perm_inds</span><span class="p">,</span> <span class="n">perm_inds</span><span class="p">)])</span>
+    <span class="n">null</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p_upper</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">currtime</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds elapsed.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>36.673 seconds elapsed.
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="simulate-from-the-alternative">
+<h3>Simulate from the alternative<a class="headerlink" href="#simulate-from-the-alternative" title="Permalink to this headline">¶</a></h3>
+<p>Note that here I am calculating p-values using the null distribution from the above.
+This assumes that the parameter <span class="math notranslate nohighlight">\(p\)</span> is known, thus we only need to estimate <span class="math notranslate nohighlight">\(\delta\)</span>.
+In real data we would have to use the plug in estimate of <span class="math notranslate nohighlight">\(\hat{p}\)</span> which is the ER
+global connection probability that we’d estimate from the data
+(i.e. <span class="math notranslate nohighlight">\(\frac{M}{N (N - 1)}\)</span>).</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">deltas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">null</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">null</span><span class="p">)</span>
+<span class="n">null</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">null</span><span class="p">)</span>
+<span class="n">currtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">delta</span> <span class="ow">in</span> <span class="n">deltas</span><span class="p">:</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">construct_feedforward_P</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="n">delta</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">sample_edges</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loops</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">sampled_p_upper</span> <span class="o">=</span> <span class="n">calculate_p_upper</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;sampled_p_upper&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampled_p_upper</span>
+        <span class="n">perm_inds</span> <span class="o">=</span> <span class="n">rank_graph_match_flow</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+        <span class="n">p_upper</span> <span class="o">=</span> <span class="n">calculate_p_upper</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">perm_inds</span><span class="p">,</span> <span class="n">perm_inds</span><span class="p">)])</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;estimated_p_upper&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_upper</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;estimated_p&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">A</span><span class="p">))</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">null</span><span class="p">,</span> <span class="n">p_upper</span><span class="p">)</span>
+        <span class="n">pvalue</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ind</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">null</span><span class="p">)</span>  <span class="c1"># TODO make more exact but this is roughly right</span>
+        <span class="c1"># for the 1-sided test</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;pvalue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pvalue</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;delta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">delta</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;str_delta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">delta</span><span class="si">:</span><span class="s2">0.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">currtime</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds elapsed.&quot;</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>79.423 seconds elapsed.
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="create-a-color-map">
+<h3>Create a color map<a class="headerlink" href="#create-a-color-map" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">str_deltas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;str_delta&quot;</span><span class="p">])</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;husl&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">str_deltas</span><span class="p">))</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">str_deltas</span><span class="p">,</span> <span class="n">colors</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">str_deltas</span><span class="p">):</span>
+    <span class="n">palette</span><span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">)]</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-p-values-from-varying-effect-sizes">
+<h3>Plot the p-values from varying effect sizes<a class="headerlink" href="#plot-the-p-values-from-varying-effect-sizes" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">pointplot</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;str_delta&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;pvalue&quot;</span><span class="p">,</span>
+    <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+    <span class="n">ci</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">join</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">markers</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span>
+    <span class="n">size</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;str_delta&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;pvalue&quot;</span><span class="p">,</span>
+    <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;str_delta&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span>
+    <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Effect size&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;p-value&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">FixedLocator</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/feedforwardness_sims_14_0.png" src="_images/feedforwardness_sims_14_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-distribution-p-values-under-the-null">
+<h3>Plot the distribution p-values under the null<a class="headerlink" href="#plot-the-distribution-p-values-under-the-null" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">ecdfplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">[</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;str_delta&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;0.000&quot;</span><span class="p">],</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;pvalue&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;p-value&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Cumulative density&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;ECDF under $H_0$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fafc9c256a0&gt;]
+</pre></div>
+</div>
+<img alt="_images/feedforwardness_sims_16_1.png" src="_images/feedforwardness_sims_16_1.png" />
+</div>
+</div>
+</div>
+<div class="section" id="plot-power-for-alpha-0-05">
+<h3>Plot power for <span class="math notranslate nohighlight">\(\alpha = 0.05\)</span><a class="headerlink" href="#plot-power-for-alpha-0-05" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_power_at</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">alpha</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
+<span class="n">grouped_results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;str_delta&quot;</span><span class="p">)</span>
+<span class="n">power</span> <span class="o">=</span> <span class="n">grouped_results</span><span class="p">[</span><span class="s2">&quot;pvalue&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">calc_power_at</span><span class="p">)</span>
+<span class="n">power</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;power&quot;</span>
+<span class="n">power</span> <span class="o">=</span> <span class="n">power</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">power</span><span class="p">[</span><span class="s2">&quot;delta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">power</span><span class="p">[</span><span class="s2">&quot;str_delta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">power</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Power&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Effect size&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Text(0, 0.5, &#39;Power&#39;), Text(0.5, 0, &#39;Effect size&#39;)]
+</pre></div>
+</div>
+<img alt="_images/feedforwardness_sims_18_1.png" src="_images/feedforwardness_sims_18_1.png" />
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-true-and-estimated-upper-triangle-probabilities">
+<h3>Plot the “true” and estimated upper triangle probabilities<a class="headerlink" href="#plot-the-true-and-estimated-upper-triangle-probabilities" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;sampled_p_upper&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;estimated_p_upper&quot;</span><span class="p">,</span>
+    <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;str_delta&quot;</span><span class="p">,</span>
+    <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Delta&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">autoscale</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$p_</span><span class="si">{upper}</span><span class="s2">$ under original permutation&quot;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$p_</span><span class="si">{upper}</span><span class="s2">$ under estimated permutation&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Text(0.5, 0, &#39;$p_{upper}$ under original permutation&#39;),
+ Text(0, 0.5, &#39;$p_{upper}$ under estimated permutation&#39;)]
+</pre></div>
+</div>
+<img alt="_images/feedforwardness_sims_20_1.png" src="_images/feedforwardness_sims_20_1.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="end">
+<h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Script took </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completed at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
+Script took 0:01:59.286758
+Completed at 2021-03-22 20:11:09.574441
+----
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+    <a class='left-prev' id="prev-link" href="matching_illustration.html" title="previous page">Matching the two sides of the brain</a>
+    <a class='right-next' id="next-link" href="flow_rank_hypothesis.html" title="next page">Flow ranking and hypothesis testing</a>
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By NeuroData<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>
