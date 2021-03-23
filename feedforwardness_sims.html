@@ -302,8 +302,13 @@
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#a-test-for-a-notion-of-feedforwardness">
-     A test for a notion of feedforwardness
+    <a class="reference internal nav-link" href="#a-test-for-feedforwardness">
+     A test for feedforwardness
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-test-statistic-for-feedforwardness">
+     A test statistic for feedforwardness
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -312,8 +317,8 @@
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#simulate-from-the-alternative">
-     Simulate from the alternative
+    <a class="reference internal nav-link" href="#simulate-from-the-alternative-and-test-for-feedforwardness">
+     Simulate from the alternative and test for feedforwardness
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -369,8 +374,9 @@
 <h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">pprint</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">set_warnings</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -380,19 +386,10 @@
 
 <span class="kn">from</span> <span class="nn">graspologic.plot</span> <span class="kn">import</span> <span class="n">heatmap</span>
 <span class="kn">from</span> <span class="nn">graspologic.simulations</span> <span class="kn">import</span> <span class="n">sample_edges</span>
-<span class="kn">from</span> <span class="nn">graspologic.utils</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">augment_diagonal</span><span class="p">,</span>
-    <span class="n">binarize</span><span class="p">,</span>
-    <span class="n">multigraph_lcc_intersection</span><span class="p">,</span>
-    <span class="n">pass_to_ranks</span><span class="p">,</span>
-    <span class="n">remove_loops</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">pkg.data</span> <span class="kn">import</span> <span class="n">load_adjacency</span><span class="p">,</span> <span class="n">load_node_meta</span>
+<span class="kn">from</span> <span class="nn">graspologic.utils</span> <span class="kn">import</span> <span class="n">remove_loops</span>
 <span class="kn">from</span> <span class="nn">pkg.flow</span> <span class="kn">import</span> <span class="n">rank_graph_match_flow</span>
 <span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">savefig</span>
 <span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
-<span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">get_paired_inds</span><span class="p">,</span> <span class="n">get_paired_subgraphs</span><span class="p">,</span> <span class="n">set_warnings</span>
-<span class="kn">from</span> <span class="nn">src.visualization</span> <span class="kn">import</span> <span class="n">adjplot</span>  <span class="c1"># TODO fix graspologic version and replace here</span>
 
 <span class="n">set_warnings</span><span class="p">()</span>
 
@@ -411,27 +408,6 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/miniconda3/envs/maggot-revamp/lib/python3.8/site-packages/umap/__init__.py:9: UserWarning: Tensorflow not installed; ParametricUMAP will be unavailable
-  warn(&quot;Tensorflow not installed; ParametricUMAP will be unavailable&quot;)
-</pre></div>
-</div>
-<div class="output text_html"><script type="text/javascript">
-window.PlotlyConfig = {MathJaxConfig: 'local'};
-if (window.MathJax) {MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
-if (typeof require !== 'undefined') {
-require.undef("plotly");
-requirejs.config({
-    paths: {
-        'plotly': ['https://cdn.plot.ly/plotly-latest.min']
-    }
-});
-require(['plotly'], function(Plotly) {
-    window._Plotly = Plotly;
-});
-}
-</script>
-</div></div>
 </div>
 </div>
 <div class="section" id="a-model-of-feedforwardness">
@@ -519,8 +495,8 @@ sets the overall density of the network.</p>
 </div>
 </div>
 </div>
-<div class="section" id="a-test-for-a-notion-of-feedforwardness">
-<h3>A test for a notion of feedforwardness<a class="headerlink" href="#a-test-for-a-notion-of-feedforwardness" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="a-test-for-feedforwardness">
+<h3>A test for feedforwardness<a class="headerlink" href="#a-test-for-feedforwardness" title="Permalink to this headline">¶</a></h3>
 <p>We’ll use the simple model above to motivate a one-sided test for feedforwardness as
 follows:</p>
 <div class="math notranslate nohighlight">
@@ -532,8 +508,25 @@ H_0: p_{upper} = p_{lower} = p
 H_A: p_{upper} &gt; p_{lower}
 \]</div>
 </div>
+<div class="section" id="a-test-statistic-for-feedforwardness">
+<h3>A test statistic for feedforwardness<a class="headerlink" href="#a-test-statistic-for-feedforwardness" title="Permalink to this headline">¶</a></h3>
+<p>We aim to perform a 1-sample test for <span class="math notranslate nohighlight">\(H_0\)</span> vs <span class="math notranslate nohighlight">\(H_a\)</span>. The test statistic we use is
+simply <span class="math notranslate nohighlight">\(\hat{p}_{upper}\)</span>, the proportion of edges in the upper
+triangle. To estimate this test statistic from a network, we use graph matching to
+try to maximize the proportion of edges in the upper triangle (see <a class="reference external" href="https://docs.neurodata.io/notebooks/pedigo/graspologic/graph-match/2021/03/05/ranking-via-gm.html">this notebook for
+an application of this idea to team ranking</a>).</p>
+</div>
 <div class="section" id="simulate-from-the-null">
 <h3>Simulate from the null<a class="headerlink" href="#simulate-from-the-null" title="Permalink to this headline">¶</a></h3>
+<p>Here, we set</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+p = 0.5\\
+n = 30\\
+\delta = 0
+\end{split}\]</div>
+<p>After sampling each network we compute the test statistic above, and collect these
+test statistics for our null distribution.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
@@ -551,19 +544,28 @@ H_A: p_{upper} &gt; p_{lower}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>36.673 seconds elapsed.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>37.834 seconds elapsed.
 </pre></div>
 </div>
 </div>
 </div>
 </div>
-<div class="section" id="simulate-from-the-alternative">
-<h3>Simulate from the alternative<a class="headerlink" href="#simulate-from-the-alternative" title="Permalink to this headline">¶</a></h3>
-<p>Note that here I am calculating p-values using the null distribution from the above.
+<div class="section" id="simulate-from-the-alternative-and-test-for-feedforwardness">
+<h3>Simulate from the alternative and test for feedforwardness<a class="headerlink" href="#simulate-from-the-alternative-and-test-for-feedforwardness" title="Permalink to this headline">¶</a></h3>
+<p>Here, we let the “amount of feedforwardness”, <span class="math notranslate nohighlight">\(\delta\)</span>, vary from 0 to 0.25. <span class="math notranslate nohighlight">\(\delta\)</span>
+can be interpreted as the effect size. For each <span class="math notranslate nohighlight">\(\delta\)</span> we sample 200 graphs, and run
+a test for feedforwardness. The test computes the test statistic described above, and
+then compares to the bootstrapped null distribution we computed above to calculate a
+p-value.</p>
+<p>Note that here I am calculating p-values using the same null distribution for all of
+these tests (for now, just for simplicity).
 This assumes that the parameter <span class="math notranslate nohighlight">\(p\)</span> is known, thus we only need to estimate <span class="math notranslate nohighlight">\(\delta\)</span>.
 In real data we would have to use the plug in estimate of <span class="math notranslate nohighlight">\(\hat{p}\)</span> which is the ER
 global connection probability that we’d estimate from the data
-(i.e. <span class="math notranslate nohighlight">\(\frac{M}{N (N - 1)}\)</span>).</p>
+(i.e. <span class="math notranslate nohighlight">\(\frac{M}{N (N - 1)}\)</span>), and then we’d sample networks from that model to
+generate our bootstrap null distribution.</p>
+<p>Also note that there are plenty of other reasonable null models we could use to
+generate our null distribution, including degree-corrected ER.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">deltas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
@@ -596,7 +598,7 @@ global connection probability that we’d estimate from the data
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>79.423 seconds elapsed.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>75.564 seconds elapsed.
 </pre></div>
 </div>
 </div>
@@ -621,17 +623,7 @@ global connection probability that we’d estimate from the data
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">pointplot</span><span class="p">(</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
-    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;str_delta&quot;</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;pvalue&quot;</span><span class="p">,</span>
-    <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
-    <span class="n">ci</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">join</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">markers</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span>
-    <span class="n">size</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
-<span class="p">)</span>
+
 <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span>
     <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
     <span class="n">x</span><span class="o">=</span><span class="s2">&quot;str_delta&quot;</span><span class="p">,</span>
@@ -639,14 +631,17 @@ global connection probability that we’d estimate from the data
     <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;str_delta&quot;</span><span class="p">,</span>
     <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span>
     <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">jitter</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Effect size&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;p-value&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Effect size ($\delta$)&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;p-value&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">FixedLocator</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/feedforwardness_sims_14_0.png" src="_images/feedforwardness_sims_14_0.png" />
+<img alt="_images/feedforwardness_sims_15_0.png" src="_images/feedforwardness_sims_15_0.png" />
 </div>
 </div>
 </div>
@@ -662,10 +657,10 @@ global connection probability that we’d estimate from the data
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fafc9c256a0&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f8bed8d2b50&gt;]
 </pre></div>
 </div>
-<img alt="_images/feedforwardness_sims_16_1.png" src="_images/feedforwardness_sims_16_1.png" />
+<img alt="_images/feedforwardness_sims_17_1.png" src="_images/feedforwardness_sims_17_1.png" />
 </div>
 </div>
 </div>
@@ -684,20 +679,28 @@ global connection probability that we’d estimate from the data
 <span class="n">power</span><span class="p">[</span><span class="s2">&quot;delta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">power</span><span class="p">[</span><span class="s2">&quot;str_delta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">power</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Power&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Effect size&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Power&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Effect size ($\delta$)&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Text(0, 0.5, &#39;Power&#39;), Text(0.5, 0, &#39;Effect size&#39;)]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Text(0, 0.5, &#39;Power&#39;), Text(0.5, 0, &#39;Effect size ($\\delta$)&#39;)]
 </pre></div>
 </div>
-<img alt="_images/feedforwardness_sims_18_1.png" src="_images/feedforwardness_sims_18_1.png" />
+<img alt="_images/feedforwardness_sims_19_1.png" src="_images/feedforwardness_sims_19_1.png" />
 </div>
 </div>
 </div>
 <div class="section" id="plot-the-true-and-estimated-upper-triangle-probabilities">
 <h3>Plot the “true” and estimated upper triangle probabilities<a class="headerlink" href="#plot-the-true-and-estimated-upper-triangle-probabilities" title="Permalink to this headline">¶</a></h3>
+<p>By true upper triangle probabilies, we mean the proportion of edges in the upper
+triangle under the permutation that we sampled the graph from, <span class="math notranslate nohighlight">\(\phi\)</span>. The estimated
+upper triangle probability is what we estimate after permuting the network using
+graph matching.</p>
+<p>Note that it may be possible to permute a network from its starting permutation <span class="math notranslate nohighlight">\(\phi\)</span>
+to make even more edges in the upper triangle. Conversely, it’s possible that graph
+matching fails to find a permutation with as many upper triangular edges as the
+original permutation (which we of course wouldn’t know on real data).</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
@@ -728,7 +731,7 @@ global connection probability that we’d estimate from the data
  Text(0, 0.5, &#39;$p_{upper}$ under estimated permutation&#39;)]
 </pre></div>
 </div>
-<img alt="_images/feedforwardness_sims_20_1.png" src="_images/feedforwardness_sims_20_1.png" />
+<img alt="_images/feedforwardness_sims_21_1.png" src="_images/feedforwardness_sims_21_1.png" />
 </div>
 </div>
 </div>
@@ -748,8 +751,8 @@ global connection probability that we’d estimate from the data
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:01:59.286758
-Completed at 2021-03-22 20:11:09.574441
+Script took 0:01:56.979773
+Completed at 2021-03-22 21:21:36.438907
 ----
 </pre></div>
 </div>
