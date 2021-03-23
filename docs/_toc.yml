@@ -25,7 +25,11 @@
   chapters: 
   - file: matching_illustration
 
-- part: Flow
+- part: Feedforwardness
+  chapters: 
+  - file: feedforwardness_sims
+
+- part: Appendix
   chapters:
   - file: flow_rank_hypothesis
   - file: flow_rank
