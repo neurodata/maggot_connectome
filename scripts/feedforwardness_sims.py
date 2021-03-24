@@ -14,7 +14,7 @@ import pandas as pd
 import seaborn as sns
 
 from graspologic.plot import heatmap
-from graspologic.simulations import sample_edges
+from graspologic.simulations import sample_edges, sbm
 from graspologic.utils import remove_loops
 from pkg.flow import rank_graph_match_flow
 from pkg.io import savefig
@@ -36,7 +36,31 @@ colors = sns.color_palette("Set1")
 set_theme()
 
 #%% [markdown]
-# ## A model of feedforwardness
+# ## A test for feedforwardness
+# We'll use the simple model above to motivate a one-sided test for feedforwardness as
+# follows:
+#
+# $$
+# H_0: p_{upper} = p_{lower} = p
+# $$
+#
+# $$
+# H_A: p_{upper} > p_{lower}
+# $$
+
+#%% [markdown]
+# ### A test statistic for feedforwardness
+# We aim to perform a 1-sample test for $H_0$ vs $H_a$. The test statistic we use is
+# simply $\hat{p}_{upper}$, the proportion of edges in the upper
+# triangle. To estimate this test statistic from a network, we use graph matching to
+# try to maximize the proportion of edges in the upper triangle (see [this notebook for
+# an application of this idea to team ranking](https://docs.neurodata.io/notebooks/pedigo/graspologic/graph-match/2021/03/05/ranking-via-gm.html)).
+
+#%% [markdown]
+# ### TODO: some visual explanation of our test statistic
+
+#%% [markdown]
+# ## Evaluating the test for different models of feedforwardness
 
 #%% [markdown]
 # ### The upset model
@@ -116,29 +140,9 @@ title = "A (estimated permutation)\n"
 title += r"$p_{upper} = $" + f"{p_upper:0.2f}"
 heatmap(A[np.ix_(perm_inds, perm_inds)], cbar=False, ax=axs[1], title=title)
 
-#%% [markdown]
-# ## A test for feedforwardness
-# We'll use the simple model above to motivate a one-sided test for feedforwardness as
-# follows:
-#
-# $$
-# H_0: p_{upper} = p_{lower} = p
-# $$
-#
-# $$
-# H_A: p_{upper} > p_{lower}
-# $$
 
 #%% [markdown]
-# ### A test statistic for feedforwardness
-# We aim to perform a 1-sample test for $H_0$ vs $H_a$. The test statistic we use is
-# simply $\hat{p}_{upper}$, the proportion of edges in the upper
-# triangle. To estimate this test statistic from a network, we use graph matching to
-# try to maximize the proportion of edges in the upper triangle (see [this notebook for
-# an application of this idea to team ranking](https://docs.neurodata.io/notebooks/pedigo/graspologic/graph-match/2021/03/05/ranking-via-gm.html)).
-
-#%% [markdown]
-# ### Simulate from the null
+# #### Simulate from the null
 # Here, we set
 #
 # $$
@@ -150,20 +154,39 @@ heatmap(A[np.ix_(perm_inds, perm_inds)], cbar=False, ax=axs[1], title=title)
 # After sampling each network we compute the test statistic above, and collect these
 # test statistics for our null distribution.
 #%%
-rows = []
-n_null_samples = 1000
-null = []
-currtime = time.time()
-for i in range(n_null_samples):
+
+
+def sample_null_distribution(sample_func, tstat_func, n_samples=1000, print_time=True):
+    null = []
+    currtime = time.time()
+    for i in range(n_samples):
+        A = sample_func()
+        tstat = tstat_func(A)
+        null.append(tstat)
+    if print_time:
+        print(f"{time.time() - currtime:.3f} seconds elapsed.")
+    null = np.array(null)
+    null = np.sort(null)
+    return null
+
+
+def sample_upset():
     P = construct_feedforward_P(n, p=p, delta=0)
     A = sample_edges(P, directed=True, loops=False)
+    return A
+
+
+def p_upper_tstat(A):
     perm_inds = rank_graph_match_flow(A)
     p_upper = calculate_p_upper(A[np.ix_(perm_inds, perm_inds)])
-    null.append(p_upper)
-print(f"{time.time() - currtime:.3f} seconds elapsed.")
+    return p_upper
+
+
+null = sample_null_distribution(sample_upset, p_upper_tstat)
+
 
 #%% [markdown]
-# ### Simulate from the alternative and test for feedforwardness
+# #### Simulate from the alternative and test for feedforwardness
 # Here, we let the "amount of feedforwardness", $\delta$, vary from 0 to 0.25. $\delta$
 # can be interpreted as the effect size. For each $\delta$ we sample 200 graphs, and run
 # a test for feedforwardness. The test computes the test statistic described above, and
@@ -181,34 +204,41 @@ print(f"{time.time() - currtime:.3f} seconds elapsed.")
 # Also note that there are plenty of other reasonable null models we could use to
 # generate our null distribution, including degree-corrected ER.
 #%%
+
+
+def compute_statistics(A, null):
+    row = {}
+    row["sampled_p_upper"] = calculate_p_upper(A)
+    p_upper = p_upper_tstat(A)
+    row["estimated_p_upper"] = p_upper
+    row["estimated_p"] = np.sum(A) / (A.size - len(A))
+    ind = np.searchsorted(null, p_upper)
+    row["pvalue"] = 1 - ind / len(
+        null
+    )  # TODO make more exact but this is roughly right
+    return row
+
+
 deltas = np.linspace(0, 0.25, num=11)
 n_samples = 200
-null = np.array(null)
-null = np.sort(null)
+rows = []
 currtime = time.time()
 for delta in deltas:
     P = construct_feedforward_P(n, p=p, delta=delta)
     for i in range(n_samples):
         row = {}
+        # sample
         A = sample_edges(P, directed=True, loops=False)
-        sampled_p_upper = calculate_p_upper(A)
-        row["sampled_p_upper"] = sampled_p_upper
-        perm_inds = rank_graph_match_flow(A)
-        p_upper = calculate_p_upper(A[np.ix_(perm_inds, perm_inds)])
-        row["estimated_p_upper"] = p_upper
-        row["estimated_p"] = np.sum(A) / (A.size - len(A))
-        ind = np.searchsorted(null, p_upper)
-        pvalue = 1 - ind / len(null)  # TODO make more exact but this is roughly right
-        # for the 1-sided test
-        row["pvalue"] = pvalue
+        row = compute_statistics(A, null)
         row["delta"] = delta
         row["str_delta"] = f"{delta:0.3f}"
         rows.append(row)
 print(f"{time.time() - currtime:.3f} seconds elapsed.")
 
 results = pd.DataFrame(rows)
+
 #%% [markdown]
-# ### Create a color map
+# #### Create a color map
 #%%
 str_deltas = np.unique(results["str_delta"])
 colors = sns.color_palette("husl", len(str_deltas))
@@ -217,52 +247,66 @@ for i, d in enumerate(str_deltas):
     palette[float(d)] = colors[i]
 
 #%% [markdown]
-# ### Plot the p-values from varying effect sizes
+# #### Plot the p-values from varying effect sizes
 #%%
-fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+def plot_pvalues(results):
+    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+    sns.stripplot(
+        data=results,
+        x="str_delta",
+        y="pvalue",
+        hue="str_delta",
+        palette=palette,
+        zorder=2,
+        alpha=0.5,
+        jitter=0.3,
+    )
+    ax.get_legend().remove()
+    ax.set(xlabel=r"Effect size ($\delta$)", ylabel="p-value")
+    ax.xaxis.set_major_locator(plt.FixedLocator([0, 5, 10]))
+    return ax
 
-sns.stripplot(
-    data=results,
-    x="str_delta",
-    y="pvalue",
-    hue="str_delta",
-    palette=palette,
-    zorder=2,
-    alpha=0.5,
-    jitter=0.3,
-)
-ax.get_legend().remove()
-ax.set(xlabel=r"Effect size ($\delta$)", ylabel="p-value")
-ax.xaxis.set_major_locator(plt.FixedLocator([0, 5, 10]))
+
+plot_pvalues(results)
 
 #%% [markdown]
-# ### Plot the distribution p-values under the null
+# #### Plot the distribution p-values under the null
 #%%
-fig, ax = plt.subplots(1, 1, figsize=(6, 6))
-sns.ecdfplot(data=results[results["str_delta"] == "0.000"], x="pvalue")
-ax.set(xlabel="p-value", ylabel="Cumulative density", title=r"ECDF under $H_0$")
-ax.plot([0, 1], [0, 1], color="darkred", linestyle="--", zorder=-1)
 
+
+def plot_null_ecdf(results):
+    fig, ax = plt.subplots(1, 1, figsize=(6, 6))
+    sns.ecdfplot(data=results[results["str_delta"] == "0.000"], x="pvalue")
+    ax.set(xlabel="p-value", ylabel="Cumulative density", title=r"ECDF under $H_0$")
+    ax.plot([0, 1], [0, 1], color="darkred", linestyle="--", zorder=-1)
+    return ax
+
+
+plot_null_ecdf(results)
 
 #%% [markdown]
-# ### Plot power for $\alpha = 0.05$
+# #### Plot power for $\alpha = 0.05$
 #%%
 def calc_power_at(x, alpha=0.05):
     return (x < alpha).sum() / len(x)
 
 
-grouped_results = results.groupby("str_delta")
-power = grouped_results["pvalue"].agg(calc_power_at)
-power.name = "power"
-power = power.to_frame().reset_index()
-power["delta"] = power["str_delta"].astype(float)
-fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-sns.lineplot(data=power, x="delta", y="power", ax=ax)
-ax.set(ylabel="Power", xlabel=r"Effect size ($\delta$)")
+def plot_power(results):
+    grouped_results = results.groupby("str_delta")
+    power = grouped_results["pvalue"].agg(calc_power_at)
+    power.name = "power"
+    power = power.to_frame().reset_index()
+    power["delta"] = power["str_delta"].astype(float)
+    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+    sns.lineplot(data=power, x="delta", y="power", ax=ax)
+    ax.set(ylabel="Power", xlabel=r"Effect size ($\delta$)")
+    return ax
 
+
+plot_power(results)
 
 #%% [markdown]
-# ### Plot the "true" and estimated upper triangle probabilities
+# #### Plot the "true" and estimated upper triangle probabilities
 # By true upper triangle probabilies, we mean the proportion of edges in the upper
 # triangle under the permutation that we sampled the graph from, $\phi$. The estimated
 # upper triangle probability is what we estimate after permuting the network using
@@ -293,6 +337,107 @@ ax.set(
     xlabel=r"$p_{upper}$ under original permutation",
     ylabel=r"$p_{upper}$ under estimated permutation",
 )
+
+#%% [markdown]
+# ### A feedforward SBM model
+# Here we construct a 2-block SBM where the block probabilities are feedforward with an
+# amount that depends on $\delta$.
+
+#%%
+
+
+def construct_feedforward_B(p=0.5, delta=0):
+    B = np.array([[p, p + delta], [p - delta, p]])
+    return B
+
+
+delta = 0.1
+B = construct_feedforward_B(0.5, delta)
+ns = [15, 15]
+A, labels = sbm(ns, B, directed=True, loops=False, return_labels=True)
+fig, axs = plt.subplots(1, 3, figsize=(12, 4))
+
+title = "Block probabilities\n"
+title += r"$\delta = $" + f"{delta}"
+annot = np.array([[r"$p$", r"$p + \delta$"], [r"$p + \delta$", r"$p$"]])
+sns.heatmap(
+    B,
+    vmin=0,
+    center=0,
+    vmax=1,
+    cmap="RdBu_r",
+    annot=annot,
+    cbar=False,
+    square=True,
+    fmt="",
+    ax=axs[0],
+    xticklabels=False,
+    yticklabels=False,
+)
+axs[0].set_title(title, pad=16.5)
+
+p_upper = calculate_p_upper(A)
+title = "A (original permutation)\n"
+title += r"$p_{upper} = $" + f"{p_upper:0.2f}"
+heatmap(A, cbar=False, ax=axs[1], title=title)
+
+perm_inds = rank_graph_match_flow(A)
+p_upper = calculate_p_upper(A[np.ix_(perm_inds, perm_inds)])
+
+title = "A (estimated permutation)\n"
+title += r"$p_{upper} = $" + f"{p_upper:0.2f}"
+heatmap(A[np.ix_(perm_inds, perm_inds)], cbar=False, ax=axs[2], title=title)
+
+#%% [markdown]
+# #### Simulate from the null
+# %%
+
+B = construct_feedforward_B(0.5, 0)
+
+
+def sample_func():
+    return sbm(ns, B, directed=True, loops=False)
+
+
+null = sample_null_distribution(sample_func, p_upper_tstat)
+
+# %% [markdown]
+# #### Simulate from the alternative and test for feedforwardness
+#%%
+
+deltas = np.linspace(0, 0.25, num=11)
+n_samples = 200
+rows = []
+currtime = time.time()
+for delta in deltas:
+    B = construct_feedforward_B(p, delta)
+    for i in range(n_samples):
+        row = {}
+        # sample
+        A = sbm(ns, B, directed=True, loops=False)
+        row = compute_statistics(A, null)
+        row["delta"] = delta
+        row["str_delta"] = f"{delta:0.3f}"
+        rows.append(row)
+print(f"{time.time() - currtime:.3f} seconds elapsed.")
+
+results = pd.DataFrame(rows)
+
+#%% [markdown]
+# #### Plot the p-values from varying effect sizes
+#%%
+plot_pvalues(results)
+
+
+#%% [markdown]
+# #### Plot the distribution p-values under the null
+#%%
+plot_null_ecdf(results)
+
+#%% [markdown]
+# #### Plot power for $\alpha = 0.05$
+#%%
+plot_power(results)
 
 # %% [markdown]
 # ## End
