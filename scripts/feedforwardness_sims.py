@@ -121,24 +121,33 @@ def construct_feedforward_P(n, p=0.5, delta=0):
 
 n = 30
 p = 0.5
+delta = 0.1
 
-P = construct_feedforward_P(n, p=p, delta=0.1)
+P = construct_feedforward_P(n, p=p, delta=delta)
 
 A = sample_edges(P, directed=True, loops=False)
 
-fig, axs = plt.subplots(1, 2, figsize=(8, 4))
+fig, axs = plt.subplots(1, 3, figsize=(12, 4))
+
+# TODO make a plot of Phat
+title = r"$P$" + "\n"
+title += r"$p = $" + f"{p}, " + r"$\delta = $" + f"{delta}"
+ax = axs[0]
+heatmap(P, vmin=0, vmax=1, cbar=False, ax=ax, title=title)
+ax.text(n / 4, 3 * n / 4, r"$p - \delta$", ha="center", va="center")
+ax.text(3 * n / 4, n / 4, r"$p - \delta$", ha="center", va="center", color="white")
 
 p_upper = calculate_p_upper(A)
 title = "A (original permutation)\n"
 title += r"$p_{upper} = $" + f"{p_upper:0.2f}"
-heatmap(A, cbar=False, ax=axs[0], title=title)
+heatmap(A, cbar=False, ax=axs[1], title=title)
 
 perm_inds = rank_graph_match_flow(A)
 p_upper = calculate_p_upper(A[np.ix_(perm_inds, perm_inds)])
 
 title = "A (estimated permutation)\n"
 title += r"$p_{upper} = $" + f"{p_upper:0.2f}"
-heatmap(A[np.ix_(perm_inds, perm_inds)], cbar=False, ax=axs[1], title=title)
+heatmap(A[np.ix_(perm_inds, perm_inds)], cbar=False, ax=axs[2], title=title)
 
 
 #%% [markdown]
@@ -358,7 +367,7 @@ A, labels = sbm(ns, B, directed=True, loops=False, return_labels=True)
 fig, axs = plt.subplots(1, 3, figsize=(12, 4))
 
 title = "Block probabilities\n"
-title += r"$\delta = $" + f"{delta}"
+title += r"$p = $" + f"{p}, " + r"$\delta = $" + f"{delta}"
 annot = np.array([[r"$p$", r"$p + \delta$"], [r"$p + \delta$", r"$p$"]])
 sns.heatmap(
     B,
