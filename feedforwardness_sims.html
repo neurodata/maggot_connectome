@@ -534,24 +534,33 @@ sets the overall density of the network.</p>
 
 <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
 <span class="n">p</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-<span class="n">P</span> <span class="o">=</span> <span class="n">construct_feedforward_P</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">construct_feedforward_P</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="n">delta</span><span class="p">)</span>
 
 <span class="n">A</span> <span class="o">=</span> <span class="n">sample_edges</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loops</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># TODO make a plot of Phat</span>
+<span class="n">title</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$P$&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="n">title</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;$p = $&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">, &quot;</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;$\delta = $&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">heatmap</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">n</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$p - \delta$&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$p - \delta$&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
 
 <span class="n">p_upper</span> <span class="o">=</span> <span class="n">calculate_p_upper</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;A (original permutation)</span><span class="se">\n</span><span class="s2">&quot;</span>
 <span class="n">title</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;$p_</span><span class="si">{upper}</span><span class="s2"> = $&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p_upper</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="n">heatmap</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+<span class="n">heatmap</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
 
 <span class="n">perm_inds</span> <span class="o">=</span> <span class="n">rank_graph_match_flow</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 <span class="n">p_upper</span> <span class="o">=</span> <span class="n">calculate_p_upper</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">perm_inds</span><span class="p">,</span> <span class="n">perm_inds</span><span class="p">)])</span>
 
 <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;A (estimated permutation)</span><span class="se">\n</span><span class="s2">&quot;</span>
 <span class="n">title</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;$p_</span><span class="si">{upper}</span><span class="s2"> = $&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p_upper</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="n">heatmap</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">perm_inds</span><span class="p">,</span> <span class="n">perm_inds</span><span class="p">)],</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+<span class="n">heatmap</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">perm_inds</span><span class="p">,</span> <span class="n">perm_inds</span><span class="p">)],</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -606,7 +615,7 @@ test statistics for our null distribution.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>33.481 seconds elapsed.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>30.464 seconds elapsed.
 </pre></div>
 </div>
 </div>
@@ -664,7 +673,7 @@ generate our null distribution, including degree-corrected ER.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>71.059 seconds elapsed.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>65.485 seconds elapsed.
 </pre></div>
 </div>
 </div>
@@ -837,7 +846,7 @@ amount that depends on <span class="math notranslate nohighlight">\(\delta\)</sp
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Block probabilities</span><span class="se">\n</span><span class="s2">&quot;</span>
-<span class="n">title</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;$\delta = $&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">title</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;$p = $&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">, &quot;</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;$\delta = $&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="n">annot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="sa">r</span><span class="s2">&quot;$p$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$p + \delta$&quot;</span><span class="p">],</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$p + \delta$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$p$&quot;</span><span class="p">]])</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span>
     <span class="n">B</span><span class="p">,</span>
@@ -892,7 +901,7 @@ amount that depends on <span class="math notranslate nohighlight">\(\delta\)</sp
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>31.912 seconds elapsed.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>29.691 seconds elapsed.
 </pre></div>
 </div>
 </div>
@@ -923,7 +932,7 @@ amount that depends on <span class="math notranslate nohighlight">\(\delta\)</sp
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>70.928 seconds elapsed.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>64.146 seconds elapsed.
 </pre></div>
 </div>
 </div>
@@ -994,8 +1003,8 @@ amount that depends on <span class="math notranslate nohighlight">\(\delta\)</sp
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:03:32.678525
-Completed at 2021-03-24 13:17:50.089896
+Script took 0:03:14.758523
+Completed at 2021-03-24 14:25:22.496200
 ----
 </pre></div>
 </div>
