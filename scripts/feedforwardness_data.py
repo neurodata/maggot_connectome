@@ -52,8 +52,8 @@ set_theme()
 
 mg = load_maggot_graph()
 mg = mg[mg.nodes["paper_clustered_neurons"]]
-mg = mg[mg.nodes["left"]]
-mg = mg[mg.nodes["class1"] == "KC"]
+# mg = mg[mg.nodes["left"]]
+# mg = mg[mg.nodes["class1"] == "KC"]
 
 #%% [markdown]
 # ## Run a one-sample test for feedforwardness on each edge type
@@ -77,7 +77,9 @@ def sample_null_distribution(sample_func, tstat_func, n_samples=1000, parallel=T
             return tstat
 
         seeds = np.random.randint(1e8, size=n_samples)
-        null = Parallel(n_jobs=48)(delayed(sample_and_tstat)(seed) for seed in seeds)
+        null = Parallel(n_jobs=48, verbose=10)(
+            delayed(sample_and_tstat)(seed) for seed in seeds
+        )
     else:
         null = []
         for i in tqdm(range(n_samples)):
