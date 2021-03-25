@@ -52,8 +52,8 @@ set_theme()
 
 mg = load_maggot_graph()
 mg = mg[mg.nodes["paper_clustered_neurons"]]
-# mg = mg[mg.nodes["left"]]
-# mg = mg[mg.nodes["class1"] == "KC"]
+mg = mg[mg.nodes["left"]]
+mg = mg[mg.nodes["class1"] == "KC"]
 
 #%% [markdown]
 # ## Run a one-sample test for feedforwardness on each edge type
