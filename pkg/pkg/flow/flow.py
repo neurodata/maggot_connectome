@@ -56,3 +56,13 @@ def rank_graph_match_flow(A, n_init=10, max_iter=30, eps=1e-4, **kwargs):
     gm = GraphMatch(n_init=n_init, max_iter=max_iter, init=init, eps=eps, **kwargs)
     perm_inds = gm.fit_predict(match_mat, A)
     return perm_inds
+
+
+def calculate_p_upper(A):
+    A = remove_loops(A)
+    n = len(A)
+    triu_inds = np.triu_indices(n, k=1)
+    upper_triu_sum = A[triu_inds].sum()
+    total_sum = A.sum()
+    upper_triu_p = upper_triu_sum / total_sum
+    return upper_triu_p

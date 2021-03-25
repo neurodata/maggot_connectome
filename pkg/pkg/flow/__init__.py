@@ -3,4 +3,5 @@ from .flow import (
     signal_flow,
     rank_signal_flow,
     rank_graph_match_flow,
+    calculate_p_upper,
 )
