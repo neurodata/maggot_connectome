@@ -66,13 +66,14 @@ def p_upper_tstat(A):
     return p_upper
 
 
-def sample_null_distribution(sample_func, tstat_func, n_samples=1000, parallel=True):
+def sample_null_distribution(p_mat, tstat_func, n_samples=1000, parallel=True):
     if parallel:
 
         def sample_and_tstat(seed=None):
             if seed is not None:
                 np.random.seed(seed)
-            A = sample_func()
+            # A = sample_func()
+            A = sample_edges(p_mat, directed=True, loops=False)
             tstat = tstat_func(A)
             return tstat
 
@@ -83,7 +84,7 @@ def sample_null_distribution(sample_func, tstat_func, n_samples=1000, parallel=T
     else:
         null = []
         for i in tqdm(range(n_samples)):
-            A = sample_func()
+            A = sample_edges(p_mat, directed=True, loops=False)
             tstat = tstat_func(A)
             null.append(tstat)
     null = np.array(null)
@@ -133,7 +134,7 @@ for edge_type in edge_types:
             return np.squeeze(ne.sample())
 
         null = sample_null_distribution(
-            sampler, p_upper_tstat, n_samples=n_null_samples
+            ne.p_mat_, p_upper_tstat, n_samples=n_null_samples
         )
 
         null_dist = pd.Series(data=null, name="estimated_p_upper").to_frame()
