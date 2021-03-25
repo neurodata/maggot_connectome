@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from tqdm import tqdm
+from joblib import Parallel, delayed
 
 from graspologic.models import DCEREstimator, EREstimator
 from graspologic.plot import heatmap
@@ -65,11 +66,7 @@ def p_upper_tstat(A):
     return p_upper
 
 
-from joblib import Parallel, delayed
-
-
 def sample_null_distribution(sample_func, tstat_func, n_samples=1000, parallel=True):
-    null = []
     if parallel:
 
         def sample_and_tstat(seed=None):
@@ -80,12 +77,13 @@ def sample_null_distribution(sample_func, tstat_func, n_samples=1000, parallel=T
             return tstat
 
         seeds = np.random.randint(1e8, size=n_samples)
-        Parallel(n_jobs=-2)(delayed(sample_and_tstat)(seed) for seed in seeds)
-
-    for i in tqdm(range(n_samples)):
-        A = sample_func()
-        tstat = tstat_func(A)
-        null.append(tstat)
+        null = Parallel(n_jobs=48)(delayed(sample_and_tstat)(seed) for seed in seeds)
+    else:
+        null = []
+        for i in tqdm(range(n_samples)):
+            A = sample_func()
+            tstat = tstat_func(A)
+            null.append(tstat)
     null = np.array(null)
     null = np.sort(null)
     return null
