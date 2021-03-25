@@ -72,9 +72,7 @@ def sample_null_distribution(p_mat, tstat_func, n_samples=1000, parallel=True):
         def sample_and_tstat(seed=None):
             if seed is not None:
                 np.random.seed(seed)
-            # A = sample_func()
-            print(type(p_mat))
-            A = sample_edges(p_mat, directed=True, loops=False)
+            A = sample_edges(np.array(p_mat), directed=True, loops=False)
             tstat = tstat_func(A)
             return tstat
 
