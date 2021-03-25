@@ -65,19 +65,27 @@ def p_upper_tstat(A):
     return p_upper
 
 
-def sample_null_distribution(sample_func, tstat_func, n_samples=1000, print_time=True):
+from joblib import Parallel, delayed
+
+
+def sample_null_distribution(sample_func, tstat_func, n_samples=1000, parallel=True):
     null = []
-    currtime = time.time()
+    if parallel:
+
+        def sample_and_tstat(seed=None):
+            if seed is not None:
+                np.random.seed(seed)
+            A = sample_func()
+            tstat = tstat_func(A)
+            return tstat
+
+        seeds = np.random.randint(1e8, size=n_samples)
+        Parallel(n_jobs=-2)(delayed(sample_and_tstat)(seed) for seed in seeds)
+
     for i in tqdm(range(n_samples)):
-        currtime = time.time()
         A = sample_func()
-        currtime = time.time()
         tstat = tstat_func(A)
         null.append(tstat)
-    if print_time:
-        print(
-            f"{time.time() - currtime:.3f} seconds elapsed to calculate null distribution."
-        )
     null = np.array(null)
     null = np.sort(null)
     return null
