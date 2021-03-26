@@ -60,6 +60,8 @@ mg = mg[mg.nodes["paper_clustered_neurons"]]
 #%%
 rerun_test = False
 
+from graspologic.utils import is_fully_connected
+
 
 def p_upper_tstat(A):
     perm_inds = rank_graph_match_flow(A, n_init=1, max_iter=20)
@@ -85,6 +87,16 @@ def sample_null_distribution(p_mat, tstat_func, n_samples=1000, parallel=True):
         null = []
         for i in tqdm(range(n_samples)):
             A = sample_edges(p_mat, directed=True, loops=False)
+            if not is_fully_connected(A):
+                print("Original sample was not fully connected, trying again...")
+                tries = 0
+                connected = False
+                while not connected and tries < 10:
+                    A = sample_edges(p_mat, directed=True, loops=False)
+                    connected = is_fully_connected(A)
+                    tries += 1
+                if not connected:
+                    print("Did not sample connected graph after 10 tries.")
             tstat = tstat_func(A)
             null.append(tstat)
     null = np.array(null)
