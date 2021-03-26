@@ -1,27 +1,33 @@
 #%% [markdown]
 # # One-sample feedforwardness testing: data
 
-#%% [markdown]
+#%%
 from pkg.utils import set_warnings
 
 import datetime
 import time
+from pathlib import Path
+import os
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from tqdm import tqdm
 from joblib import Parallel, delayed
+from tqdm import tqdm
 
 from graspologic.models import DCEREstimator, EREstimator
 from graspologic.plot import heatmap
 from graspologic.simulations import sample_edges, sbm
-from graspologic.utils import binarize, largest_connected_component, remove_loops
+from graspologic.utils import (
+    binarize,
+    is_fully_connected,
+    largest_connected_component,
+    remove_loops,
+)
 from pkg.data import load_maggot_graph
 from pkg.flow import calculate_p_upper, rank_graph_match_flow
 from pkg.io import savefig
-from pathlib import Path
 from pkg.plot import set_theme
 
 #%%
@@ -34,6 +40,7 @@ np.random.seed(8888)
 
 t0 = time.time()
 
+os.chdir("/Users/bpedigo/JHU_code/maggot")
 out_path = Path("maggot_connectome/results/outputs/feedforwardness_data")
 
 
@@ -49,17 +56,12 @@ set_theme()
 # ### Load the data
 
 #%%
-
 mg = load_maggot_graph()
 mg = mg[mg.nodes["paper_clustered_neurons"]]
-# mg = mg[mg.nodes["left"]]
-# mg = mg[mg.nodes["class1"] == "KC"]
 
 #%% [markdown]
 # ## Run a one-sample test for feedforwardness on each edge type
 #%%
-
-from graspologic.utils import is_fully_connected
 
 
 def p_upper_tstat(A):
@@ -174,7 +176,7 @@ if rerun_test:
     print(f"{time.time() - currtime:.3f} seconds elapsed.")
 
 #%% [markdown]
-# ## Plot null distribution and observed test statistic for feedforward tests
+# ## Plot null distribution and observed test statistic for feedforward testss
 #%%
 
 statistics = pd.read_csv(out_path / "statistics.csv", index_col=0)
