@@ -129,7 +129,7 @@ null_estimators = {
     "DCER": DCEREstimator(directed=True, loops=False, degree_directed=False),
 }
 
-rerun_test = True
+rerun_test = False
 
 if rerun_test:
     currtime = time.time()
@@ -173,6 +173,8 @@ if rerun_test:
 
     print(f"{time.time() - currtime:.3f} seconds elapsed.")
 
+#%% [markdown]
+# ## Plot null distribution and observed test statistic for feedforward tests
 #%%
 
 statistics = pd.read_csv(out_path / "statistics.csv", index_col=0)
@@ -180,12 +182,18 @@ statistics = pd.read_csv(out_path / "statistics.csv", index_col=0)
 for edge_type in edge_types:
     edge_type_stats = statistics[statistics["edge_type"] == edge_type]
     fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-    sns.histplot(
+    sns.kdeplot(
         data=edge_type_stats[edge_type_stats["null_model"] != "Observed"],
         x="estimated_p_upper",
         hue="null_model",
-        stat="density",
         ax=ax,
+        cut=0,
+        fill=True
+        # stat="density",
+        # element="poly",
+        # kde=True,
+        # binwidth=0.001,
+        # common_bins=True,
     )
     ax.get_legend().set_title("Null model")
     observed = edge_type_stats[edge_type_stats["null_model"] == "Observed"]

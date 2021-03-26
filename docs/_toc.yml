@@ -28,6 +28,7 @@
 - part: Feedforwardness
   chapters: 
   - file: feedforwardness_sims
+  - file: feedforwardness_data
 
 - part: Appendix
   chapters:
