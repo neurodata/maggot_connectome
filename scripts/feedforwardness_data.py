@@ -58,6 +58,7 @@ mg = mg[mg.nodes["paper_clustered_neurons"]]
 #%% [markdown]
 # ## Run a one-sample test for feedforwardness on each edge type
 #%%
+rerun_test = False
 
 
 def p_upper_tstat(A):
@@ -107,46 +108,46 @@ null_estimators = {
     "DCER": DCEREstimator(directed=True, loops=False, degree_directed=False),
 }
 
-currtime = time.time()
+if rerun_test:
+    currtime = time.time()
 
-n_null_samples = 100
-statistics = []
+    n_null_samples = 100
+    statistics = []
 
-for edge_type in edge_types:
-    print(f"Edge type = {edge_type}")
-    edge_type_adj = mg.to_edge_type_graph(edge_type).adj
-    edge_type_adj = binarize(edge_type_adj)
-    largest_connected_component(edge_type_adj)
-    tstat = p_upper_tstat(edge_type_adj)
+    for edge_type in edge_types:
+        print(f"Edge type = {edge_type}")
+        edge_type_adj = mg.to_edge_type_graph(edge_type).adj
+        edge_type_adj = binarize(edge_type_adj)
+        largest_connected_component(edge_type_adj)
+        tstat = p_upper_tstat(edge_type_adj)
 
-    observed = pd.DataFrame(index=[0])
-    observed["estimated_p_upper"] = tstat
-    observed["edge_type"] = edge_type
-    observed["null_model"] = "Observed"
-    statistics.append(observed)
+        observed = pd.DataFrame(index=[0])
+        observed["estimated_p_upper"] = tstat
+        observed["edge_type"] = edge_type
+        observed["null_model"] = "Observed"
+        statistics.append(observed)
 
-    # estimate null distribution via bootstrap sampling
-    for null_name, NullEstimator in null_estimators.items():
-        ne = NullEstimator.fit(edge_type_adj)
+        # estimate null distribution via bootstrap sampling
+        for null_name, NullEstimator in null_estimators.items():
+            ne = NullEstimator.fit(edge_type_adj)
 
-        def sampler():
-            return np.squeeze(ne.sample())
+            def sampler():
+                return np.squeeze(ne.sample())
 
-        null = sample_null_distribution(
-            ne.p_mat_, p_upper_tstat, n_samples=n_null_samples
-        )
+            null = sample_null_distribution(
+                ne.p_mat_, p_upper_tstat, n_samples=n_null_samples
+            )
 
-        null_dist = pd.Series(data=null, name="estimated_p_upper").to_frame()
-        null_dist["null_model"] = null_name
-        null_dist["edge_type"] = edge_type
-        statistics.append(null_dist)
+            null_dist = pd.Series(data=null, name="estimated_p_upper").to_frame()
+            null_dist["null_model"] = null_name
+            null_dist["edge_type"] = edge_type
+            statistics.append(null_dist)
 
+    statistics = pd.concat(statistics, ignore_index=True)
+    statistics.to_csv(out_path / "statistics.csv")
+    print()
 
-statistics = pd.concat(statistics, ignore_index=True)
-statistics.to_csv(out_path / "statistics.csv")
-print()
-
-print(f"{time.time() - currtime:.3f} seconds elapsed.")
+    print(f"{time.time() - currtime:.3f} seconds elapsed.")
 
 #%%
 
