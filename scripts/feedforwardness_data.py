@@ -76,6 +76,16 @@ def sample_null_distribution(p_mat, tstat_func, n_samples=1000, parallel=True):
             if seed is not None:
                 np.random.seed(seed)
             A = sample_edges(np.array(p_mat), directed=True, loops=False)
+            if not is_fully_connected(A):
+                print("Original sample was not fully connected, trying again...")
+                tries = 0
+                connected = False
+                while not connected and tries < 10:
+                    A = sample_edges(p_mat, directed=True, loops=False)
+                    connected = is_fully_connected(A)
+                    tries += 1
+                if not connected:
+                    print("Did not sample connected graph after 10 tries.")
             tstat = tstat_func(A)
             return tstat
 
