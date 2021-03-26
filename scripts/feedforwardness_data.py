@@ -143,9 +143,10 @@ if rerun_test:
             null_dist["edge_type"] = edge_type
             statistics.append(null_dist)
 
-    statistics = pd.concat(statistics, ignore_index=True)
-    statistics.to_csv(out_path / "statistics.csv")
-    print()
+        statistics_save = pd.concat(statistics, ignore_index=True)
+        statistics_save.to_csv(out_path / "statistics.csv")
+        print("Saved progress to statistics.csv")
+        print()
 
     print(f"{time.time() - currtime:.3f} seconds elapsed.")
 
