@@ -61,6 +61,11 @@ mg = mg[mg.nodes["paper_clustered_neurons"]]
 
 #%% [markdown]
 # ## Run a one-sample test for feedforwardness on each edge type
+# Here the number of bootstrap samples for the null distributions is 100. We compute the
+# null distribution for both the ER and DCER fits to each observed network.
+#
+# NB: There was some weirdness where often some of the sampled graphs were disconnected.
+# I think this happened in particular for the DCER graphs.
 #%%
 
 
@@ -176,7 +181,9 @@ if rerun_test:
     print(f"{time.time() - currtime:.3f} seconds elapsed.")
 
 #%% [markdown]
-# ## Plot null distribution and observed test statistic for feedforward testss
+# ## Plot feedforward test statistics
+# We look at the test statistic $p_{upper}$ (see {doc}`./bilateral_symmetry`)
+# for the observed data as well as for samples from ER and DCER null models.
 #%%
 
 statistics = pd.read_csv(out_path / "statistics.csv", index_col=0)
@@ -190,17 +197,25 @@ for edge_type in edge_types:
         hue="null_model",
         ax=ax,
         cut=0,
-        fill=True
-        # stat="density",
-        # element="poly",
-        # kde=True,
-        # binwidth=0.001,
-        # common_bins=True,
+        fill=True,
     )
-    ax.get_legend().set_title("Null model")
     observed = edge_type_stats[edge_type_stats["null_model"] == "Observed"]
-    ax.axvline(observed.iloc[0]["estimated_p_upper"], color="darkred", linestyle="--")
-    ax.set(xlabel=r"$\hat{p}_{upper}$", title=edge_type.upper())
+    line = ax.axvline(
+        observed.iloc[0]["estimated_p_upper"], color="darkred", linestyle="--"
+    )
+
+    legend = ax.get_legend()
+    legend.set_title("Null model")
+    legend._set_loc((1, 0.8))
+    handles = legend.legendHandles
+    handles.append(line)
+    labels = [t.get_text() for t in legend.texts]
+    labels.append("Observed")
+    legend.remove()
+    ax.legend(handles=handles, labels=labels, bbox_to_anchor=(1, 1), loc="upper left")
+
+    ax.set(xlabel=r"$\hat{p}_{upper}$", title=edge_type.upper(), yticklabels=[])
+    ax.spines["left"].set_visible(False)
     stashfig(f"{edge_type}_p_upper_statistic")
 
 # %% [markdown]
