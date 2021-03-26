@@ -80,7 +80,7 @@ def sample_null_distribution(p_mat, tstat_func, n_samples=1000, parallel=True):
                 tries = 0
                 connected = False
                 while not connected and tries < 10:
-                    A = sample_edges(p_mat, directed=True, loops=False)
+                    A = sample_edges(np.array(p_mat), directed=True, loops=False)
                     connected = is_fully_connected(A)
                     tries += 1
                 if not connected:
@@ -101,7 +101,7 @@ def sample_null_distribution(p_mat, tstat_func, n_samples=1000, parallel=True):
                 tries = 0
                 connected = False
                 while not connected and tries < 10:
-                    A = sample_edges(p_mat, directed=True, loops=False)
+                    A = sample_edges(np.array(p_mat), directed=True, loops=False)
                     connected = is_fully_connected(A)
                     tries += 1
                 if not connected:
