@@ -1,5 +1,9 @@
 #%% [markdown]
 # # One-sample feedforwardness testing: data
+# Here we apply the test statistic $p_{upper}$ (see {doc}`./bilateral_symmetry`) to our
+# four observed networks and compare to randomly sampled networks from null models.
+#%% [markdown]
+# ## Preliminaries
 
 #%%
 from pkg.utils import set_warnings
@@ -30,10 +34,6 @@ from pkg.flow import calculate_p_upper, rank_graph_match_flow
 from pkg.io import savefig
 from pkg.plot import set_theme
 
-#%%
-# ## Preliminaries
-
-#%%
 set_warnings()
 
 np.random.seed(8888)
@@ -203,10 +203,7 @@ for edge_type in edge_types:
     line = ax.axvline(
         observed.iloc[0]["estimated_p_upper"], color="darkred", linestyle="--"
     )
-
     legend = ax.get_legend()
-    legend.set_title("Null model")
-    legend._set_loc((1, 0.8))
     handles = legend.legendHandles
     handles.append(line)
     labels = [t.get_text() for t in legend.texts]
