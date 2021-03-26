@@ -53,6 +53,8 @@
         const thebe_selector_output = ".output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="shortcut icon" href="_static/nd_logo_small.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -300,8 +302,8 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#plot-null-distribution-and-observed-test-statistic-for-feedforward-testss">
-   Plot null distribution and observed test statistic for feedforward testss
+  <a class="reference internal nav-link" href="#plot-feedforward-test-statistics">
+   Plot feedforward test statistics
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -399,6 +401,10 @@
 </div>
 <div class="section" id="run-a-one-sample-test-for-feedforwardness-on-each-edge-type">
 <h2>Run a one-sample test for feedforwardness on each edge type<a class="headerlink" href="#run-a-one-sample-test-for-feedforwardness-on-each-edge-type" title="Permalink to this headline">¶</a></h2>
+<p>Here the number of bootstrap samples for the null distributions is 100. We compute the
+null distribution for both the ER and DCER fits to each observed network.</p>
+<p>NB: There was some weirdness where often some of the sampled graphs were disconnected.
+I think this happened in particular for the DCER graphs.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">p_upper_tstat</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
@@ -516,8 +522,10 @@
 </div>
 </div>
 </div>
-<div class="section" id="plot-null-distribution-and-observed-test-statistic-for-feedforward-testss">
-<h2>Plot null distribution and observed test statistic for feedforward testss<a class="headerlink" href="#plot-null-distribution-and-observed-test-statistic-for-feedforward-testss" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="plot-feedforward-test-statistics">
+<h2>Plot feedforward test statistics<a class="headerlink" href="#plot-feedforward-test-statistics" title="Permalink to this headline">¶</a></h2>
+<p>We look at the test statistic <span class="math notranslate nohighlight">\(p_{upper}\)</span> (see <a class="reference internal" href="bilateral_symmetry.html"><span class="doc">Testing bilateral symmetry</span></a>)
+for the observed data as well as for samples from ER and DCER null models.</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">statistics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">out_path</span> <span class="o">/</span> <span class="s2">&quot;statistics.csv&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -531,17 +539,25 @@
         <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;null_model&quot;</span><span class="p">,</span>
         <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
         <span class="n">cut</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">fill</span><span class="o">=</span><span class="kc">True</span>
-        <span class="c1"># stat=&quot;density&quot;,</span>
-        <span class="c1"># element=&quot;poly&quot;,</span>
-        <span class="c1"># kde=True,</span>
-        <span class="c1"># binwidth=0.001,</span>
-        <span class="c1"># common_bins=True,</span>
+        <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Null model&quot;</span><span class="p">)</span>
     <span class="n">observed</span> <span class="o">=</span> <span class="n">edge_type_stats</span><span class="p">[</span><span class="n">edge_type_stats</span><span class="p">[</span><span class="s2">&quot;null_model&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Observed&quot;</span><span class="p">]</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">observed</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;estimated_p_upper&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat</span><span class="si">{p}</span><span class="s2">_</span><span class="si">{upper}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">edge_type</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
+        <span class="n">observed</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;estimated_p_upper&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">legend</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span>
+    <span class="n">legend</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Null model&quot;</span><span class="p">)</span>
+    <span class="n">legend</span><span class="o">.</span><span class="n">_set_loc</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
+    <span class="n">handles</span> <span class="o">=</span> <span class="n">legend</span><span class="o">.</span><span class="n">legendHandles</span>
+    <span class="n">handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">legend</span><span class="o">.</span><span class="n">texts</span><span class="p">]</span>
+    <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Observed&quot;</span><span class="p">)</span>
+    <span class="n">legend</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">handles</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat</span><span class="si">{p}</span><span class="s2">_</span><span class="si">{upper}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">edge_type</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">yticklabels</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">edge_type</span><span class="si">}</span><span class="s2">_p_upper_statistic&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -569,8 +585,8 @@
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:00:10.251399
-Completed at 2021-03-26 16:00:10.828061
+Script took 0:00:10.756737
+Completed at 2021-03-26 16:37:34.721658
 ----
 </pre></div>
 </div>
