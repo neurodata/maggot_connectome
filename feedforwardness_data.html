@@ -292,9 +292,16 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#load-the-data">
-   Load the data
+  <a class="reference internal nav-link" href="#preliminaries">
+   Preliminaries
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#load-the-data">
+     Load the data
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#run-a-one-sample-test-for-feedforwardness-on-each-edge-type">
@@ -325,6 +332,10 @@
                 
   <div class="section" id="one-sample-feedforwardness-testing-data">
 <h1>One-sample feedforwardness testing: data<a class="headerlink" href="#one-sample-feedforwardness-testing-data" title="Permalink to this headline">¶</a></h1>
+<p>Here we apply the test statistic <span class="math notranslate nohighlight">\(p_{upper}\)</span> (see <a class="reference internal" href="bilateral_symmetry.html"><span class="doc">Testing bilateral symmetry</span></a>) to our
+four observed networks and compare to randomly sampled networks from null models.</p>
+<div class="section" id="preliminaries">
+<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">set_warnings</span>
@@ -354,20 +365,8 @@
 <span class="kn">from</span> <span class="nn">pkg.flow</span> <span class="kn">import</span> <span class="n">calculate_p_upper</span><span class="p">,</span> <span class="n">rank_graph_match_flow</span>
 <span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">savefig</span>
 <span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_hide-input docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ## Preliminaries</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_hide-input docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">set_warnings</span><span class="p">()</span>
+
+<span class="n">set_warnings</span><span class="p">()</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">8888</span><span class="p">)</span>
 
@@ -389,12 +388,13 @@
 </div>
 </div>
 <div class="section" id="load-the-data">
-<h2>Load the data<a class="headerlink" href="#load-the-data" title="Permalink to this headline">¶</a></h2>
+<h3>Load the data<a class="headerlink" href="#load-the-data" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mg</span> <span class="o">=</span> <span class="n">load_maggot_graph</span><span class="p">()</span>
 <span class="n">mg</span> <span class="o">=</span> <span class="n">mg</span><span class="p">[</span><span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;paper_clustered_neurons&quot;</span><span class="p">]]</span>
 </pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -545,10 +545,7 @@ for the observed data as well as for samples from ER and DCER null models.</p>
     <span class="n">line</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
         <span class="n">observed</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;estimated_p_upper&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span>
     <span class="p">)</span>
-
     <span class="n">legend</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span>
-    <span class="n">legend</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Null model&quot;</span><span class="p">)</span>
-    <span class="n">legend</span><span class="o">.</span><span class="n">_set_loc</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
     <span class="n">handles</span> <span class="o">=</span> <span class="n">legend</span><span class="o">.</span><span class="n">legendHandles</span>
     <span class="n">handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">legend</span><span class="o">.</span><span class="n">texts</span><span class="p">]</span>
@@ -563,10 +560,10 @@ for the observed data as well as for samples from ER and DCER null models.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/feedforwardness_data_9_0.png" src="_images/feedforwardness_data_9_0.png" />
-<img alt="_images/feedforwardness_data_9_1.png" src="_images/feedforwardness_data_9_1.png" />
-<img alt="_images/feedforwardness_data_9_2.png" src="_images/feedforwardness_data_9_2.png" />
-<img alt="_images/feedforwardness_data_9_3.png" src="_images/feedforwardness_data_9_3.png" />
+<img alt="_images/feedforwardness_data_8_0.png" src="_images/feedforwardness_data_8_0.png" />
+<img alt="_images/feedforwardness_data_8_1.png" src="_images/feedforwardness_data_8_1.png" />
+<img alt="_images/feedforwardness_data_8_2.png" src="_images/feedforwardness_data_8_2.png" />
+<img alt="_images/feedforwardness_data_8_3.png" src="_images/feedforwardness_data_8_3.png" />
 </div>
 </div>
 </div>
@@ -585,8 +582,8 @@ for the observed data as well as for samples from ER and DCER null models.</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:00:10.756737
-Completed at 2021-03-26 16:37:34.721658
+Script took 0:00:10.031580
+Completed at 2021-03-26 16:47:03.143947
 ----
 </pre></div>
 </div>
