@@ -58,7 +58,6 @@ mg = mg[mg.nodes["paper_clustered_neurons"]]
 #%% [markdown]
 # ## Run a one-sample test for feedforwardness on each edge type
 #%%
-rerun_test = False
 
 from graspologic.utils import is_fully_connected
 
@@ -129,6 +128,8 @@ null_estimators = {
     "ER": EREstimator(directed=True, loops=False),
     "DCER": DCEREstimator(directed=True, loops=False, degree_directed=False),
 }
+
+rerun_test = True
 
 if rerun_test:
     currtime = time.time()
