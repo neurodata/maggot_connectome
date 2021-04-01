@@ -1,5 +1,5 @@
 #%% [markdown]
-# # Hemisphere matching
+# # Experimental matching
 #%% [markdown]
 # ## Preliminaries
 #%%
@@ -37,7 +37,7 @@ t0 = time.time()
 
 
 def stashfig(name, **kwargs):
-    foldername = "hemisphere_matching"
+    foldername = "experimental_matching"
     savefig(name, foldername=foldername, **kwargs)
 
 
@@ -102,7 +102,7 @@ def _doubly_stochastic(P, tol=1e-3, max_iter=1000):
     return P_eps
 
 
-def quadratic_assignment_ot(A, B, method="faq", options=None):
+def quadratic_assignment_layered(A, B, method="faq", options=None):
     if options is None:
         options = {}
 
@@ -168,18 +168,25 @@ def _layered_product(*args):
     )
 
 
+@jit(nopython=True)
 def _single_layered_product(A, B):
-    n_layers = max(A.shape[-1], B.shape[-1])
+    # n_layers = max(A.shape[-1], B.shape[-1])
+    if len(A.shape) == 3:
+        n_layers = A.shape[-1]
+    elif len(B.shape) == 3:
+        n_layers = B.shape[-1]
+    else:
+        n_layers = 1
     output = np.empty((A.shape[0], B.shape[1], n_layers))
     if A.ndim == 2:
         for layer in range(n_layers):
-            output[:, :, layer] = A @ B[:, :, layer]
+            output[..., layer] = A @ B[..., layer]
     elif B.ndim == 2:
         for layer in range(n_layers):
-            output[:, :, layer] = A[:, :, layer] @ B
+            output[..., layer] = A[..., layer] @ B
     else:
         for layer in range(n_layers):
-            output[:, :, layer] = A[:, :, layer] @ B[:, :, layer]
+            output[..., layer] = A[..., layer] @ B[..., layer]
     return output
 
 
@@ -204,6 +211,7 @@ def _quadratic_assignment_faq_ot(
     reg=100,
     thr=5e-2,
     ot=False,
+    verbose=False,
 ):
 
     maxiter = operator.index(maxiter)
@@ -258,7 +266,8 @@ def _quadratic_assignment_faq_ot(
     const_sum = _layered_product(A21, _transpose(B21)) + _layered_product(
         _transpose(A12), B12
     )
-    print(f"{time.time() - currtime:.3f} seconds elapsed for const_sum.")
+    if verbose:
+        print(f"{time.time() - currtime:.3f} seconds elapsed for const_sum.")
 
     # [1] Algorithm 1 Line 2 - loop while stopping criteria not met
     for n_iter in range(1, maxiter + 1):
@@ -276,7 +285,8 @@ def _quadratic_assignment_faq_ot(
         grad_fp += _layered_product(_layered_product(A22, P), _transpose(B22))
         grad_fp += _layered_product(_layered_product(_transpose(A22), P), B22)
         grad_fp = grad_fp.sum(axis=-1)
-        print(f"{time.time() - currtime:.3f} seconds elapsed for grad_fp.")
+        if verbose:
+            print(f"{time.time() - currtime:.3f} seconds elapsed for grad_fp.")
         # [1] Algorithm 1 Line 4 - get direction Q by solving Eq. 8
         currtime = time.time()
         if ot:
@@ -284,7 +294,8 @@ def _quadratic_assignment_faq_ot(
         else:
             _, cols = linear_sum_assignment(grad_fp, maximize=maximize)
             Q = np.eye(n_unseed)[cols]
-        print(f"{time.time() - currtime:.3f} seconds elapsed.")
+        if verbose:
+            print(f"{time.time() - currtime:.3f} seconds elapsed for LAP(ish) step.")
         #         Q = np.eye(n_unseed)[cols]
 
         # [1] Algorithm 1 Line 5 - compute the step size
@@ -295,17 +306,16 @@ def _quadratic_assignment_faq_ot(
         # TODO all einsums?
         currtime = time.time()
         R = P - Q
-        b21 = (_layered_product(R.T[..., None], A21) * B21).sum()
-        b12 = (
-            _layered_product(R.T[..., None], _transpose(A12)) * _transpose(B12)
-        ).sum()
-        AR22 = _layered_product(_transpose(A22), R[..., None])
-        BR22 = _layered_product(B22, R.T[..., None])
-        b22a = (AR22 * (_layered_product(Q[..., None], _transpose(B22)))).sum()
-        b22b = (A22 * _layered_product(Q[..., None], BR22)).sum()
+        b21 = (_layered_product(R.T, A21) * B21).sum()
+        b12 = (_layered_product(R.T, _transpose(A12)) * _transpose(B12)).sum()
+        AR22 = _layered_product(_transpose(A22), R)
+        BR22 = _layered_product(B22, R.T)
+        b22a = (AR22 * (_layered_product(Q, _transpose(B22)))).sum()
+        b22b = (A22 * _layered_product(Q, BR22)).sum()
         a = (_transpose(AR22) * BR22).sum()
         b = b21 + b12 + b22a + b22b
-        print(f"{time.time() - currtime:.3f} seconds elapsed for quadradic terms.")
+        if verbose:
+            print(f"{time.time() - currtime:.3f} seconds elapsed for quadradic terms.")
         # critical point of ax^2 + bx + c is at x = -d/(2*e)
         # if a * obj_func_scalar > 0, it is a minimum
         # if minimum is not in [0, 1], only endpoints need to be considered
@@ -354,16 +364,13 @@ def alap(P, n, maximize, reg, tol):
 
 from graspologic.simulations import er_corr
 
-options = dict(maximize=True, shuffle_input=True, ot=False, maxiter=1)
-res = quadratic_assignment_ot(left_adjs, right_adjs, method="faq", options=options)
-
 
 #%%
 
 n = 20
 p = 0.4
 rs = [0.6, 0.7, 0.8, 0.9, 1.0]
-n_sims = 1
+n_sims = 20
 options = dict(maximize=True, shuffle_input=True)
 rows = []
 
@@ -381,7 +388,7 @@ for r in rs:
         A = np.stack((A1, A2), axis=2)
         B = np.stack((B1, B2), axis=2)
 
-        layer_res = quadratic_assignment_ot(A, B, options=options)
+        layer_res = quadratic_assignment_layered(A, B, options=options)
         layer_res["method"] = "multilayer"
         layer_res["rho"] = r
         layer_res["match_ratio"] = compute_match_ratio(layer_res["col_ind"])
@@ -391,7 +398,7 @@ for r in rs:
         A_sum = A.sum(axis=-1).reshape((n, n, 1))
         B_sum = B.sum(axis=-1).reshape((n, n, 1))
 
-        flat_res = quadratic_assignment_ot(A_sum, B_sum, options=options)
+        flat_res = quadratic_assignment(A_sum, B_sum, options=options)
         flat_res["method"] = "flat"
         flat_res["rho"] = r
         flat_res["match_ratio"] = compute_match_ratio(flat_res["col_ind"])
@@ -404,4 +411,104 @@ fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 sns.lineplot(data=results, x="rho", y="match_ratio", hue="method")
 stashfig("multilayer-er")
 
+#%%
 
+mg = load_maggot_graph()
+mg = mg[mg.nodes["paper_clustered_neurons"]]
+
+ll_mg, rr_mg, lr_mg, rl_mg = mg.bisect(paired=True)
+
+edge_types = ["aa", "ad", "da", "dd"]
+ll_adjs = []
+rr_adjs = []
+for edge_type in edge_types:
+    ll_adjs.append(ll_mg.to_edge_type_graph(edge_type).adj)
+    rr_adjs.append(rr_mg.to_edge_type_graph(edge_type).adj)
+ll_adjs = np.stack(ll_adjs, axis=2)
+rr_adjs = np.stack(rr_adjs, axis=2)
+print(ll_adjs.shape)
+
+ll_adjs_sum = ll_adjs.sum(axis=-1)
+rr_adjs_sum = rr_adjs.sum(axis=-1)
+
+#%%
+
+from scipy.optimize import quadratic_assignment
+from tqdm import tqdm
+
+n = len(ll_adjs)
+correct_perm = np.arange(n)
+
+layered_options = dict(
+    maximize=True, shuffle_input=False, ot=False, maxiter=20, verbose=False, tol=1e-4
+)
+vanilla_options = dict(maximize=True, shuffle_input=False, maxiter=20, tol=1e-4)
+
+rows = []
+n_init = 5
+for i in tqdm(range(n_init)):
+    shuffle_inds = np.random.permutation(n)
+    correct_perm = np.argsort(shuffle_inds)
+    currtime = time.time()
+    res = quadratic_assignment_layered(
+        ll_adjs, rr_adjs[shuffle_inds][:, shuffle_inds], options=layered_options
+    )
+    perm_inds = res["col_ind"]
+    res["match_ratio"] = (perm_inds == correct_perm).mean()
+    res["method"] = "layered"
+    res["time"] = time.time() - currtime
+    rows.append(res)
+
+    currtime = time.time()
+    res = quadratic_assignment(
+        ll_adjs_sum, rr_adjs_sum[shuffle_inds][:, shuffle_inds], options=vanilla_options
+    )
+    perm_inds = res["col_ind"]
+    res["match_ratio"] = (perm_inds == correct_perm).mean()
+    res["method"] = "vanilla"
+    res["time"] = time.time() - currtime
+    rows.append(res)
+results = pd.DataFrame(rows)
+results
+
+#%%
+from numba import jit
+
+
+def einsum_layered_product(A, B):
+    return np.einsum("ijl,jkl->ikl", A, B)
+
+
+@jit(nopython=True)
+def forloop_layered_product(A, B):
+    n_layers = B.shape[-1]
+    output = np.empty((A.shape[0], B.shape[1], n_layers))
+    for layer in range(n_layers):
+        output[:, :, layer] = A[:, :, layer] @ B[:, :, layer]
+    return output
+
+
+def stack_layered_product(A, B):
+    outs = []
+    for layer in range(A.shape[-1]):
+        outs.append(A[:, :, layer] @ B[:, :, layer])
+    return np.stack(outs, axis=2)
+
+
+for i in range(10):
+    currtime = time.time()
+    einsum_layered_product(ll_adjs, _transpose(rr_adjs))
+    print(f"{time.time() - currtime:.3f} seconds elapsed for einsum layered product.")
+
+    currtime = time.time()
+    forloop_layered_product(ll_adjs, _transpose(rr_adjs))
+    print(f"{time.time() - currtime:.3f} seconds elapsed for forloop layered product.")
+
+    currtime = time.time()
+    stack_layered_product(ll_adjs, _transpose(rr_adjs))
+    print(f"{time.time() - currtime:.3f} seconds elapsed for stack layered product.")
+
+    currtime = time.time()
+    ll_adjs_sum @ rr_adjs_sum.T
+    print(f"{time.time() - currtime:.3f} seconds elapsed for flat product.")
+    print()
