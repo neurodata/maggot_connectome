@@ -24,6 +24,7 @@
 - part: Matching
   chapters: 
   - file: matching_illustration
+  - file: match_with_contra
 
 - part: Feedforwardness
   chapters: 

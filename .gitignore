@@ -147,4 +147,4 @@ data
 
 # not storing figures
 results
-scripts/light_speed.py
+sandbox/light_speed.py
