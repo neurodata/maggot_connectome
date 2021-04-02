@@ -3,22 +3,28 @@
 #%% [markdown]
 # ## Preliminaries
 #%%
-from pkg.utils import set_warnings
-
-set_warnings()
-
 import datetime
+import functools
+import operator
 import pprint
 import time
-
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-
+from numba import jit
+from scipy._lib._util import check_random_state
+from scipy.optimize import (
+    OptimizeResult,
+    linear_sum_assignment,
+    minimize_scalar,
+    quadratic_assignment,
+)
+from tqdm import tqdm
 
 from graspologic.plot import pairplot
+from graspologic.simulations import er_corr
 from graspologic.utils import (
     augment_diagonal,
     binarize,
@@ -26,12 +32,13 @@ from graspologic.utils import (
     pass_to_ranks,
 )
 from pkg.data import load_maggot_graph
-
 from pkg.io import savefig
 from pkg.plot import set_theme
-from pkg.utils import get_paired_inds, get_paired_subgraphs
-
+from pkg.utils import get_paired_inds, get_paired_subgraphs, set_warnings
 from src.visualization import adjplot  # TODO fix graspologic version and replace here
+
+set_warnings()
+
 
 t0 = time.time()
 
@@ -47,12 +54,6 @@ set_theme()
 
 
 #%%
-
-import operator
-
-import numpy as np
-from scipy._lib._util import check_random_state
-from scipy.optimize import OptimizeResult, linear_sum_assignment
 
 
 def _check_init_input(P0, n):
@@ -153,9 +154,6 @@ def _common_input_validation(A, B, partial_match):
         raise ValueError(msg)
 
     return A, B, partial_match
-
-
-import functools
 
 
 def _layered_product(*args):
@@ -362,15 +360,12 @@ def alap(P, n, maximize, reg, tol):
     return P_eps
 
 
-from graspologic.simulations import er_corr
-
-
 #%%
 
 n = 20
 p = 0.4
 rs = [0.6, 0.7, 0.8, 0.9, 1.0]
-n_sims = 20
+n_sims = 50
 options = dict(maximize=True, shuffle_input=True)
 rows = []
 
@@ -395,8 +390,8 @@ for r in rs:
         rows.append(layer_res)
         # layer_perm_inds = layer_res["col_ind"]
 
-        A_sum = A.sum(axis=-1).reshape((n, n, 1))
-        B_sum = B.sum(axis=-1).reshape((n, n, 1))
+        A_sum = A.sum(axis=-1)
+        B_sum = B.sum(axis=-1)
 
         flat_res = quadratic_assignment(A_sum, B_sum, options=options)
         flat_res["method"] = "flat"
@@ -433,8 +428,6 @@ rr_adjs_sum = rr_adjs.sum(axis=-1)
 
 #%%
 
-from scipy.optimize import quadratic_assignment
-from tqdm import tqdm
 
 n = len(ll_adjs)
 correct_perm = np.arange(n)
@@ -445,7 +438,7 @@ layered_options = dict(
 vanilla_options = dict(maximize=True, shuffle_input=False, maxiter=20, tol=1e-4)
 
 rows = []
-n_init = 5
+n_init = 0
 for i in tqdm(range(n_init)):
     shuffle_inds = np.random.permutation(n)
     correct_perm = np.argsort(shuffle_inds)
@@ -472,7 +465,6 @@ results = pd.DataFrame(rows)
 results
 
 #%%
-from numba import jit
 
 
 def einsum_layered_product(A, B):
@@ -495,7 +487,7 @@ def stack_layered_product(A, B):
     return np.stack(outs, axis=2)
 
 
-for i in range(10):
+for i in range(0):
     currtime = time.time()
     einsum_layered_product(ll_adjs, _transpose(rr_adjs))
     print(f"{time.time() - currtime:.3f} seconds elapsed for einsum layered product.")
@@ -512,3 +504,404 @@ for i in range(10):
     ll_adjs_sum @ rr_adjs_sum.T
     print(f"{time.time() - currtime:.3f} seconds elapsed for flat product.")
     print()
+
+
+#%% [markdown]
+# ## between_term matching
+
+
+def quadratic_assignment_between_term(
+    A,
+    B,
+    AB,
+    BA,
+    maximize=False,
+    partial_match=None,
+    rng=None,
+    P0="barycenter",
+    shuffle_input=False,
+    maxiter=30,
+    tol=0.03,
+    reg=100,
+    thr=5e-2,
+    ot=False,
+    verbose=False,
+):
+    maxiter = operator.index(maxiter)
+
+    rng = check_random_state(rng)
+
+    A, B, partial_match = _common_input_validation(A, B, partial_match)
+
+    n = A.shape[0]  # number of vertices in graphs
+    n_seeds = partial_match.shape[0]  # number of seeds
+    if n_seeds > 0:
+        raise NotImplementedError(
+            "Have not implemented between_term matching with seeds."
+        )
+    n_unseed = n - n_seeds
+    n_layers = A.shape[-1]
+
+    obj_func_scalar = 1
+    if maximize:
+        obj_func_scalar = -1
+
+    nonseed_B = np.setdiff1d(range(n), partial_match[:, 1])
+    if shuffle_input:
+        nonseed_B = rng.permutation(nonseed_B)
+        # shuffle_input to avoid results from inputs that were already matched
+
+    nonseed_A = np.setdiff1d(range(n), partial_match[:, 0])
+    perm_A = np.concatenate([partial_match[:, 0], nonseed_A])
+    perm_B = np.concatenate([partial_match[:, 1], nonseed_B])
+
+    # definitions according to Seeded Graph Matching [2].
+    A11, A12, A21, A22 = _split_matrix(A[perm_A][:, perm_A], n_seeds)
+    B11, B12, B21, B22 = _split_matrix(B[perm_B][:, perm_B], n_seeds)
+    AB11, AB12, AB21, AB22 = _split_matrix(AB[perm_A][:, perm_B], n_seeds)
+    BA11, BA12, BA21, BA22 = _split_matrix(BA[perm_B][:, perm_A], n_seeds)
+
+    # [1] Algorithm 1 Line 1 - choose initialization
+    if isinstance(P0, str):
+        # initialize J, a doubly stochastic barycenter
+        J = np.ones((n_unseed, n_unseed)) / n_unseed
+        if P0 == "barycenter":
+            P = J
+        elif P0 == "randomized":
+            # generate a nxn matrix where each entry is a random number [0, 1]
+            # would use rand, but Generators don't have it
+            # would use random, but old mtrand.RandomStates don't have it
+            K = rng.uniform(size=(n_unseed, n_unseed))
+            # Sinkhorn balancing
+            K = _doubly_stochastic(K)
+            P = J * 0.5 + K * 0.5
+    else:
+        P0 = np.atleast_2d(P0)
+        _check_init_input(P0, n_unseed)
+        P = P0
+
+    currtime = time.time()
+    # const_sum = _layered_product(A21, _transpose(B21)) + _layered_product(
+    #     _transpose(A12), B12
+    # )
+    if verbose:
+        print(f"{time.time() - currtime:.3f} seconds elapsed for const_sum.")
+
+    # [1] Algorithm 1 Line 2 - loop while stopping criteria not met
+    for n_iter in range(1, maxiter + 1):
+        # [1] Algorithm 1 Line 3 - compute the gradient of f(P) = -tr(APB^tP^t)
+
+        currtime = time.time()
+        grad_fp = (
+            _layered_product(A22, P, _transpose(B22))
+            + _layered_product(_transpose(A22), P, B22)
+            + _layered_product(AB22, P.T, _transpose(BA22))
+            + _layered_product(BA22, P.T, AB22)
+        ).sum(axis=-1)
+        # grad_fp = grad_fp.sum(axis=-1)
+        if verbose:
+            print(f"{time.time() - currtime:.3f} seconds elapsed for grad_fp.")
+        # [1] Algorithm 1 Line 4 - get direction Q by solving Eq. 8
+        currtime = time.time()
+        if ot:
+            Q = alap(grad_fp, n_unseed, maximize, reg, thr)
+        else:
+            _, cols = linear_sum_assignment(grad_fp, maximize=maximize)
+            Q = np.eye(n_unseed)[cols]
+        if verbose:
+            print(f"{time.time() - currtime:.3f} seconds elapsed for LAP(ish) step.")
+
+        # [1] Algorithm 1 Line 5 - compute the step size
+        currtime = time.time()
+        # TODO find the optimal alpha
+        def obj_func(P):
+            intra = np.trace(_layered_product(A22, P, B22, P.T).sum(axis=1))
+            contra = np.trace(_layered_product(AB22.T, P, BA22, P).sum(axis=1))
+            return obj_func_scalar * (intra + contra)
+
+        def obj_func_combo(alpha):
+            return alpha * obj_func(P) + (1 - alpha) * obj_func(Q)
+
+        # res = minimize_scalar(
+        #     obj_func_combo, bracket=[0, 1], bounds=[0, 1], method="Bounded"
+        # )
+        # alpha = res["x"]
+
+        alpha = 1 - 0.5 * 1 / n_iter
+
+        if verbose:
+            print(f"{time.time() - currtime:.3f} seconds elapsed for quadradic terms.")
+
+        # [1] Algorithm 1 Line 6 - Update P
+        P_i1 = alpha * P + (1 - alpha) * Q
+        if np.linalg.norm(P - P_i1) / np.sqrt(n_unseed) < tol:
+            P = P_i1
+            break
+        P = P_i1
+    # [1] Algorithm 1 Line 7 - end main loop
+
+    # [1] Algorithm 1 Line 8 - project onto the set of permutation matrices
+    #     print(P)
+    _, col = linear_sum_assignment(-P)
+    perm = np.concatenate((np.arange(n_seeds), col + n_seeds))
+
+    unshuffled_perm = np.zeros(n, dtype=int)
+    unshuffled_perm[perm_A] = perm_B[perm]
+
+    score = _calc_score(A, B, unshuffled_perm)
+
+    res = {"col_ind": unshuffled_perm, "fun": score, "nit": n_iter}
+
+    return OptimizeResult(res)
+
+
+lp_inds, rp_inds = get_paired_inds(mg.nodes)
+ll_adj = mg.sum.adj[np.ix_(lp_inds, lp_inds)].reshape((n, n, 1))
+rr_adj = mg.sum.adj[np.ix_(rp_inds, rp_inds)].reshape((n, n, 1))
+lr_adj = mg.sum.adj[np.ix_(lp_inds, rp_inds)].reshape((n, n, 1))
+rl_adj = mg.sum.adj[np.ix_(rp_inds, lp_inds)].reshape((n, n, 1))
+options = dict(
+    maximize=True, shuffle_input=False, ot=False, maxiter=50, verbose=True, tol=1e-4
+)
+n_init = 2
+for i in range(n_init):
+    shuffle_inds = np.random.permutation(n)
+    correct_perm = np.argsort(shuffle_inds)
+    res = quadratic_assignment_between_term(
+        ll_adj,
+        rr_adj[shuffle_inds][:, shuffle_inds],
+        lr_adj[:, shuffle_inds],
+        rl_adj[shuffle_inds],
+        **options,
+    )
+    perm_inds = res["col_ind"]
+    match_ratio = (correct_perm == perm_inds).mean()
+    print(f"Match ratio = {match_ratio}")
+
+
+#%%
+mg = load_maggot_graph()
+mg = mg[mg.nodes["paper_clustered_neurons"]]
+
+maxiter = 30
+verbose = False
+ot = False
+maximize = True
+reg = np.nan  # TODO could try GOAT
+thr = np.nan
+tol = 1e-4
+n_init = 10
+
+lp_inds, rp_inds = get_paired_inds(mg.nodes)
+n = len(lp_inds)
+
+ll_adj = mg.sum.adj[np.ix_(lp_inds, lp_inds)]
+rr_adj = mg.sum.adj[np.ix_(rp_inds, rp_inds)]
+lr_adj = mg.sum.adj[np.ix_(lp_inds, rp_inds)]
+rl_adj = mg.sum.adj[np.ix_(rp_inds, lp_inds)]
+
+
+@jit(nopython=True)
+def compute_gradient(A, B, AB, BA, P):
+    return A @ P @ B.T + A.T @ P @ B + AB @ P.T @ BA.T + BA.T @ P.T @ AB
+
+
+@jit(nopython=True)
+def compute_step_size(A, B, AB, BA, P, Q):
+    R = P - Q
+    # TODO make these "smart" traces like in the scipy code, couldn't hurt
+    # though I don't know how much Numba cares
+    a_cross = np.trace(AB.T @ R @ BA @ R)
+    b_cross = np.trace(AB.T @ R @ BA @ Q) + np.trace(AB.T @ Q @ BA @ R)
+    a_intra = np.trace(A @ R @ B.T @ R.T)
+    b_intra = np.trace(A @ Q @ B.T @ R.T + A @ R @ B.T @ Q.T)
+
+    a = a_cross + a_intra
+    b = b_cross + b_intra
+
+    if a * obj_func_scalar > 0 and 0 <= -b / (2 * a) <= 1:
+        alpha = -b / (2 * a)
+    return alpha
+    # else:
+    #     alpha = np.argmin([0, (b + a) * obj_func_scalar])
+    # return alpha
+
+
+@jit(nopython=True)
+def compute_objective_function(A, B, AB, BA, P):
+    return np.trace(A @ P @ B.T @ P.T) + np.trace(AB.T @ P @ BA @ P)
+
+
+rows = []
+for init in range(n_init):
+    print(f"Initialization: {init}")
+    shuffle_inds = np.random.permutation(n)
+    correct_perm = np.argsort(shuffle_inds)
+    A_base = ll_adj.copy()
+    B_base = rr_adj.copy()
+    AB_base = lr_adj.copy()
+    BA_base = rl_adj.copy()
+
+    for between_term in [True, False]:
+        init_t0 = time.time()
+        print(f"Between term: {between_term}")
+        A = A_base
+        B = B_base[shuffle_inds][:, shuffle_inds]
+        AB = AB_for_obj = AB_base[:, shuffle_inds]
+        BA = BA_for_obj = BA_base[shuffle_inds]
+
+        if not between_term:
+            AB = np.zeros((n, n))
+            BA = np.zeros((n, n))
+
+        P = np.full((n, n), 1 / n)
+
+        obj_func_scalar = 1
+        if maximize:
+            obj_func_scalar = -1
+
+        for n_iter in range(1, maxiter + 1):
+
+            # [1] Algorithm 1 Line 3 - compute the gradient of f(P)
+            currtime = time.time()
+            grad_fp = compute_gradient(A, B, AB, BA, P)
+            if verbose > 1:
+                print(f"{time.time() - currtime:.3f} seconds elapsed for grad_fp.")
+
+            # [1] Algorithm 1 Line 4 - get direction Q by solving Eq. 8
+            currtime = time.time()
+            if ot:
+                Q = alap(grad_fp, n, maximize, reg, thr)
+            else:
+                _, cols = linear_sum_assignment(grad_fp, maximize=maximize)
+                Q = np.eye(n)[cols]
+            if verbose > 1:
+                print(
+                    f"{time.time() - currtime:.3f} seconds elapsed for LSAP/Sinkhorn step."
+                )
+
+            # [1] Algorithm 1 Line 5 - compute the step size
+            currtime = time.time()
+
+            alpha = compute_step_size(A, B, AB, BA, P, Q)
+
+            if verbose > 1:
+                print(
+                    f"{time.time() - currtime:.3f} seconds elapsed for quadradic terms."
+                )
+
+            # [1] Algorithm 1 Line 6 - Update P
+            P_i1 = alpha * P + (1 - alpha) * Q
+            if np.linalg.norm(P - P_i1) / np.sqrt(n) < tol:
+                P = P_i1
+                break
+            P = P_i1
+            _, iteration_perm = linear_sum_assignment(-P)
+            match_ratio = (correct_perm == iteration_perm).mean()
+
+            objfunc = compute_objective_function(A, B, AB_for_obj, BA_for_obj, P)
+
+            if verbose > 0:
+                print(
+                    f"Iteration: {n_iter},  Objective function: {objfunc:.2f},  Match ratio: {match_ratio:.2f}"
+                )
+
+            row = {
+                "init": init,
+                "iter": n_iter,
+                "objfunc": objfunc,
+                "match_ratio": match_ratio,
+                "between_term": between_term,
+                "time": time.time() - init_t0,
+            }
+            rows.append(row)
+
+        if verbose > 0:
+            print("\n")
+
+    _, perm = linear_sum_assignment(-P)
+    if verbose > 0:
+        print("\n")
+
+results = pd.DataFrame(rows)
+results
+
+
+#%%
+last_results_idx = results.groupby(["between_term", "init"])["iter"].idxmax()
+last_results = results.loc[last_results_idx].copy()
+
+data = last_results.copy()
+
+
+def matched_stripplot(
+    data,
+    x=None,
+    y=None,
+    jitter=0.2,
+    hue=None,
+    match=None,
+    ax=None,
+    matchline_kws=None,
+    **kwargs,
+):
+    if ax is None:
+        ax = plt.gca()
+
+    unique_x_var = data[x].unique()
+    ind_map = dict(zip(unique_x_var, range(len(unique_x_var))))
+    data["x"] = data[x].map(ind_map)
+    data["x"] += np.random.uniform(-jitter, jitter, len(data))
+
+    sns.scatterplot(data=data, x="x", y=y, hue=hue, ax=ax, zorder=1, **kwargs)
+
+    if match is not None:
+        unique_match_var = data[match].unique()
+        fake_palette = dict(zip(unique_match_var, len(unique_match_var) * ["black"]))
+        if matchline_kws is None:
+            matchline_kws = dict(alpha=0.2, linewidth=1)
+        sns.lineplot(
+            data=data,
+            x="x",
+            y=y,
+            hue=match,
+            ax=ax,
+            legend=False,
+            palette=fake_palette,
+            zorder=-1,
+            **matchline_kws,
+        )
+    ax.set(xlabel=x, xticks=np.arange(len(unique_x_var)), xticklabels=unique_x_var)
+    ax.get_legend().remove()
+    return ax
+
+
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+matched_stripplot(
+    last_results,
+    jitter=0.2,
+    x="between_term",
+    y="objfunc",
+    match="init",
+    hue="between_term",
+)
+stashfig('between-objfunc')
+
+
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+matched_stripplot(
+    last_results,
+    jitter=0.2,
+    x="between_term",
+    y="match_ratio",
+    match="init",
+    hue="between_term",
+)
+stashfig('between-match-ratio')
+
+#%%
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+sns.lineplot(
+    data=results, x="iter", y="objfunc", hue="init", style="between_term", ax=ax
+)
+ax.set_yscale("log")
