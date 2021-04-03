@@ -4,7 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
     <title>One-sample feedforwardness testing: simulation &#8212; Maggot Connectome</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
@@ -96,7 +97,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Preliminaries
  </span>
@@ -113,7 +114,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Look at it
  </span>
@@ -125,7 +126,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   A priori modeling
  </span>
@@ -137,7 +138,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Bilateral symmetry
  </span>
@@ -159,7 +160,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Matching
  </span>
@@ -176,7 +177,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Feedforwardness
  </span>
@@ -193,7 +194,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Appendix
  </span>
@@ -427,9 +428,9 @@
         
               <div>
                 
-  <div class="section" id="one-sample-feedforwardness-testing-simulation">
+  <section id="one-sample-feedforwardness-testing-simulation">
 <h1>One-sample feedforwardness testing: simulation<a class="headerlink" href="#one-sample-feedforwardness-testing-simulation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="preliminaries">
+<section id="preliminaries">
 <h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -468,8 +469,8 @@
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="a-test-for-feedforwardness">
+</section>
+<section id="a-test-for-feedforwardness">
 <h2>A test for feedforwardness<a class="headerlink" href="#a-test-for-feedforwardness" title="Permalink to this headline">¶</a></h2>
 <p>We’ll use the simple model above to motivate a one-sided test for feedforwardness as
 follows:</p>
@@ -481,21 +482,21 @@ H_0: p_{upper} = p_{lower} = p
 \[
 H_A: p_{upper} &gt; p_{lower}
 \]</div>
-<div class="section" id="a-test-statistic-for-feedforwardness">
+<section id="a-test-statistic-for-feedforwardness">
 <h3>A test statistic for feedforwardness<a class="headerlink" href="#a-test-statistic-for-feedforwardness" title="Permalink to this headline">¶</a></h3>
 <p>We aim to perform a 1-sample test for <span class="math notranslate nohighlight">\(H_0\)</span> vs <span class="math notranslate nohighlight">\(H_a\)</span>. The test statistic we use is
 simply <span class="math notranslate nohighlight">\(\hat{p}_{upper}\)</span>, the proportion of edges in the upper
 triangle. To estimate this test statistic from a network, we use graph matching to
 try to maximize the proportion of edges in the upper triangle (see <a class="reference external" href="https://docs.neurodata.io/notebooks/pedigo/graspologic/graph-match/2021/03/05/ranking-via-gm.html">this notebook for
 an application of this idea to team ranking</a>).</p>
-</div>
-<div class="section" id="todo-some-visual-explanation-of-our-test-statistic">
+</section>
+<section id="todo-some-visual-explanation-of-our-test-statistic">
 <h3>TODO: some visual explanation of our test statistic<a class="headerlink" href="#todo-some-visual-explanation-of-our-test-statistic" title="Permalink to this headline">¶</a></h3>
-</div>
-</div>
-<div class="section" id="evaluating-the-test-for-different-models-of-feedforwardness">
+</section>
+</section>
+<section id="evaluating-the-test-for-different-models-of-feedforwardness">
 <h2>Evaluating the test for different models of feedforwardness<a class="headerlink" href="#evaluating-the-test-for-different-models-of-feedforwardness" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="the-upset-model">
+<section id="the-upset-model">
 <h3>The upset model<a class="headerlink" href="#the-upset-model" title="Permalink to this headline">¶</a></h3>
 <p>This model is one of the simplest feedforward models we can think of. This model is
 parameterized by two probabilities and a ranking/permutation of a set of nodes.</p>
@@ -586,7 +587,7 @@ sets the overall density of the network.</p>
 <img alt="_images/feedforwardness_sims_8_1.png" src="_images/feedforwardness_sims_8_1.png" />
 </div>
 </div>
-<div class="section" id="simulate-from-the-null">
+<section id="simulate-from-the-null">
 <h4>Simulate from the null<a class="headerlink" href="#simulate-from-the-null" title="Permalink to this headline">¶</a></h4>
 <p>Here, we set</p>
 <div class="math notranslate nohighlight">
@@ -635,8 +636,8 @@ test statistics for our null distribution.</p>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="simulate-from-the-alternative-and-test-for-feedforwardness">
+</section>
+<section id="simulate-from-the-alternative-and-test-for-feedforwardness">
 <h4>Simulate from the alternative and test for feedforwardness<a class="headerlink" href="#simulate-from-the-alternative-and-test-for-feedforwardness" title="Permalink to this headline">¶</a></h4>
 <p>Here, we let the “amount of feedforwardness”, <span class="math notranslate nohighlight">\(\delta\)</span>, vary from 0 to 0.25. <span class="math notranslate nohighlight">\(\delta\)</span>
 can be interpreted as the effect size. For each <span class="math notranslate nohighlight">\(\delta\)</span> we sample 200 graphs, and run
@@ -693,8 +694,8 @@ generate our null distribution, including degree-corrected ER.</p>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="create-a-color-map">
+</section>
+<section id="create-a-color-map">
 <h4>Create a color map<a class="headerlink" href="#create-a-color-map" title="Permalink to this headline">¶</a></h4>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -707,8 +708,8 @@ generate our null distribution, including degree-corrected ER.</p>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-p-values-from-varying-effect-sizes">
+</section>
+<section id="plot-the-p-values-from-varying-effect-sizes">
 <h4>Plot the p-values from varying effect sizes<a class="headerlink" href="#plot-the-p-values-from-varying-effect-sizes" title="Permalink to this headline">¶</a></h4>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -741,8 +742,8 @@ generate our null distribution, including degree-corrected ER.</p>
 <img alt="_images/feedforwardness_sims_16_1.png" src="_images/feedforwardness_sims_16_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-distribution-p-values-under-the-null">
+</section>
+<section id="plot-the-distribution-p-values-under-the-null">
 <h4>Plot the distribution p-values under the null<a class="headerlink" href="#plot-the-distribution-p-values-under-the-null" title="Permalink to this headline">¶</a></h4>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -765,8 +766,8 @@ generate our null distribution, including degree-corrected ER.</p>
 <img alt="_images/feedforwardness_sims_18_1.png" src="_images/feedforwardness_sims_18_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="plot-power-for-alpha-0-05">
+</section>
+<section id="plot-power-for-alpha-0-05">
 <h4>Plot power for <span class="math notranslate nohighlight">\(\alpha = 0.05\)</span><a class="headerlink" href="#plot-power-for-alpha-0-05" title="Permalink to this headline">¶</a></h4>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -797,8 +798,8 @@ generate our null distribution, including degree-corrected ER.</p>
 <img alt="_images/feedforwardness_sims_20_1.png" src="_images/feedforwardness_sims_20_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-true-and-estimated-upper-triangle-probabilities">
+</section>
+<section id="plot-the-true-and-estimated-upper-triangle-probabilities">
 <h4>Plot the “true” and estimated upper triangle probabilities<a class="headerlink" href="#plot-the-true-and-estimated-upper-triangle-probabilities" title="Permalink to this headline">¶</a></h4>
 <p>By true upper triangle probabilies, we mean the proportion of edges in the upper
 triangle under the permutation that we sampled the graph from, <span class="math notranslate nohighlight">\(\phi\)</span>. The estimated
@@ -841,9 +842,9 @@ original permutation (which we of course wouldn’t know on real data).</p>
 <img alt="_images/feedforwardness_sims_22_1.png" src="_images/feedforwardness_sims_22_1.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="a-feedforward-sbm-model">
+</section>
+</section>
+<section id="a-feedforward-sbm-model">
 <h3>A feedforward SBM model<a class="headerlink" href="#a-feedforward-sbm-model" title="Permalink to this headline">¶</a></h3>
 <p>Here we construct a 2-block SBM where the block probabilities are feedforward with an
 amount that depends on <span class="math notranslate nohighlight">\(\delta\)</span>.</p>
@@ -900,7 +901,7 @@ amount that depends on <span class="math notranslate nohighlight">\(\delta\)</sp
 <img alt="_images/feedforwardness_sims_24_1.png" src="_images/feedforwardness_sims_24_1.png" />
 </div>
 </div>
-<div class="section" id="id1">
+<section id="id1">
 <h4>Simulate from the null<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -921,8 +922,8 @@ amount that depends on <span class="math notranslate nohighlight">\(\delta\)</sp
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="id2">
+</section>
+<section id="id2">
 <h4>Simulate from the alternative and test for feedforwardness<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -952,8 +953,8 @@ amount that depends on <span class="math notranslate nohighlight">\(\delta\)</sp
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="id3">
+</section>
+<section id="id3">
 <h4>Plot the p-values from varying effect sizes<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -968,8 +969,8 @@ amount that depends on <span class="math notranslate nohighlight">\(\delta\)</sp
 <img alt="_images/feedforwardness_sims_30_1.png" src="_images/feedforwardness_sims_30_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="id4">
+</section>
+<section id="id4">
 <h4>Plot the distribution p-values under the null<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -984,8 +985,8 @@ amount that depends on <span class="math notranslate nohighlight">\(\delta\)</sp
 <img alt="_images/feedforwardness_sims_32_1.png" src="_images/feedforwardness_sims_32_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="id5">
+</section>
+<section id="id5">
 <h4>Plot power for <span class="math notranslate nohighlight">\(\alpha = 0.05\)</span><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1000,10 +1001,10 @@ amount that depends on <span class="math notranslate nohighlight">\(\delta\)</sp
 <img alt="_images/feedforwardness_sims_34_1.png" src="_images/feedforwardness_sims_34_1.png" />
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="section" id="end">
+</section>
+</section>
+</section>
+<section id="end">
 <h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1025,8 +1026,8 @@ Completed at 2021-03-24 14:25:22.496200
 </div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

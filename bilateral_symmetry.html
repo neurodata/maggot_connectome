@@ -4,7 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
     <title>Testing bilateral symmetry &#8212; Maggot Connectome</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
@@ -96,7 +97,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Preliminaries
  </span>
@@ -113,7 +114,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Look at it
  </span>
@@ -125,7 +126,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   A priori modeling
  </span>
@@ -137,7 +138,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Bilateral symmetry
  </span>
@@ -159,7 +160,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Matching
  </span>
@@ -176,7 +177,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Feedforwardness
  </span>
@@ -193,7 +194,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Appendix
  </span>
@@ -476,7 +477,7 @@
         
               <div>
                 
-  <div class="section" id="testing-bilateral-symmetry">
+  <section id="testing-bilateral-symmetry">
 <h1>Testing bilateral symmetry<a class="headerlink" href="#testing-bilateral-symmetry" title="Permalink to this headline">¶</a></h1>
 <p>This notebook describes a first pass at testing for some notion of bilateral symmetry.
 Here, we focus only on the left-left and right-right induced subgraphs for simplicity.
@@ -490,7 +491,7 @@ different results.</p>
 positions of the left-left induced subgraph and the right-right induced subgraph have
 the same distribution over many embedding dimensions, suggesting that for the current
 setup we fail to reject bilateral symmetry.</p>
-<div class="section" id="preliminaries">
+<section id="preliminaries">
 <h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -563,10 +564,10 @@ require(['plotly'], function(Plotly) {
 </script>
 </div></div>
 </div>
-</div>
-<div class="section" id="load-the-data">
+</section>
+<section id="load-the-data">
 <h2>Load the data<a class="headerlink" href="#load-the-data" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="load-node-metadata-and-select-the-subgraphs-of-interest">
+<section id="load-node-metadata-and-select-the-subgraphs-of-interest">
 <h3>Load node metadata and select the subgraphs of interest<a class="headerlink" href="#load-node-metadata-and-select-the-subgraphs-of-interest" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -606,8 +607,8 @@ Number of pairs after taking LCC intersection: 1148
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="plotting-the-aligned-adjacency-matrices">
+</section>
+<section id="plotting-the-aligned-adjacency-matrices">
 <h3>Plotting the aligned adjacency matrices<a class="headerlink" href="#plotting-the-aligned-adjacency-matrices" title="Permalink to this headline">¶</a></h3>
 <p>At a high level, we see that the left-left and right-right induced subgraphs look
 quite similar when aligned by the known neuron pairs.</p>
@@ -638,9 +639,9 @@ quite similar when aligned by the known neuron pairs.</p>
 <img alt="_images/bilateral_symmetry_7_0.png" src="_images/bilateral_symmetry_7_0.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="embedding-the-graphs">
+</section>
+</section>
+<section id="embedding-the-graphs">
 <h2>Embedding the graphs<a class="headerlink" href="#embedding-the-graphs" title="Permalink to this headline">¶</a></h2>
 <p>Here I embed the unweighted, directed graphs using ASE.</p>
 <div class="cell tag_hide-input docutils container">
@@ -675,7 +676,7 @@ quite similar when aligned by the known neuron pairs.</p>
 </div>
 </div>
 </div>
-<div class="section" id="run-the-embedding">
+<section id="run-the-embedding">
 <h3>Run the embedding<a class="headerlink" href="#run-the-embedding" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -697,8 +698,8 @@ quite similar when aligned by the known neuron pairs.</p>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-screeplots">
+</section>
+<section id="plot-the-screeplots">
 <h3>Plot the screeplots<a class="headerlink" href="#plot-the-screeplots" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -717,8 +718,8 @@ quite similar when aligned by the known neuron pairs.</p>
 <img alt="_images/bilateral_symmetry_13_0.png" src="_images/bilateral_symmetry_13_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="calculating-the-frobenius-norm-of-the-adjacency-matrices">
+</section>
+<section id="calculating-the-frobenius-norm-of-the-adjacency-matrices">
 <h3>Calculating the Frobenius norm of the adjacency matrices<a class="headerlink" href="#calculating-the-frobenius-norm-of-the-adjacency-matrices" title="Permalink to this headline">¶</a></h3>
 <p>Note that in the screeplot above, the singular values of the right-right subgraph
 are always above those of the left-left subgraph (at least for this range of <span class="math notranslate nohighlight">\(d\)</span>).
@@ -740,8 +741,8 @@ Norm of right-right adjacency: 170.35551062410633
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-latent-positions-of-both-graphs-before-alignment">
+</section>
+<section id="plot-the-latent-positions-of-both-graphs-before-alignment">
 <h3>Plot the latent positions of both graphs before alignment<a class="headerlink" href="#plot-the-latent-positions-of-both-graphs-before-alignment" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -761,9 +762,9 @@ Norm of right-right adjacency: 170.35551062410633
 <img alt="_images/bilateral_symmetry_17_1.png" src="_images/bilateral_symmetry_17_1.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="align-the-embeddings">
+</section>
+</section>
+<section id="align-the-embeddings">
 <h2>Align the embeddings<a class="headerlink" href="#align-the-embeddings" title="Permalink to this headline">¶</a></h2>
 <p>Here we align first using orthogonal Procrustes (OP), and then using
 seedless Procrustes initialized at the orthogonal Procrustes solution (O-SP).</p>
@@ -793,7 +794,7 @@ performing the alignment.</p>
 </div>
 </div>
 </div>
-<div class="section" id="plot-the-alignment-for-d-8-dimensions">
+<section id="plot-the-alignment-for-d-8-dimensions">
 <h3>Plot the alignment for d=8 dimensions<a class="headerlink" href="#plot-the-alignment-for-d-8-dimensions" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -834,8 +835,8 @@ Seedless Procrustes diff. norm using true pairs: 4.789
 <img alt="_images/bilateral_symmetry_21_2.png" src="_images/bilateral_symmetry_21_2.png" />
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-alignment-for-d-7-dimensions">
+</section>
+<section id="plot-the-alignment-for-d-7-dimensions">
 <h3>Plot the alignment for d=7 dimensions<a class="headerlink" href="#plot-the-alignment-for-d-7-dimensions" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -876,9 +877,9 @@ Seedless Procrustes diff. norm using true pairs: 9.052
 <img alt="_images/bilateral_symmetry_23_2.png" src="_images/bilateral_symmetry_23_2.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="hypothesis-testing-on-the-embeddings">
+</section>
+</section>
+<section id="hypothesis-testing-on-the-embeddings">
 <h2>Hypothesis testing on the embeddings<a class="headerlink" href="#hypothesis-testing-on-the-embeddings" title="Permalink to this headline">¶</a></h2>
 <p>To test whether the distribution of latent positions is different, we use the approach
 of the “nonpar” test, also called the latent distribution test. Here, for the backend
@@ -931,7 +932,7 @@ of the “nonpar” test, also called the latent distribution test. Here, for th
 </div>
 </div>
 </div>
-<div class="section" id="run-the-two-sample-test-for-varying-embedding-dimension">
+<section id="run-the-two-sample-test-for-varying-embedding-dimension">
 <h3>Run the two-sample test for varying embedding dimension<a class="headerlink" href="#run-the-two-sample-test-for-varying-embedding-dimension" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -971,8 +972,8 @@ of the “nonpar” test, also called the latent distribution test. Here, for th
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-2-sample-test-p-values-by-varying-dimension">
+</section>
+<section id="plot-the-2-sample-test-p-values-by-varying-dimension">
 <h3>Plot the 2-sample test p-values by varying dimension<a class="headerlink" href="#plot-the-2-sample-test-p-values-by-varying-dimension" title="Permalink to this headline">¶</a></h3>
 <p>Note: these are on a log y-scale.</p>
 <div class="cell tag_hide-input docutils container">
@@ -1027,19 +1028,19 @@ of the “nonpar” test, also called the latent distribution test. Here, for th
 <img alt="_images/bilateral_symmetry_29_0.png" src="_images/bilateral_symmetry_29_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="not-what-we-expected">
+</section>
+<section id="not-what-we-expected">
 <h3>Not what we expected<a class="headerlink" href="#not-what-we-expected" title="Permalink to this headline">¶</a></h3>
 <p>It is worrisome that the p-values change drastically when the embedding dimension
 changes slightly.</p>
 <p>Below, we investigate what could be causing this phenomenon.</p>
-</div>
-</div>
-<div class="section" id="focus-on-the-d-1-case">
+</section>
+</section>
+<section id="focus-on-the-d-1-case">
 <h2>Focus on the d=1 case<a class="headerlink" href="#focus-on-the-d-1-case" title="Permalink to this headline">¶</a></h2>
 <p>Note that in the testing above, even for <span class="math notranslate nohighlight">\(d=1\)</span>, the latent positions were significantly
 different. Is this a bug? Or how can we explain this?</p>
-<div class="section" id="set-up-some-metadata-for-this-experiment">
+<section id="set-up-some-metadata-for-this-experiment">
 <h3>Set up some metadata for this experiment<a class="headerlink" href="#set-up-some-metadata-for-this-experiment" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1055,8 +1056,8 @@ different. Is this a bug? Or how can we explain this?</p>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="align-and-test-the-d-1-out-embedding">
+</section>
+<section id="align-and-test-the-d-1-out-embedding">
 <h3>Align and test the d=1, out embedding<a class="headerlink" href="#align-and-test-the-d-1-out-embedding" title="Permalink to this headline">¶</a></h3>
 <p>Just like in the 2-sample testing above, we take the <span class="math notranslate nohighlight">\(d=1\)</span> embedding, align the left
 to the right, and ask whether these embeddings are different. Here I only use the
@@ -1090,8 +1091,8 @@ p-value = 0.0049
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="align-the-d-8-out-embedding-test-on-the-first-dimension">
+</section>
+<section id="align-the-d-8-out-embedding-test-on-the-first-dimension">
 <h3>Align the <span class="math notranslate nohighlight">\(d=8\)</span> out embedding, test on the first dimension<a class="headerlink" href="#align-the-d-8-out-embedding-test-on-the-first-dimension" title="Permalink to this headline">¶</a></h3>
 <p>Now, we instead perform the alignment in the <span class="math notranslate nohighlight">\(d=8\)</span> embedding. Then, we again look at
 only the first dimension <em>of that aligned set of embeddings</em> and test whether those
@@ -1127,8 +1128,8 @@ p-value = 0.8575
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-results-for-testing-on-the-first-dimension-only">
+</section>
+<section id="plot-the-results-for-testing-on-the-first-dimension-only">
 <h3>Plot the results for testing on the first dimension only<a class="headerlink" href="#plot-the-results-for-testing-on-the-first-dimension-only" title="Permalink to this headline">¶</a></h3>
 <p>Below are empirical CDFs for the first dimension, in both of the cases described above.
 Note that in either case, the right embedding (blue line) is the same, because we
@@ -1183,8 +1184,8 @@ aligned left to right.</p>
 <img alt="_images/bilateral_symmetry_39_0.png" src="_images/bilateral_symmetry_39_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="a-projection-experiment">
+</section>
+<section id="a-projection-experiment">
 <h3>A projection experiment<a class="headerlink" href="#a-projection-experiment" title="Permalink to this headline">¶</a></h3>
 <p>Just to further put this issue of the first dimension to rest - here we look at what
 happens if we use the latent positions learned from the left to project the
@@ -1318,7 +1319,7 @@ right-to-right adjacency matrix into the left latent space, and vice versa.</p>
 <img alt="_images/bilateral_symmetry_41_0.png" src="_images/bilateral_symmetry_41_0.png" />
 </div>
 </div>
-<div class="section" id="double-check-that-the-identical-pvalues-are-real">
+<section id="double-check-that-the-identical-pvalues-are-real">
 <h4>Double check that the identical pvalues are real<a class="headerlink" href="#double-check-that-the-identical-pvalues-are-real" title="Permalink to this headline">¶</a></h4>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1349,9 +1350,9 @@ p-value = 0.6116909673886892
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="run-the-projection-experiment-but-without-singular-value-scaling">
+</section>
+</section>
+<section id="run-the-projection-experiment-but-without-singular-value-scaling">
 <h3>Run the projection experiment but without singular value scaling<a class="headerlink" href="#run-the-projection-experiment-but-without-singular-value-scaling" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1370,8 +1371,8 @@ p-value = 0.6116909673886892
 <img alt="_images/bilateral_symmetry_45_0.png" src="_images/bilateral_symmetry_45_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="test-the-2-dimensional-joint-distributions">
+</section>
+<section id="test-the-2-dimensional-joint-distributions">
 <h3>Test the 2-dimensional joint distributions<a class="headerlink" href="#test-the-2-dimensional-joint-distributions" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1437,8 +1438,8 @@ p-value = 0.6116909673886892
 <img alt="_images/bilateral_symmetry_47_0.png" src="_images/bilateral_symmetry_47_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="test-the-2-dimensional-joints-but-without-singular-value-scaling">
+</section>
+<section id="test-the-2-dimensional-joints-but-without-singular-value-scaling">
 <h3>Test the 2-dimensional joints but without singular value scaling<a class="headerlink" href="#test-the-2-dimensional-joints-but-without-singular-value-scaling" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1455,9 +1456,9 @@ p-value = 0.6116909673886892
 <img alt="_images/bilateral_symmetry_49_0.png" src="_images/bilateral_symmetry_49_0.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="a-corrected-version-of-this-test">
+</section>
+</section>
+<section id="a-corrected-version-of-this-test">
 <h2>A “corrected” version of this test<a class="headerlink" href="#a-corrected-version-of-this-test" title="Permalink to this headline">¶</a></h2>
 <p>We saw above that the alignment makes a huge difference in the outcome of the test.
 One possible way to fix this is to use a higher embedding dimension where the
@@ -1511,7 +1512,7 @@ dimension alone.</p>
 </div>
 </div>
 </div>
-<div class="section" id="plot-the-results-of-the-corrected-version-which-starts-from-a-good-alignment">
+<section id="plot-the-results-of-the-corrected-version-which-starts-from-a-good-alignment">
 <h3>Plot the results of the corrected version which starts from a good alignment<a class="headerlink" href="#plot-the-results-of-the-corrected-version-which-starts-from-a-good-alignment" title="Permalink to this headline">¶</a></h3>
 <p>Here I plot the results only for orthogonal Procrustes. The behavior of the p-values
 is much closer to what we would have expected.</p>
@@ -1525,9 +1526,9 @@ is much closer to what we would have expected.</p>
 <img alt="_images/bilateral_symmetry_53_0.png" src="_images/bilateral_symmetry_53_0.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="end">
+</section>
+</section>
+<section id="end">
 <h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1549,8 +1550,8 @@ Completed at 2021-03-15 11:13:34.544446
 </div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

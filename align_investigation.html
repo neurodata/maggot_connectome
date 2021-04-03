@@ -4,7 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
     <title>Investigating alignment &#8212; Maggot Connectome</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
@@ -96,7 +97,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Preliminaries
  </span>
@@ -113,7 +114,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Look at it
  </span>
@@ -125,7 +126,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   A priori modeling
  </span>
@@ -137,7 +138,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Bilateral symmetry
  </span>
@@ -159,7 +160,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Matching
  </span>
@@ -176,7 +177,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Feedforwardness
  </span>
@@ -193,7 +194,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Appendix
  </span>
@@ -412,7 +413,7 @@
         
               <div>
                 
-  <div class="section" id="investigating-alignment">
+  <section id="investigating-alignment">
 <h1>Investigating alignment<a class="headerlink" href="#investigating-alignment" title="Permalink to this headline">¶</a></h1>
 <p>In <a class="reference internal" href="bilateral_symmetry.html"><span class="doc">Testing bilateral symmetry</span></a>, we saw how odd some of the embedding alignments can
 be, and how large of an effect they have on downstream analysis.</p>
@@ -426,7 +427,7 @@ correspondence for Procrustes matching</p></li>
 <li><p>Try removing the paired Kenyon cells from this analysis to see whether they have
 much effect on the alignments above.</p></li>
 </ul>
-<div class="section" id="preliminaries">
+<section id="preliminaries">
 <h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -492,8 +493,8 @@ require(['plotly'], function(Plotly) {
 </script>
 </div></div>
 </div>
-</div>
-<div class="section" id="load-and-process-data">
+</section>
+<section id="load-and-process-data">
 <h2>Load and process data<a class="headerlink" href="#load-and-process-data" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -557,8 +558,8 @@ require(['plotly'], function(Plotly) {
 <img alt="_images/align_investigation_4_2.png" src="_images/align_investigation_4_2.png" />
 </div>
 </div>
-</div>
-<div class="section" id="evaluate-the-pairs-using-graph-matching">
+</section>
+<section id="evaluate-the-pairs-using-graph-matching">
 <h2>Evaluate the pairs using graph matching<a class="headerlink" href="#evaluate-the-pairs-using-graph-matching" title="Permalink to this headline">¶</a></h2>
 <p>Here, we run graph matching either starting from the known pairs (idendtity matrix as
 the initial position for FAQ) or from the barycenter. The goal is to evaluate how good
@@ -616,10 +617,10 @@ GMP objective function from known pairs:
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="investigate-alignment-methods">
+</section>
+<section id="investigate-alignment-methods">
 <h2>Investigate alignment methods<a class="headerlink" href="#investigate-alignment-methods" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="run-the-initial-embedding-using-ase">
+<section id="run-the-initial-embedding-using-ase">
 <h3>Run the initial embedding using ASE<a class="headerlink" href="#run-the-initial-embedding-using-ase" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -675,8 +676,8 @@ GMP objective function from known pairs:
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="plot-screeplots">
+</section>
+<section id="plot-screeplots">
 <h3>Plot screeplots<a class="headerlink" href="#plot-screeplots" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -706,8 +707,8 @@ GMP objective function from known pairs:
 <img alt="_images/align_investigation_11_0.png" src="_images/align_investigation_11_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-latent-positions-without-alignment">
+</section>
+<section id="plot-the-latent-positions-without-alignment">
 <h3>Plot the latent positions without alignment<a class="headerlink" href="#plot-the-latent-positions-without-alignment" title="Permalink to this headline">¶</a></h3>
 <p>In the following figures, I usually focus on <span class="math notranslate nohighlight">\(d=3\)</span> as the embedding dimension, as this
 was a small dimension where alignment was non-trivial (not just a sign flip) and in
@@ -731,8 +732,8 @@ came from the same distribution (see <a class="reference internal" href="bilater
 <img alt="_images/align_investigation_13_0.png" src="_images/align_investigation_13_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="align-the-3-dimensional-out-embeddings-using-known-or-predicted-pairs">
+</section>
+<section id="align-the-3-dimensional-out-embeddings-using-known-or-predicted-pairs">
 <h3>Align the 3-dimensional out embeddings using known or predicted pairs<a class="headerlink" href="#align-the-3-dimensional-out-embeddings-using-known-or-predicted-pairs" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -786,8 +787,8 @@ Seedless Procrustes diff. norm using predicted pairs: 3.806
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-results-of-these-two-kinds-of-alignment-using-orthogonal-procrustes">
+</section>
+<section id="plot-the-results-of-these-two-kinds-of-alignment-using-orthogonal-procrustes">
 <h3>Plot the results of these two kinds of alignment using orthogonal Procrustes<a class="headerlink" href="#plot-the-results-of-these-two-kinds-of-alignment-using-orthogonal-procrustes" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -814,8 +815,8 @@ Seedless Procrustes diff. norm using predicted pairs: 3.806
 <img alt="_images/align_investigation_17_1.png" src="_images/align_investigation_17_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-results-of-these-two-kinds-of-alignment-using-seedless-procrustes">
+</section>
+<section id="plot-the-results-of-these-two-kinds-of-alignment-using-seedless-procrustes">
 <h3>Plot the results of these two kinds of alignment using seedless Procrustes<a class="headerlink" href="#plot-the-results-of-these-two-kinds-of-alignment-using-seedless-procrustes" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -842,8 +843,8 @@ Seedless Procrustes diff. norm using predicted pairs: 3.806
 <img alt="_images/align_investigation_19_1.png" src="_images/align_investigation_19_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-results-of-aligning-with-seedless-procrustes-using-all-dimension-flip-initializations">
+</section>
+<section id="plot-the-results-of-aligning-with-seedless-procrustes-using-all-dimension-flip-initializations">
 <h3>Plot the results of aligning with seedless Procrustes using all dimension flip initializations<a class="headerlink" href="#plot-the-results-of-aligning-with-seedless-procrustes-using-all-dimension-flip-initializations" title="Permalink to this headline">¶</a></h3>
 <p>Perhaps the results above settled into a local minima since we were initializing seedless
 Procrustes from the orthogonal procustes solution. Here we restart from all of the
@@ -868,8 +869,8 @@ Procrustes from the orthogonal procustes solution. Here we restart from all of t
 <img alt="_images/align_investigation_21_0.png" src="_images/align_investigation_21_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="embed-using-omni-instead-of-ase-align">
+</section>
+<section id="embed-using-omni-instead-of-ase-align">
 <h3>Embed using Omni instead of ASE + align<a class="headerlink" href="#embed-using-omni-instead-of-ase-align" title="Permalink to this headline">¶</a></h3>
 <p>Again, we use the try using either the known pairing or the best one that we have
 predicted by graph matching.</p>
@@ -914,8 +915,8 @@ we don’t need to worry about what happens in <span class="math notranslate noh
 <img alt="_images/align_investigation_23_2.png" src="_images/align_investigation_23_2.png" />
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-left-omni-embedding-by-rough-cell-type">
+</section>
+<section id="plot-the-left-omni-embedding-by-rough-cell-type">
 <h3>Plot the left Omni embedding by rough cell type<a class="headerlink" href="#plot-the-left-omni-embedding-by-rough-cell-type" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -937,9 +938,9 @@ we don’t need to worry about what happens in <span class="math notranslate noh
 <img alt="_images/align_investigation_25_1.png" src="_images/align_investigation_25_1.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="what-happens-when-we-remove-the-kenyon-cells">
+</section>
+</section>
+<section id="what-happens-when-we-remove-the-kenyon-cells">
 <h2>What happens when we remove the Kenyon cells?<a class="headerlink" href="#what-happens-when-we-remove-the-kenyon-cells" title="Permalink to this headline">¶</a></h2>
 <p>We can repeat much of the analysis from the above, but after removing the Kenyon
 cells. These neurons are thought to be less bilaterally stereotyped than many other
@@ -997,7 +998,7 @@ analysis since we started from only the paired neurons.</p>
 </div>
 </div>
 </div>
-<div class="section" id="align-the-3-dimensional-out-embeddings-using-known-pairs">
+<section id="align-the-3-dimensional-out-embeddings-using-known-pairs">
 <h3>Align the 3-dimensional out embeddings using known pairs<a class="headerlink" href="#align-the-3-dimensional-out-embeddings-using-known-pairs" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1020,8 +1021,8 @@ Seedless Procrustes diff. norm using true pairs: 3.326
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-results-of-alignment-using-orthogonal-procrustes">
+</section>
+<section id="plot-the-results-of-alignment-using-orthogonal-procrustes">
 <h3>Plot the results of alignment using orthogonal Procrustes<a class="headerlink" href="#plot-the-results-of-alignment-using-orthogonal-procrustes" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1039,8 +1040,8 @@ Seedless Procrustes diff. norm using true pairs: 3.326
 <img alt="_images/align_investigation_32_0.png" src="_images/align_investigation_32_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-results-of-alignment-using-seedless-procrustes">
+</section>
+<section id="plot-the-results-of-alignment-using-seedless-procrustes">
 <h3>Plot the results of alignment using seedless Procrustes<a class="headerlink" href="#plot-the-results-of-alignment-using-seedless-procrustes" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1058,8 +1059,8 @@ Seedless Procrustes diff. norm using true pairs: 3.326
 <img alt="_images/align_investigation_34_0.png" src="_images/align_investigation_34_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="plot-the-embeddings-using-omni-with-the-known-pair-correspondence">
+</section>
+<section id="plot-the-embeddings-using-omni-with-the-known-pair-correspondence">
 <h3>Plot the embeddings using Omni with the known pair correspondence<a class="headerlink" href="#plot-the-embeddings-using-omni-with-the-known-pair-correspondence" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1084,9 +1085,9 @@ Seedless Procrustes diff. norm using true pairs: 3.326
 <img alt="_images/align_investigation_36_1.png" src="_images/align_investigation_36_1.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="end">
+</section>
+</section>
+<section id="end">
 <h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1108,8 +1109,8 @@ Completed at 2021-03-22 09:33:34.012958
 </div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

@@ -4,7 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
     <title>Off-diagonal and off-script &#8212; Maggot Connectome</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
@@ -96,7 +97,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Preliminaries
  </span>
@@ -113,7 +114,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Look at it
  </span>
@@ -125,7 +126,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   A priori modeling
  </span>
@@ -137,7 +138,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Bilateral symmetry
  </span>
@@ -159,7 +160,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Matching
  </span>
@@ -176,7 +177,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Feedforwardness
  </span>
@@ -193,7 +194,7 @@
   </a>
  </li>
 </ul>
-<p class="caption collapsible-parent">
+<p>
  <span class="caption-text">
   Appendix
  </span>
@@ -347,7 +348,7 @@
         
               <div>
                 
-  <div class="section" id="off-diagonal-and-off-script">
+  <section id="off-diagonal-and-off-script">
 <h1>Off-diagonal and off-script<a class="headerlink" href="#off-diagonal-and-off-script" title="Permalink to this headline">¶</a></h1>
 <p>In <a class="reference internal" href="bilateral_symmetry.html"><span class="doc">Testing bilateral symmetry</span></a>, we showed that we fail to reject the null hypothesis
 that the left-to-left and right-to-right induced subgraphs have different latent
@@ -388,7 +389,7 @@ generate the ipsilateral subgraphs, we would have</p>
 <p>By searching over <span class="math notranslate nohighlight">\(Q\)</span> to minimize</p>
 <div class="math notranslate nohighlight">
 \[\| P_{L \rightarrow R} - X_{L} Q Y_{R}^T \|_F^2\]</div>
-<div class="section" id="preliminaries">
+<section id="preliminaries">
 <h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -465,10 +466,10 @@ require(['plotly'], function(Plotly) {
 </script>
 </div></div>
 </div>
-</div>
-<div class="section" id="load-the-data">
+</section>
+<section id="load-the-data">
 <h2>Load the data<a class="headerlink" href="#load-the-data" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="load-node-metadata-and-select-the-subgraphs-of-interest">
+<section id="load-node-metadata-and-select-the-subgraphs-of-interest">
 <h3>Load node metadata and select the subgraphs of interest<a class="headerlink" href="#load-node-metadata-and-select-the-subgraphs-of-interest" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -613,9 +614,9 @@ Number of pairs after taking LCC intersection: 1132
 <img alt="_images/off_diagonal_11_2.png" src="_images/off_diagonal_11_2.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="a-modified-orthogonal-procrustes-procedure">
+</section>
+</section>
+<section id="a-modified-orthogonal-procrustes-procedure">
 <h2>A modified orthogonal Procrustes procedure<a class="headerlink" href="#a-modified-orthogonal-procrustes-procedure" title="Permalink to this headline">¶</a></h2>
 <p>Motivated by the above, we seek to minimize</p>
 <div class="math notranslate nohighlight">
@@ -652,7 +653,7 @@ tr(W Y^T B^T X) \leq tr(\Sigma)
 tr(W Y^T B^T X) = tr(V U^T U \Sigma V^T) = tr(\Sigma V^T V) = tr(\Sigma)
 \]</div>
 <p>Thus, we have achieved the upper bound, and therefore maximized the quantity as desired.</p>
-<div class="section" id="implementation">
+<section id="implementation">
 <h3>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h3>
 <p>The implementation of the above is quite simple, below is a simple version in numpy.</p>
 <div class="cell tag_hide-input docutils container">
@@ -667,8 +668,8 @@ tr(W Y^T B^T X) = tr(V U^T U \Sigma V^T) = tr(\Sigma V^T V) = tr(\Sigma)
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="test-this-procrustes">
+</section>
+<section id="test-this-procrustes">
 <h3>Test this procrustes<a class="headerlink" href="#test-this-procrustes" title="Permalink to this headline">¶</a></h3>
 <p>Here, I let:</p>
 <ul class="simple">
@@ -893,9 +894,9 @@ see that they are nearly the same.</p>
 <img alt="_images/off_diagonal_23_0.png" src="_images/off_diagonal_23_0.png" />
 </div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
