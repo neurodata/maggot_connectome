@@ -4,6 +4,8 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 
+from graspologic.utils import largest_connected_component
+
 from ..utils import get_paired_inds, to_pandas_edgelist
 
 
@@ -20,18 +22,19 @@ class MaggotGraph:
             edges = to_pandas_edgelist(g)
         self.edges = edges
         self._node_columns = nodes.columns
-        self._single_type = False
-        if edges["edge_type"].nunique() == 1:
-            self._single_type = True
 
     def to_edge_type_graph(self, edge_type):
         type_edges = self.edges[self.edges["edge_type"] == edge_type]
-        view = nx.edge_subgraph(self.g, type_edges.index)
+        view = nx.edge_subgraph(self.g, type_edges.index).copy()
         return MaggotGraph(view, self.nodes, type_edges)
 
     @property
     def edge_types(self):
         return sorted(self.edges["edge_type"].unique())
+
+    @property
+    def is_single_type(self):
+        return len(self.edge_types) == 1
 
     @property
     def aa(self):
@@ -54,17 +57,23 @@ class MaggotGraph:
         return self.to_edge_type_graph("sum")
 
     @property
-    def adj(self, edge_type=None):
-        if self._single_type:
+    def adj(self):
+        if self.is_single_type:
             adj = nx.to_numpy_array(self.g, nodelist=self.nodes.index)
             return adj
-        elif edge_type is not None:
-            etg = self.to_edge_type_graph(edge_type)
-            return etg.adj()
         else:
             msg = "Current MaggotGraph has more than one edge type. "
             msg += "Use .adjs() method instead to specify multple edge types."
             raise ValueError(msg)
+
+    @property
+    def adjs(self):
+        adjs = []
+        for edge_type in self.edge_types:
+            adj = self.to_edge_type_graph(edge_type).adj
+            adjs.append(adj)
+        adjs = np.stack(adjs)
+        return adjs
 
     def node_subgraph(self, source_node_ids, target_node_ids=None):
         # if target_node_ids is None:  # induced subgraph on source nodes
@@ -82,7 +91,7 @@ class MaggotGraph:
         nodes = self.nodes
         source_edges = edges[edges.source.isin(source_node_ids)]
         source_target_edges = source_edges[source_edges.target.isin(target_node_ids)]
-        sub_g = self.g.edge_subgraph(source_target_edges.index)
+        sub_g = self.g.edge_subgraph(source_target_edges.index).copy()
         sub_nodes = nodes[
             nodes.index.isin(source_node_ids) | nodes.index.isin(target_node_ids)
         ]
@@ -186,5 +195,22 @@ class MaggotGraph:
                     row[pair_id_key] = -1
                     print(f"Removing invalid pair: {node_id} to {pair}")
 
-    def to_largest_connected_component(self):
-        raise NotImplementedError()
+    def to_largest_connected_component(self, verbose=False):
+        if self.is_single_type:
+            adj = self.adj
+        else:
+            adj = self.adjs.sum(axis=0)
+        lcc, inds = largest_connected_component(adj, return_inds=True)
+        lcc_node_ids = self.nodes.index[inds]
+        remove_node_ids = np.setdiff1d(self.nodes.index, lcc_node_ids)
+        self.g.remove_nodes_from(remove_node_ids)
+        self.nodes = self.nodes.iloc[inds]
+        edges = self.edges
+        self.edges = edges[
+            edges["source"].isin(lcc_node_ids) & edges["target"].isin(lcc_node_ids)
+        ]
+        if verbose > 0:
+            n_removed = len(remove_node_ids)
+            print(
+                f"Removed {n_removed} nodes when taking the largest connected component."
+            )

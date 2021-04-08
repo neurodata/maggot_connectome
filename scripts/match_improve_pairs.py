@@ -10,6 +10,8 @@ set_warnings()
 
 import datetime
 import time
+from pathlib import Path
+import os
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -25,8 +27,18 @@ from pkg.io import savefig
 from pkg.plot import set_theme
 from pkg.utils import get_paired_inds, get_paired_subgraphs
 
+from src.visualization import simple_plot_neurons
+from src.pymaid import start_instance
+from src.visualization import CLASS_COLOR_DICT
+
 
 t0 = time.time()
+
+output_path = Path(
+    os.path.join(os.getcwd(), "maggot_connectome/results/outputs/match_improve_pairs")
+)
+if not os.path.isdir(output_path):
+    raise ValueError("Path for saving output does not exist.")
 
 
 def stashfig(name, **kwargs):
@@ -87,7 +99,9 @@ lr_adj = pad(adj[np.ix_(left_inds, right_inds)], max_n_side)
 rl_adj = pad(adj[np.ix_(right_inds, left_inds)], max_n_side)
 
 for i in range(max_n_side - len(left_inds)):
-    left_nodes = left_nodes.append(pd.Series(name=-i, dtype="float"), ignore_index=True)
+    left_nodes = left_nodes.append(
+        pd.Series(name=-i, dtype="float"), ignore_index=False
+    )
 
 #%%
 plot_kws = dict(plot_type="scattermap", sizes=(1, 1))
@@ -125,21 +139,23 @@ adjplot(rr_adj, meta=right_nodes, ax=ax, color=palette["Right"], **plot_kws)
 #%% [markdown]
 # ### Run the graph matching experiment
 #%%
+from graspologic.match.qap import _doubly_stochastic
+
 np.random.seed(8888)
-maxiter = 20
+maxiter = 30
 verbose = 1
 ot = False
 maximize = True
 reg = np.nan  # TODO could try GOAT
 thr = np.nan
-tol = 1e-4
+tol = 1e-3
 n_init = 20
+alpha = 0.1
 n = len(ll_adj)
 # construct an initialization
 P0 = np.zeros((n, n))
 P0[np.arange(n_pairs), np.arange(n_pairs)] = 1
 P0[n_pairs:, n_pairs:] = 1 / (n - n_pairs)
-P0
 
 
 @jit(nopython=True)
@@ -199,6 +215,12 @@ for init in range(n_init):
 
         P = P0.copy()
         P = P[:, shuffle_inds]
+
+        if alpha > 0:
+            rand_ds = np.random.uniform(size=(n, n))
+            rand_ds = _doubly_stochastic(rand_ds)
+            P = (1 - alpha) * P + alpha * rand_ds
+
         # _, iteration_perm = linear_sum_assignment(-P)
         # match_ratio = (correct_perm == iteration_perm)[:n_pairs].mean()
         # print(match_ratio)
@@ -244,23 +266,22 @@ for init in range(n_init):
                 P = P_i1
                 break
             P = P_i1
-            _, iteration_perm = linear_sum_assignment(-P)
-            match_ratio = (correct_perm == iteration_perm)[:n_pairs].mean()
+            # _, iteration_perm = linear_sum_assignment(-P)
+            # match_ratio = (correct_perm == iteration_perm)[:n_pairs].mean()
 
             objfunc = compute_objective_function(A, B, AB_for_obj, BA_for_obj, P)
 
             if verbose > 0:
-                print(
-                    f"Iteration: {n_iter},  Objective function: {objfunc:.2f},  Match ratio: {match_ratio:.2f}"
-                )
+                print(f"Iteration: {n_iter},  Objective function: {objfunc:.2f}")
 
             row = {
                 "init": init,
                 "iter": n_iter,
                 "objfunc": objfunc,
-                "match_ratio": match_ratio,
+                # "match_ratio": match_ratio,
                 "between_term": between_term,
                 "time": time.time() - init_t0,
+                "P": P[:, correct_perm],
             }
             rows.append(row)
 
@@ -274,34 +295,110 @@ for init in range(n_init):
 results = pd.DataFrame(rows)
 results
 
-#%% [markdown]
-# ### Plot the results
 #%%
 last_results_idx = results.groupby(["between_term", "init"])["iter"].idxmax()
 last_results = results.loc[last_results_idx].copy()
 
-fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-matched_stripplot(
-    last_results,
-    jitter=0.2,
-    x="between_term",
-    y="objfunc",
-    match="init",
-    hue="between_term",
-)
-stashfig("between-objfunc")
+total_objfunc = last_results["objfunc"].sum()
+amalgam_P = np.zeros((n, n))
+for idx, row in last_results.iterrows():
+    P = row["P"]
+    objfunc = row["objfunc"]
+    scaled_P = P * objfunc / total_objfunc
+    amalgam_P += scaled_P
 
 
-fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-matched_stripplot(
-    last_results,
-    jitter=0.2,
-    x="between_term",
-    y="match_ratio",
-    match="init",
-    hue="between_term",
+#%%
+
+# I = np.eye(n_pairs)
+# A = A_base[:n_pairs, :n_pairs].copy()
+# B = B_base[:n_pairs, :n_pairs].copy()
+# AB = AB_base[:n_pairs, :n_pairs].copy()
+# BA = BA_base[:n_pairs, :n_pairs].copy()
+# P = amalgam_P[:n_pairs, :n_pairs].copy()
+
+# og_objfunc = compute_objective_function(A, B, AB, BA, I)
+# print(f"Objective function with current pairs: {og_objfunc}")
+
+# for i in range(10):
+#     shuffle_inds = np.random.permutation(len(P))
+#     unshuffle_inds = np.argsort(shuffle_inds)
+#     P_shuffle = P[shuffle_inds][:, shuffle_inds].copy()
+#     _, perm_inds = linear_sum_assignment(P_shuffle, maximize=True)
+#     perm_inds = perm_inds[unshuffle_inds]
+#     P_final = np.eye(n)
+#     P_final = P_final[perm_inds][:n_pairs, :n_pairs].copy()  # double check
+
+#     final_objfunc = compute_objective_function(A, B, AB, BA, P_final)
+#     print(f"Final objective function with predicted pairs: {final_objfunc}")
+
+
+#%%
+
+
+def predict_pairs(P, source_nodes, target_nodes):
+    source_nodes["predicted_pairs"] = ""
+    source_nodes["prediction_changed"] = False
+    source_nodes["multiple_predictions"] = False
+    source_nodes["had_pair"] = True
+    for i in range(n):
+        idx = source_nodes.index[i]
+        row = P[i]
+        nonzero_inds = np.nonzero(row)[0]
+        sort_inds = np.argsort(-row[nonzero_inds])
+        ranking = nonzero_inds[sort_inds]
+        ranking_skids = target_nodes.index[ranking]
+        source_nodes.at[idx, "predicted_pairs"] = list(ranking_skids)
+        current_pair = source_nodes.loc[idx, "pair"]
+        if ranking_skids[0] != current_pair:
+            source_nodes.loc[idx, "prediction_changed"] = True
+        if len(ranking_skids) > 1:
+            source_nodes.loc[idx, "multiple_predictions"] = True
+        if source_nodes.loc[idx, "pair"] == -1 or idx < 1:
+            source_nodes.loc[idx, "had_pair"] = False
+    return source_nodes
+
+
+left_nodes = predict_pairs(amalgam_P, left_nodes, right_nodes)
+right_nodes = predict_pairs(amalgam_P.T, right_nodes, left_nodes)
+changed_left_nodes = left_nodes[
+    left_nodes["prediction_changed"] | left_nodes["multiple_predictions"]
+].sort_values(
+    ["had_pair", "prediction_changed", "multiple_predictions"], ascending=False
 )
-stashfig("between-match-ratio")
+changed_right_nodes = right_nodes[
+    right_nodes["prediction_changed"] | right_nodes["multiple_predictions"]
+].sort_values(
+    ["had_pair", "prediction_changed", "multiple_predictions"], ascending=False
+)
+
+
+changed_left_nodes.to_csv(output_path / "changed_left_pairs_meta.csv")
+changed_right_nodes.to_csv(output_path / "changed_right_pairs_meta.csv")
+
+#%%
+
+plot_nodes = changed_left_nodes[
+    changed_left_nodes["prediction_changed"] & changed_left_nodes["had_pair"]
+]
+skeleton_palette = dict(
+    zip(mg.nodes.index, np.vectorize(CLASS_COLOR_DICT.get)(mg.nodes["merge_class"]))
+)
+start_instance()
+n_plot = 40
+for i in np.random.choice(len(plot_nodes), size=n_plot, replace=False):
+    idx = plot_nodes.index[i]
+    row = plot_nodes.loc[idx]
+    predicted_pairs = row["predicted_pairs"]
+    predicted_pairs += [idx]
+    fig = plt.figure(figsize=(8, 8))
+    gs = plt.GridSpec(1, 1, figure=fig)
+    ax = fig.add_subplot(gs[0, 0], projection="3d")
+    simple_plot_neurons(predicted_pairs, palette=skeleton_palette, ax=ax, dist=6)
+    ax.set_title(f"Left: {idx}")
+    ax.set_xlim((7000, 99000))
+    ax.set_ylim((7000, 99000))
+    stashfig(f"left-{idx}-pair-predictions")
 
 # %% [markdown]
 # ## End

@@ -9,7 +9,7 @@ from sklearn.utils import Bunch
 from ..graph import MaggotGraph
 from ..utils import to_pandas_edgelist
 
-DATA_VERSION = "2021-03-10"  # set to whatever the most recent one is
+DATA_VERSION = "2021-04-02"  # set to whatever the most recent one is
 
 DATA_PATH = Path(__file__).parent.parent.parent.parent  # don't judge me judge judy
 DATA_PATH = DATA_PATH / "data"
