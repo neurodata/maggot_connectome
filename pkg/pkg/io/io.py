@@ -21,6 +21,10 @@ FIG_PATH = Path(__file__).parent.parent.parent.parent
 FIG_PATH = FIG_PATH / "results"
 FIG_PATH = FIG_PATH / "figs"
 
+OUT_PATH = Path(__file__).parent.parent.parent.parent
+OUT_PATH = OUT_PATH / "results"
+OUT_PATH = OUT_PATH / "outputs"
+
 
 def savefig(
     name,
@@ -51,3 +55,8 @@ def savefig(
         )
         if print_out:
             print(f"Saved figure to {savename}")
+
+
+def get_out_dir(foldername=None, subfoldername=None, pathname=OUT_PATH):
+    path = _handle_dirs(pathname, foldername, subfoldername)
+    return path

@@ -1,65 +1,45 @@
 #%% [markdown]
-# # Testing bilateral symmetry
-# This notebook describes a first pass at testing for some notion of bilateral symmetry.
-# Here, we focus only on the left-left and right-right induced subgraphs for simplicity.
-# We also use the unweighted version of the maggot connectomes. Also, for now, we
-# restrict ourselves to the set of neurons for which we know a pairing between neuron A
-# on the left hemisphere and neuron A on the right hemisphere.
-#
-# To summarize, this notebook presents a strange phenomena where depending on the
-# dimension of the embedding that we use to test bilateral symmetry, we get vastly
-# different results.
-#
-# We also present a modified proceedure that fails to reject the null that the latent
-# positions of the left-left induced subgraph and the right-right induced subgraph have
-# the same distribution over many embedding dimensions, suggesting that for the current
-# setup we fail to reject bilateral symmetry.
+# # Testing bilateral symmetry - semiparametric test
 #%% [markdown]
 # ## Preliminaries
 #%%
-from pkg.utils import set_warnings
-
-set_warnings()
-
 import datetime
 import pprint
 import time
-
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from hyppo.ksample import KSample
-from scipy.stats import epps_singleton_2samp, ks_2samp
 
-
-from graspologic.align import OrthogonalProcrustes, SeedlessProcrustes
-from graspologic.embed import AdjacencySpectralEmbed, select_dimension
-from graspologic.plot import pairplot
+from graspologic.inference import latent_position_test
 from graspologic.utils import (
-    augment_diagonal,
     binarize,
     multigraph_lcc_intersection,
-    pass_to_ranks,
+    symmetrize,
 )
 from pkg.data import load_adjacency, load_node_meta
-from pkg.io import savefig
+from pkg.io import savefig, get_out_dir
 from pkg.plot import set_theme
-from pkg.utils import get_paired_inds, get_paired_subgraphs
-
+from pkg.utils import get_paired_inds, get_paired_subgraphs, set_warnings
 from src.visualization import adjplot  # TODO fix graspologic version and replace here
+
+set_warnings()
+
 
 t0 = time.time()
 
+foldername = "semipar"
+
 
 def stashfig(name, **kwargs):
-    foldername = "bilateral_symmetry"
     savefig(name, foldername=foldername, **kwargs)
 
 
+out_dir = get_out_dir(foldername=foldername)
+
 colors = sns.color_palette("Set1")
-palette = dict(zip(["Left", "Right", "OP", "O-SP"], colors))
+palette = dict(zip(["Left", "Right"], colors))
 set_theme()
 
 #%% [markdown]
@@ -94,7 +74,7 @@ n_pairs = len(ll_adj)
 print(f"Number of pairs after taking LCC intersection: {n_pairs}")
 
 #%% [markdown]
-# ### Plotting the aligned adjacency matrices
+# ### Plot the aligned adjacency matrices
 # At a high level, we see that the left-left and right-right induced subgraphs look
 # quite similar when aligned by the known neuron pairs.
 #%%
@@ -118,48 +98,10 @@ adjplot(
 stashfig("left-right-induced-adjs")
 
 #%% [markdown]
-# ## Embedding the graphs
-# Here I embed the unweighted, directed graphs using ASE.
+# ## Run a latent position test
+
 #%%
-
-
-def plot_latents(left, right, title="", n_show=4):
-    plot_data = np.concatenate([left, right], axis=0)
-    labels = np.array(["Left"] * len(left) + ["Right"] * len(right))
-    pg = pairplot(plot_data[:, :n_show], labels=labels, title=title)
-    return pg
-
-
-def screeplot(sing_vals, elbow_inds, color=None, ax=None, label=None):
-    if ax is None:
-        _, ax = plt.subplots(1, 1, figsize=(8, 4))
-    plt.plot(range(1, len(sing_vals) + 1), sing_vals, color=color, label=label)
-    plt.scatter(
-        elbow_inds, sing_vals[elbow_inds - 1], marker="x", s=50, zorder=10, color=color
-    )
-    ax.set(ylabel="Singular value", xlabel="Index")
-    return ax
-
-
-def embed(adj, n_components=40, ptr=False):
-    if ptr:
-        adj = pass_to_ranks(adj)
-    elbow_inds, elbow_vals = select_dimension(augment_diagonal(adj), n_elbows=4)
-    elbow_inds = np.array(elbow_inds)
-    ase = AdjacencySpectralEmbed(n_components=n_components)
-    out_latent, in_latent = ase.fit_transform(adj)
-    return out_latent, in_latent, ase.singular_values_, elbow_inds
-
-
-#%% [markdown]
-# ### Run the embedding
-#%%
-
-from graspologic.utils import symmetrize
-from graspologic.inference import latent_position_test
-
 n_components = 12
-max_n_components = 40
 preprocess = [symmetrize, binarize]
 graphs = [ll_adj, rr_adj]
 
@@ -169,33 +111,99 @@ for func in preprocess:
 
 ll_adj = graphs[0]
 rr_adj = graphs[1]
-test_case = "scalar-rotation"
+n_bootstraps = 2
+test_case = "rotation"
 embedding = "ase"
-currtime = time.time()
-pvalue, tstat, misc = latent_position_test(
-    ll_adj,
-    rr_adj,
-    embedding=embedding,
-    n_components=n_components,
-    test_case=test_case,
-    n_bootstraps=500,
-)
-print(f"{time.time() - currtime:.3f} seconds elapsed.")
+verbose = 1
+rows = []
+for embedding in ["ase", "omnibus"]:
+    for n_components in np.arange(6, 15):
+        currtime = time.time()
+        params = dict(
+            embedding=embedding,
+            n_components=n_components,
+            test_case=test_case,
+            n_bootstraps=n_bootstraps,
+        )
+        pvalue, tstat, misc = latent_position_test(ll_adj, rr_adj, **params)
+        elapsed = time.time() - currtime
 
-print(f"test case: {test_case}")
-print(f"embedding: {embedding}")
-print(f"n_components: {n_components}")
-print(f"p-value: {pvalue}")
-print(f"tstat: {tstat}")
+        row = params.copy()
+        row["pvalue"] = pvalue
+        row["tstat"] = tstat
+        rows.append(row)
+        results = pd.DataFrame(rows)
+        results.to_csv(out_dir / "semipar_results")
+        if verbose > 0:
+            pprint.pprint(row)
+            print()
+
+#%%
+results = pd.read_csv(out_dir / "semipar_results", index_col=0)
+
+#%% [markdown]
+# ## Plot p-values
+
+
+def scatterplot(
+    data,
+    x=None,
+    y=None,
+    hue=None,
+    shift=None,
+    shift_bounds=(-0.1, 0.1),
+    ax=None,
+    shade=False,
+    **kwargs,
+):
+    if ax is None:
+        _, ax = plt.subplots(1, 1, figsize=(8, 6))
+    data = data.copy()
+    data["x_shift"] = data[x]
+    if shift is not None:
+        groups = data.groupby(shift)
+        shifts = np.linspace(shift_bounds[0], shift_bounds[1], len(groups))
+        shifts = dict(zip(groups.groups.keys(), shifts))
+        for group_key, group_data in groups:
+            data.loc[group_data.index, "x_shift"] += shifts[group_key]
+    sns.scatterplot(data=data, x="x_shift", y=y, hue=hue, ax=ax, **kwargs)
+
+    start = int(data[x].unique().min())
+    stop = int(data[x].unique().max())
+    if shade > 0:
+        # xlim = ax.get_xlim()
+        for x in np.arange(start, stop, 2):
+            ax.axvspan(x - 0.5, x + 0.5, color="lightgrey", alpha=0.2, linewidth=0)
+
+    return ax
+
+
+scatterplot(
+    data=results,
+    x="n_components",
+    y="pvalue",
+    hue="embedding",
+    shift="embedding",
+    shade=True,
+)
+
+#%%
+groups = results.groupby("embedding")
+for i, group in groups:
+    print(i)
+    print(group)
+
+#%%
 
 #%%
 test_case = "rotation"
 embedding = "omnibus"
 n_components = 8
 n_bootstraps = 100
-n_repeats = 2
+n_repeats = 5
 rows = []
-for n_shuffle in [2, 4, 8, 16]:
+for n_shuffle in [4, 8, 16]:
+
     for repeat in range(n_repeats):
         inds = np.arange(len(rr_adj))
         choice_inds = np.random.choice(len(rr_adj), size=n_shuffle, replace=False)
@@ -231,3 +239,19 @@ for n_shuffle in [2, 4, 8, 16]:
         print(f"p-value: {pvalue}")
         print(f"tstat: {tstat}")
         print()
+
+#%%
+results = pd.DataFrame(rows)
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+sns.scatterplot(data=results, x="n_shuffle", y="pvalue", ax=ax)
+stashfig("shuffle-p-values")
+
+# %% [markdown]
+# ## End
+#%%
+elapsed = time.time() - t0
+delta = datetime.timedelta(seconds=elapsed)
+print("----")
+print(f"Script took {delta}")
+print(f"Completed at {datetime.datetime.now()}")
+print("----")

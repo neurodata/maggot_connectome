@@ -19,7 +19,7 @@ import seaborn as sns
 from graspologic.match import GraphMatch
 
 from pkg.data import load_maggot_graph
-from pkg.io import savefig
+from pkg.io import savefig, get_out_dir
 from pkg.match import quadratic_assignment
 from pkg.match.qap import _doubly_stochastic
 from pkg.plot import set_theme
