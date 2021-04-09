@@ -4,8 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Flow ranking and hypothesis testing &#8212; Maggot Connectome</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
@@ -97,7 +96,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Preliminaries
  </span>
@@ -114,7 +113,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Look at it
  </span>
@@ -126,7 +125,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   A priori modeling
  </span>
@@ -138,7 +137,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Bilateral symmetry
  </span>
@@ -160,7 +159,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Matching
  </span>
@@ -177,7 +176,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Feedforwardness
  </span>
@@ -194,7 +193,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Appendix
  </span>
@@ -360,7 +359,7 @@
         
               <div>
                 
-  <section id="flow-ranking-and-hypothesis-testing">
+  <div class="section" id="flow-ranking-and-hypothesis-testing">
 <h1>Flow ranking and hypothesis testing<a class="headerlink" href="#flow-ranking-and-hypothesis-testing" title="Permalink to this headline">¶</a></h1>
 <p>TODO: explain the goal of finding a latent ordering, comparing between graphs</p>
 <p>TODO: explain some of the math behind spring rank/signal flow</p>
@@ -420,7 +419,7 @@ require(['plotly'], function(Plotly) {
 </script>
 </div></div>
 </div>
-<section id="creating-latent-ranks-or-orderings">
+<div class="section" id="creating-latent-ranks-or-orderings">
 <h2>Creating latent “ranks” or “orderings”<a class="headerlink" href="#creating-latent-ranks-or-orderings" title="Permalink to this headline">¶</a></h2>
 <p>Here I sample some latent ranks that we’ll use for simulations, this distribution came
 from the original paper.</p>
@@ -462,8 +461,8 @@ from the original paper.</p>
 <img alt="_images/flow_rank_hypothesis_4_0.png" src="_images/flow_rank_hypothesis_4_0.png" />
 </div>
 </div>
-</section>
-<section id="a-distribution-from-the-latent-ranks">
+</div>
+<div class="section" id="a-distribution-from-the-latent-ranks">
 <h2>A distribution from the latent ranks<a class="headerlink" href="#a-distribution-from-the-latent-ranks" title="Permalink to this headline">¶</a></h2>
 <p>Using the ranks, we can create a distribution from which to sample graphs. Here I plot
 the matrix of edge probabilities <span class="math notranslate nohighlight">\(P\)</span> and an adjacency matrix <span class="math notranslate nohighlight">\(A\)</span> from it.</p>
@@ -530,8 +529,8 @@ a specific kind of feedforward SBM model.</p>
 <img alt="_images/flow_rank_hypothesis_8_0.png" src="_images/flow_rank_hypothesis_8_0.png" />
 </div>
 </div>
-</section>
-<section id="are-the-ranks-of-g-1-the-same-as-the-ranks-of-g-2">
+</div>
+<div class="section" id="are-the-ranks-of-g-1-the-same-as-the-ranks-of-g-2">
 <h2>Are the ranks of <span class="math notranslate nohighlight">\(G_1\)</span> “the same” as the ranks of <span class="math notranslate nohighlight">\(G_2\)</span>?<a class="headerlink" href="#are-the-ranks-of-g-1-the-same-as-the-ranks-of-g-2" title="Permalink to this headline">¶</a></h2>
 <p>If we are given two graphs (with an alignment/matching between the nodes of the two
 graphs) we may want to know whether the latent ranks <span class="math notranslate nohighlight">\(s\)</span> of the two graphs are the same.</p>
@@ -562,8 +561,8 @@ null distribution 2.</p></li>
 shifting the ranks up or down by a constant does not affect the resulting distribution
 on graphs. Here I’ve just chosen a test statistic (correlation) that happens to not
 care about this, but it’s worth being aware of.</p>
-</section>
-<section id="power-simulations">
+</div>
+<div class="section" id="power-simulations">
 <h2>Power simulations<a class="headerlink" href="#power-simulations" title="Permalink to this headline">¶</a></h2>
 <p>Here I sample latent ranks <span class="math notranslate nohighlight">\(s_1\)</span> from the distribution described/plotted above. The
 ranks <span class="math notranslate nohighlight">\(s_2 = s_1 + \epsilon\)</span>, where <span class="math notranslate nohighlight">\(\epsilon \sim N(0, \sigma^2 I)\)</span>, that is,
@@ -721,21 +720,21 @@ Sigma = 0.35: 100%|██████████| 100/100 [03:37&lt;00:00,  2.1
 <img alt="_images/flow_rank_hypothesis_10_10.png" src="_images/flow_rank_hypothesis_10_10.png" />
 </div>
 </div>
-</section>
-<section id="valid-and-power-goes-to-1">
+</div>
+<div class="section" id="valid-and-power-goes-to-1">
 <h2>Valid and power goes to 1?<a class="headerlink" href="#valid-and-power-goes-to-1" title="Permalink to this headline">¶</a></h2>
 <p>At least from the above simulation, it looks like:</p>
 <ul class="simple">
 <li><p>The p-values are sub-uniform under the null</p></li>
 <li><p>The p-values go to 0 as the effect size goes up</p></li>
 </ul>
-</section>
-<section id="if-the-ranks-of-g-1-and-g-2-are-not-the-same-how-are-they-related">
+</div>
+<div class="section" id="if-the-ranks-of-g-1-and-g-2-are-not-the-same-how-are-they-related">
 <h2>If the ranks of <span class="math notranslate nohighlight">\(G_1\)</span> and <span class="math notranslate nohighlight">\(G_2\)</span> are not “the same”, how are they related?<a class="headerlink" href="#if-the-ranks-of-g-1-and-g-2-are-not-the-same-how-are-they-related" title="Permalink to this headline">¶</a></h2>
 <p>More specifically, do the ranks of <span class="math notranslate nohighlight">\(G_1\)</span> point in a completely opposite direction
 as those of <span class="math notranslate nohighlight">\(G_2\)</span>?</p>
-</section>
-</section>
+</div>
+</div>
 
     <script type="text/x-thebe-config">
     {

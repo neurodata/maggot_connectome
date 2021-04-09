@@ -4,8 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>A priori SBMs &#8212; Maggot Connectome</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
@@ -97,7 +96,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Preliminaries
  </span>
@@ -114,7 +113,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Look at it
  </span>
@@ -126,7 +125,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   A priori modeling
  </span>
@@ -138,7 +137,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Bilateral symmetry
  </span>
@@ -160,7 +159,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Matching
  </span>
@@ -177,7 +176,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Feedforwardness
  </span>
@@ -194,7 +193,7 @@
   </a>
  </li>
 </ul>
-<p>
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Appendix
  </span>
@@ -369,10 +368,10 @@
         
               <div>
                 
-  <section id="a-priori-sbms">
+  <div class="section" id="a-priori-sbms">
 <h1>A priori SBMs<a class="headerlink" href="#a-priori-sbms" title="Permalink to this headline">¶</a></h1>
 <p>Comparing connectivity models generated from biological node metadata</p>
-<section id="problem-statement">
+<div class="section" id="problem-statement">
 <h2>Problem statement<a class="headerlink" href="#problem-statement" title="Permalink to this headline">¶</a></h2>
 <p>We are given an adjacency matrix <span class="math notranslate nohighlight">\(A\)</span> with <span class="math notranslate nohighlight">\(n\)</span> nodes, and a set of node metadata.
 Consider the <span class="math notranslate nohighlight">\(p\)</span>th “column” of the node metadata to be an <span class="math notranslate nohighlight">\(n\)</span>-length vector:</p>
@@ -531,10 +530,10 @@ We evaluate each in terms of BIC as described above.</p>
 </div>
 </div>
 </div>
-</section>
-<section id="load-the-data">
+</div>
+<div class="section" id="load-the-data">
 <h2>Load the data<a class="headerlink" href="#load-the-data" title="Permalink to this headline">¶</a></h2>
-<section id="load-node-metadata-and-select-the-graph-of-interest">
+<div class="section" id="load-node-metadata-and-select-the-graph-of-interest">
 <h3>Load node metadata and select the graph of interest<a class="headerlink" href="#load-node-metadata-and-select-the-graph-of-interest" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -567,8 +566,8 @@ We evaluate each in terms of BIC as described above.</p>
 </div>
 </div>
 </div>
-</section>
-<section id="load-the-graph">
+</div>
+<div class="section" id="load-the-graph">
 <h3>Load the graph<a class="headerlink" href="#load-the-graph" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -579,9 +578,9 @@ We evaluate each in terms of BIC as described above.</p>
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="fit-a-series-of-a-priori-sbms">
+</div>
+</div>
+<div class="section" id="fit-a-series-of-a-priori-sbms">
 <h2>Fit a series of <em>a priori</em> SBMs<a class="headerlink" href="#fit-a-series-of-a-priori-sbms" title="Permalink to this headline">¶</a></h2>
 <p>Here we use these known groupings of neurons to fit different <em>a priori</em> SBMs. As an
 example, consider the groupings <code class="docutils literal notranslate"><span class="pre">hemisphere</span></code> and <code class="docutils literal notranslate"><span class="pre">axon_lat</span></code>. <code class="docutils literal notranslate"><span class="pre">hemisphere</span></code> indicates
@@ -665,7 +664,7 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
 </div>
 </div>
 </div>
-<section id="collect-experimental-results">
+<div class="section" id="collect-experimental-results">
 <h3>Collect experimental results<a class="headerlink" href="#collect-experimental-results" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -677,11 +676,11 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="evaluate-model-fits">
+</div>
+</div>
+<div class="section" id="evaluate-model-fits">
 <h2>Evaluate model fits<a class="headerlink" href="#evaluate-model-fits" title="Permalink to this headline">¶</a></h2>
-<section id="plot-bic-likelihood-and-the-number-of-parameters-for-each-model">
+<div class="section" id="plot-bic-likelihood-and-the-number-of-parameters-for-each-model">
 <h3>Plot BIC, likelihood, and the number of parameters for each model<a class="headerlink" href="#plot-bic-likelihood-and-the-number-of-parameters-for-each-model" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -735,8 +734,8 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
 <img alt="_images/a_priori_sbm_15_3.png" src="_images/a_priori_sbm_15_3.png" />
 </div>
 </div>
-</section>
-<section id="look-at-the-tradeoff-between-complexity-and-fit">
+</div>
+<div class="section" id="look-at-the-tradeoff-between-complexity-and-fit">
 <h3>Look at the tradeoff between complexity and fit<a class="headerlink" href="#look-at-the-tradeoff-between-complexity-and-fit" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -776,9 +775,9 @@ in terms of log-likelihood, the number of parameters, and BIC.</p>
 <img alt="_images/a_priori_sbm_17_1.png" src="_images/a_priori_sbm_17_1.png" />
 </div>
 </div>
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
 
     <script type="text/x-thebe-config">
     {
