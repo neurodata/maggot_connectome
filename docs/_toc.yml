@@ -17,6 +17,7 @@
 
 - part: Bilateral symmetry
   chapters:
+  - file: look_at_paired_embeddings
   - file: bilateral_symmetry
   - file: align_investigation
   - file: off_diagonal

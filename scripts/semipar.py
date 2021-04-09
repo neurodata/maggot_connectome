@@ -27,6 +27,8 @@ set_warnings()
 
 t0 = time.time()
 
+RECOMPUTE = False
+
 foldername = "semipar"
 
 
@@ -76,43 +78,44 @@ print(f"Number of pairs after taking LCC intersection: {n_pairs}")
 # ## Run a latent position test
 
 #%%
-preprocess = [symmetrize, binarize]
-graphs = [ll_adj, rr_adj]
+if RECOMPUTE:
+    preprocess = [symmetrize, binarize]
+    graphs = [ll_adj, rr_adj]
 
-for func in preprocess:
-    for i, graph in enumerate(graphs):
-        graphs[i] = func(graph)
+    for func in preprocess:
+        for i, graph in enumerate(graphs):
+            graphs[i] = func(graph)
 
-ll_adj = graphs[0]
-rr_adj = graphs[1]
-n_bootstraps = 200
-test_case = "rotation"
-embedding = "ase"
-verbose = 1
-workers = -2
-rows = []
-for embedding in ["ase", "omnibus"]:
-    for n_components in np.arange(6, 15):
-        currtime = time.time()
-        params = dict(
-            embedding=embedding,
-            n_components=n_components,
-            test_case=test_case,
-            n_bootstraps=n_bootstraps,
-            workers=workers,
-        )
-        pvalue, tstat, misc = latent_position_test(ll_adj, rr_adj, **params)
-        elapsed = time.time() - currtime
+    ll_adj = graphs[0]
+    rr_adj = graphs[1]
+    n_bootstraps = 200
+    test_case = "rotation"
+    embedding = "ase"
+    verbose = 1
+    workers = -2
+    rows = []
+    for embedding in ["ase", "omnibus"]:
+        for n_components in np.arange(6, 15):
+            currtime = time.time()
+            params = dict(
+                embedding=embedding,
+                n_components=n_components,
+                test_case=test_case,
+                n_bootstraps=n_bootstraps,
+                workers=workers,
+            )
+            pvalue, tstat, misc = latent_position_test(ll_adj, rr_adj, **params)
+            elapsed = time.time() - currtime
 
-        row = params.copy()
-        row["pvalue"] = pvalue
-        row["tstat"] = tstat
-        rows.append(row)
-        results = pd.DataFrame(rows)
-        results.to_csv(out_dir / "semipar_results")
-        if verbose > 0:
-            pprint.pprint(row)
-            print()
+            row = params.copy()
+            row["pvalue"] = pvalue
+            row["tstat"] = tstat
+            rows.append(row)
+            results = pd.DataFrame(rows)
+            results.to_csv(out_dir / "semipar_results")
+            if verbose > 0:
+                pprint.pprint(row)
+                print()
 
 #%%
 results = pd.read_csv(out_dir / "semipar_results", index_col=0)
@@ -129,6 +132,12 @@ ax = scatterplot(
     shade=True,
 )
 ax.set_yscale("log")
+styles = ["--", ":"]
+line_locs = [0.05, 0.005]
+line_kws = dict(color="black", alpha=0.7, linewidth=1.5, zorder=-1)
+for loc, style in zip(line_locs, styles):
+    ax.axhline(loc, linestyle=style, **line_kws)
+    ax.text(ax.get_xlim()[-1] + 0.1, loc, loc, ha="left", va="center")
 stashfig("semipar-pvalues-by-dimension")
 
 # #%%
