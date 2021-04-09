@@ -71,7 +71,7 @@ rr_adj = adjs[1]
 print(f"{len(lcc_inds)} in intersection of largest connected components.")
 
 #%% [markdown]
-# ## Investigate alignment methods
+# ## Embed
 
 #%% [markdown]
 # ### Run the initial embedding using ASE
@@ -108,17 +108,6 @@ preprocess = ["binarize", "rescale"]
 
 ll_adj_to_embed, rr_adj_to_embed = preprocess_for_embed(ll_adj, rr_adj, preprocess)
 
-# for someone else to run this experiment too
-# np.savetxt(
-#     "maggot_connectome/results/outputs/align_investigation/left_adj.csv",
-#     ll_adj_to_embed,
-#     delimiter=",",
-# )
-# np.savetxt(
-#     "maggot_connectome/results/outputs/align_investigation/right_adj.csv",
-#     rr_adj_to_embed,
-#     delimiter=",",
-# )
 
 left_out, left_in, left_sing_vals, left_elbow_inds = embed(
     ll_adj_to_embed, n_components=max_n_components
@@ -188,7 +177,7 @@ def plot_latents(left, right, title="", n_show=4, alpha=0.3, linewidth=0.4):
         n_show = left.shape[1]
     plot_data = np.concatenate([left, right], axis=0)
     labels = np.array(["Left"] * len(left) + ["Right"] * len(right))
-    pg = pairplot(plot_data[:, :n_show], labels=labels, title=title)
+    pg = pairplot(plot_data[:, :n_show], labels=labels, title=title, size=5)
     axs = pg.axes
     for i in range(n_show):
         for j in range(n_show):
@@ -203,6 +192,7 @@ def plot_latents(left, right, title="", n_show=4, alpha=0.3, linewidth=0.4):
                     alpha=alpha,
                     linewidth=linewidth,
                 )
+    pg._legend.remove()
     return pg
 
 
@@ -211,7 +201,7 @@ stashfig(f"out-latent-no-align-preprocess={preprocess}")
 
 
 #%% [markdown]
-# ### Align the 3-dimensional out embeddings using known or predicted pairs
+# ### Align the embeddings using known pairs
 #%%
 
 
@@ -241,7 +231,7 @@ op_known_left_out, sp_known_left_out = run_alignments(
 )
 
 #%% [markdown]
-# ### Plot the results of these two kinds of alignment using orthogonal Procrustes
+# ### Plot the results from aligning in various dimensions
 #%%
 n_show = 6
 for n_components in [4, 8, 12]:
@@ -257,3 +247,120 @@ for n_components in [4, 8, 12]:
         linewidth=0.5,
     )
     stashfig(f"out-latent-op-known-preprocess={preprocess}-n_components={n_components}")
+
+#%% [markdown]
+# ### Zoom in on the first few dimensions for the $d=12$ alignment
+#%%
+
+from giskard.plot import simple_scatterplot
+
+
+def plot_latents(left, right, title="", show=4, alpha=0.3, linewidth=0.4):
+    if isinstance(show, int):
+        n_show = show
+        if n_show > left.shape[1]:
+            n_show = left.shape[1]
+    plot_data = np.concatenate([left, right], axis=0)
+    labels = np.array(["Left"] * len(left) + ["Right"] * len(right))
+    if isinstance(show, int) and n_show > 2:
+        pg = pairplot(plot_data[:, :n_show], labels=labels, title=title, size=5)
+        pg._legend.remove()
+        axs = pg.axes
+        for i in range(n_show):
+            for j in range(n_show):
+                if i != j:
+                    ax = axs[i, j]
+                    add_connections(
+                        left[:, j],
+                        right[:, j],
+                        left[:, i],
+                        right[:, i],
+                        ax=ax,
+                        alpha=alpha,
+                        linewidth=linewidth,
+                    )
+        return pg
+    else:
+        ax = simple_scatterplot(
+            plot_data[:, show], labels=labels, palette=palette, s=3, spines_off=False
+        )
+        add_connections(
+            left[:, show[0]],
+            right[:, show[0]],
+            left[:, show[1]],
+            right[:, show[1]],
+            ax=ax,
+            alpha=alpha,
+            linewidth=linewidth,
+        )
+        ax.set(
+            xlabel=f"Dimension {show[0]+1}",
+            ylabel=f"Dimension {show[1]+1}",
+            title=title,
+        )
+        return ax
+
+
+plot_latents(
+    op_known_left_out,
+    right_out[:, :n_components],
+    f"Out latent positions (Procrustes, align in {n_components})",
+    show=(0, 1),
+    alpha=0.5,
+    linewidth=0.5,
+)
+
+plot_latents(
+    op_known_left_out,
+    right_out[:, :n_components],
+    f"Out latent positions (Procrustes, align in {n_components})",
+    show=(0, 2),
+    alpha=0.5,
+    linewidth=0.5,
+)
+
+plot_latents(
+    op_known_left_out,
+    right_out[:, :n_components],
+    f"Out latent positions (Procrustes, align in {n_components})",
+    show=(1, 2),
+    alpha=0.5,
+    linewidth=0.5,
+)
+
+plot_latents(
+    op_known_left_out,
+    right_out[:, :n_components],
+    f"Out latent positions (Procrustes, align in {n_components})",
+    show=(0, 3),
+    alpha=0.5,
+    linewidth=0.5,
+)
+
+plot_latents(
+    op_known_left_out,
+    right_out[:, :n_components],
+    f"Out latent positions (Procrustes, align in {n_components})",
+    show=(1, 3),
+    alpha=0.5,
+    linewidth=0.5,
+)
+
+plot_latents(
+    op_known_left_out,
+    right_out[:, :n_components],
+    f"Out latent positions (Procrustes, align in {n_components})",
+    show=(2, 3),
+    alpha=0.5,
+    linewidth=0.5,
+)
+
+# %% [markdown]
+# ## End
+#%%
+elapsed = time.time() - t0
+delta = datetime.timedelta(seconds=elapsed)
+print("----")
+print(f"Script took {delta}")
+print(f"Completed at {datetime.datetime.now()}")
+print("----")
