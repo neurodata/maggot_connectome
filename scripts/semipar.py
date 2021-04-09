@@ -19,7 +19,8 @@ from pkg.data import load_adjacency, load_node_meta
 from pkg.io import get_out_dir, savefig
 from pkg.plot import set_theme
 from pkg.utils import get_paired_inds, get_paired_subgraphs, set_warnings
-from src.visualization import adjplot  # TODO fix graspologic version and replace here
+
+# from src.visualization import adjplot  # TODO fix graspologic version and replace here
 
 set_warnings()
 
@@ -70,29 +71,6 @@ n_pairs = len(ll_adj)
 
 print(f"Number of pairs after taking LCC intersection: {n_pairs}")
 
-#%% [markdown]
-# ### Plot the aligned adjacency matrices
-# At a high level, we see that the left-left and right-right induced subgraphs look
-# quite similar when aligned by the known neuron pairs.
-#%%
-fig, axs = plt.subplots(1, 2, figsize=(10, 5))
-adjplot(
-    ll_adj,
-    plot_type="scattermap",
-    sizes=(1, 2),
-    ax=axs[0],
-    title=r"Left $\to$ left",
-    color=palette["Left"],
-)
-adjplot(
-    rr_adj,
-    plot_type="scattermap",
-    sizes=(1, 2),
-    ax=axs[1],
-    title=r"Right $\to$ right",
-    color=palette["Right"],
-)
-stashfig("left-right-induced-adjs")
 
 #%% [markdown]
 # ## Run a latent position test
