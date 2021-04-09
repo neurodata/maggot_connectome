@@ -53,6 +53,8 @@
         const thebe_selector_output = ".output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="shortcut icon" href="_static/nd_logo_small.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -315,8 +317,8 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#investigate-alignment-methods">
-   Investigate alignment methods
+  <a class="reference internal nav-link" href="#embed">
+   Embed
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
@@ -335,16 +337,30 @@
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#align-the-3-dimensional-out-embeddings-using-known-or-predicted-pairs">
-     Align the 3-dimensional out embeddings using known or predicted pairs
+    <a class="reference internal nav-link" href="#align-the-embeddings-using-known-pairs">
+     Align the embeddings using known pairs
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#plot-the-results-of-these-two-kinds-of-alignment-using-orthogonal-procrustes">
-     Plot the results of these two kinds of alignment using orthogonal Procrustes
+    <a class="reference internal nav-link" href="#plot-the-results-from-aligning-in-various-dimensions">
+     Plot the results from aligning in various dimensions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#zoom-in-on-the-first-few-dimensions-for-the-d-12-alignment">
+     Zoom in on the first few dimensions for the
+     <span class="math notranslate nohighlight">
+      \(d=12\)
+     </span>
+     alignment
     </a>
    </li>
   </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#end">
+   End
+  </a>
  </li>
 </ul>
 
@@ -461,8 +477,8 @@ require(['plotly'], function(Plotly) {
 </div>
 </div>
 </div>
-<div class="section" id="investigate-alignment-methods">
-<h2>Investigate alignment methods<a class="headerlink" href="#investigate-alignment-methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="embed">
+<h2>Embed<a class="headerlink" href="#embed" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="run-the-initial-embedding-using-ase">
 <h3>Run the initial embedding using ASE<a class="headerlink" href="#run-the-initial-embedding-using-ase" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
@@ -497,17 +513,6 @@ require(['plotly'], function(Plotly) {
 
 <span class="n">ll_adj_to_embed</span><span class="p">,</span> <span class="n">rr_adj_to_embed</span> <span class="o">=</span> <span class="n">preprocess_for_embed</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">,</span> <span class="n">preprocess</span><span class="p">)</span>
 
-<span class="c1"># for someone else to run this experiment too</span>
-<span class="c1"># np.savetxt(</span>
-<span class="c1">#     &quot;maggot_connectome/results/outputs/align_investigation/left_adj.csv&quot;,</span>
-<span class="c1">#     ll_adj_to_embed,</span>
-<span class="c1">#     delimiter=&quot;,&quot;,</span>
-<span class="c1"># )</span>
-<span class="c1"># np.savetxt(</span>
-<span class="c1">#     &quot;maggot_connectome/results/outputs/align_investigation/right_adj.csv&quot;,</span>
-<span class="c1">#     rr_adj_to_embed,</span>
-<span class="c1">#     delimiter=&quot;,&quot;,</span>
-<span class="c1"># )</span>
 
 <span class="n">left_out</span><span class="p">,</span> <span class="n">left_in</span><span class="p">,</span> <span class="n">left_sing_vals</span><span class="p">,</span> <span class="n">left_elbow_inds</span> <span class="o">=</span> <span class="n">embed</span><span class="p">(</span>
     <span class="n">ll_adj_to_embed</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">max_n_components</span>
@@ -584,7 +589,7 @@ require(['plotly'], function(Plotly) {
         <span class="n">n_show</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">plot_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;Left&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Right&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
-    <span class="n">pg</span> <span class="o">=</span> <span class="n">pairplot</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_show</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">pg</span> <span class="o">=</span> <span class="n">pairplot</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_show</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
     <span class="n">axs</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">axes</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_show</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_show</span><span class="p">):</span>
@@ -599,6 +604,7 @@ require(['plotly'], function(Plotly) {
                     <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
                     <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
                 <span class="p">)</span>
+    <span class="n">pg</span><span class="o">.</span><span class="n">_legend</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">pg</span>
 
 
@@ -612,8 +618,8 @@ require(['plotly'], function(Plotly) {
 </div>
 </div>
 </div>
-<div class="section" id="align-the-3-dimensional-out-embeddings-using-known-or-predicted-pairs">
-<h3>Align the 3-dimensional out embeddings using known or predicted pairs<a class="headerlink" href="#align-the-3-dimensional-out-embeddings-using-known-or-predicted-pairs" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="align-the-embeddings-using-known-pairs">
+<h3>Align the embeddings using known pairs<a class="headerlink" href="#align-the-embeddings-using-known-pairs" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_alignments</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -645,8 +651,8 @@ require(['plotly'], function(Plotly) {
 </div>
 </div>
 </div>
-<div class="section" id="plot-the-results-of-these-two-kinds-of-alignment-using-orthogonal-procrustes">
-<h3>Plot the results of these two kinds of alignment using orthogonal Procrustes<a class="headerlink" href="#plot-the-results-of-these-two-kinds-of-alignment-using-orthogonal-procrustes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="plot-the-results-from-aligning-in-various-dimensions">
+<h3>Plot the results from aligning in various dimensions<a class="headerlink" href="#plot-the-results-from-aligning-in-various-dimensions" title="Permalink to this headline">¶</a></h3>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_show</span> <span class="o">=</span> <span class="mi">6</span>
@@ -670,6 +676,151 @@ require(['plotly'], function(Plotly) {
 <img alt="_images/look_at_paired_embeddings_15_0.png" src="_images/look_at_paired_embeddings_15_0.png" />
 <img alt="_images/look_at_paired_embeddings_15_1.png" src="_images/look_at_paired_embeddings_15_1.png" />
 <img alt="_images/look_at_paired_embeddings_15_2.png" src="_images/look_at_paired_embeddings_15_2.png" />
+</div>
+</div>
+</div>
+<div class="section" id="zoom-in-on-the-first-few-dimensions-for-the-d-12-alignment">
+<h3>Zoom in on the first few dimensions for the <span class="math notranslate nohighlight">\(d=12\)</span> alignment<a class="headerlink" href="#zoom-in-on-the-first-few-dimensions-for-the-d-12-alignment" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">giskard.plot</span> <span class="kn">import</span> <span class="n">simple_scatterplot</span>
+
+
+<span class="k">def</span> <span class="nf">plot_latents</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.4</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">show</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">n_show</span> <span class="o">=</span> <span class="n">show</span>
+        <span class="k">if</span> <span class="n">n_show</span> <span class="o">&gt;</span> <span class="n">left</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">n_show</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">plot_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;Left&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Right&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">show</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">n_show</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">pg</span> <span class="o">=</span> <span class="n">pairplot</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_show</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">pg</span><span class="o">.</span><span class="n">_legend</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+        <span class="n">axs</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">axes</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_show</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_show</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                    <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                    <span class="n">add_connections</span><span class="p">(</span>
+                        <span class="n">left</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span>
+                        <span class="n">right</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span>
+                        <span class="n">left</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span>
+                        <span class="n">right</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span>
+                        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                        <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+                        <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
+                    <span class="p">)</span>
+        <span class="k">return</span> <span class="n">pg</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">simple_scatterplot</span><span class="p">(</span>
+            <span class="n">plot_data</span><span class="p">[:,</span> <span class="n">show</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">spines_off</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">add_connections</span><span class="p">(</span>
+            <span class="n">left</span><span class="p">[:,</span> <span class="n">show</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+            <span class="n">right</span><span class="p">[:,</span> <span class="n">show</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+            <span class="n">left</span><span class="p">[:,</span> <span class="n">show</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+            <span class="n">right</span><span class="p">[:,</span> <span class="n">show</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Dimension </span><span class="si">{</span><span class="n">show</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Dimension </span><span class="si">{</span><span class="n">show</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ax</span>
+
+
+<span class="n">plot_latents</span><span class="p">(</span>
+    <span class="n">op_known_left_out</span><span class="p">,</span>
+    <span class="n">right_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
+    <span class="sa">f</span><span class="s2">&quot;Out latent positions (Procrustes, align in </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+    <span class="n">show</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">plot_latents</span><span class="p">(</span>
+    <span class="n">op_known_left_out</span><span class="p">,</span>
+    <span class="n">right_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
+    <span class="sa">f</span><span class="s2">&quot;Out latent positions (Procrustes, align in </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+    <span class="n">show</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">plot_latents</span><span class="p">(</span>
+    <span class="n">op_known_left_out</span><span class="p">,</span>
+    <span class="n">right_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
+    <span class="sa">f</span><span class="s2">&quot;Out latent positions (Procrustes, align in </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+    <span class="n">show</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">plot_latents</span><span class="p">(</span>
+    <span class="n">op_known_left_out</span><span class="p">,</span>
+    <span class="n">right_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
+    <span class="sa">f</span><span class="s2">&quot;Out latent positions (Procrustes, align in </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+    <span class="n">show</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">plot_latents</span><span class="p">(</span>
+    <span class="n">op_known_left_out</span><span class="p">,</span>
+    <span class="n">right_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
+    <span class="sa">f</span><span class="s2">&quot;Out latent positions (Procrustes, align in </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+    <span class="n">show</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">plot_latents</span><span class="p">(</span>
+    <span class="n">op_known_left_out</span><span class="p">,</span>
+    <span class="n">right_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
+    <span class="sa">f</span><span class="s2">&quot;Out latent positions (Procrustes, align in </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+    <span class="n">show</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:title={&#39;center&#39;:&#39;Out latent positions (Procrustes, align in 12)&#39;}, xlabel=&#39;Dimension 3&#39;, ylabel=&#39;Dimension 4&#39;&gt;
+</pre></div>
+</div>
+<img alt="_images/look_at_paired_embeddings_17_1.png" src="_images/look_at_paired_embeddings_17_1.png" />
+<img alt="_images/look_at_paired_embeddings_17_2.png" src="_images/look_at_paired_embeddings_17_2.png" />
+<img alt="_images/look_at_paired_embeddings_17_3.png" src="_images/look_at_paired_embeddings_17_3.png" />
+<img alt="_images/look_at_paired_embeddings_17_4.png" src="_images/look_at_paired_embeddings_17_4.png" />
+<img alt="_images/look_at_paired_embeddings_17_5.png" src="_images/look_at_paired_embeddings_17_5.png" />
+<img alt="_images/look_at_paired_embeddings_17_6.png" src="_images/look_at_paired_embeddings_17_6.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="end">
+<h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Script took </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completed at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
+Script took 0:01:48.880673
+Completed at 2021-04-09 14:18:33.096647
+----
+</pre></div>
 </div>
 </div>
 </div>
