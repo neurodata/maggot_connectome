@@ -301,59 +301,202 @@ def plot_latents(left, right, title="", show=4, alpha=0.3, linewidth=0.4):
         return ax
 
 
+dims = (0, 1)
 plot_latents(
     op_known_left_out,
     right_out[:, :n_components],
     f"Out latent positions (Procrustes, align in {n_components})",
-    show=(0, 1),
+    show=dims,
     alpha=0.5,
     linewidth=0.5,
 )
+stashfig(f"paired-embed-dim{dims[0]}-dim{dims[1]}")
 
+dims = (0, 2)
 plot_latents(
     op_known_left_out,
     right_out[:, :n_components],
     f"Out latent positions (Procrustes, align in {n_components})",
-    show=(0, 2),
+    show=dims,
     alpha=0.5,
     linewidth=0.5,
 )
+stashfig(f"paired-embed-dim{dims[0]}-dim{dims[1]}")
 
+dims = (1, 2)
 plot_latents(
     op_known_left_out,
     right_out[:, :n_components],
     f"Out latent positions (Procrustes, align in {n_components})",
-    show=(1, 2),
+    show=dims,
     alpha=0.5,
     linewidth=0.5,
 )
+stashfig(f"paired-embed-dim{dims[0]}-dim{dims[1]}")
 
+dims = (0, 3)
 plot_latents(
     op_known_left_out,
     right_out[:, :n_components],
     f"Out latent positions (Procrustes, align in {n_components})",
-    show=(0, 3),
+    show=dims,
     alpha=0.5,
     linewidth=0.5,
 )
+stashfig(f"paired-embed-dim{dims[0]}-dim{dims[1]}")
 
+dims = (1, 3)
 plot_latents(
     op_known_left_out,
     right_out[:, :n_components],
     f"Out latent positions (Procrustes, align in {n_components})",
-    show=(1, 3),
+    show=dims,
     alpha=0.5,
     linewidth=0.5,
 )
+stashfig(f"paired-embed-dim{dims[0]}-dim{dims[1]}")
 
+dims = (2, 3)
 plot_latents(
     op_known_left_out,
     right_out[:, :n_components],
     f"Out latent positions (Procrustes, align in {n_components})",
-    show=(2, 3),
+    show=dims,
     alpha=0.5,
     linewidth=0.5,
 )
+stashfig(f"paired-embed-dim{dims[0]}-dim{dims[1]}")
+
+#%%
+
+from sklearn.neighbors import NearestNeighbors
+import pandas as pd
+
+metric = "cosine"
+threshold = 0
+
+
+def preprocess_for_vectorization(A, threshold=0):
+    A = A.copy()
+    A[A <= threshold] = 0
+    return np.concatenate((A, A.T), axis=1)
+
+
+def compute_nn_ranks(
+    left_adj, right_adj, max_n_neighbors=None, metric="jaccard", threshold=threshold
+):
+    if max_n_neighbors is None:
+        max_n_neighbors = len(left_adj)
+    left_adj = preprocess_for_vectorization(left_adj, threshold=threshold)
+    right_adj = preprocess_for_vectorization(right_adj, threshold=threshold)
+
+    nn_kwargs = dict(n_neighbors=max_n_neighbors, metric=metric)
+    nn_left = NearestNeighbors(**nn_kwargs)
+    nn_right = NearestNeighbors(**nn_kwargs)
+    nn_left.fit(left_adj)
+    nn_right.fit(right_adj)
+
+    left_neighbors = nn_right.kneighbors(left_adj, return_distance=False)
+    right_neighbors = nn_left.kneighbors(right_adj, return_distance=False)
+
+    arange = np.arange(len(left_adj))
+    _, left_match_rank = np.where(left_neighbors == arange[:, None])
+    _, right_match_rank = np.where(right_neighbors == arange[:, None])
+
+    rank_data = np.concatenate((left_match_rank, right_match_rank))
+    rank_data = pd.Series(rank_data, name="pair_nn_rank")
+    rank_data = rank_data.to_frame()
+    rank_data["metric"] = metric
+    rank_data["threshold"] = threshold
+    rank_data["side"] = len(left_adj) * ["Left"] + len(right_adj) * ["Right"]
+    return rank_data
+
+
+frames = []
+metrics = ["jaccard", "euclidean", "cosine"]
+thresholds = [0, 1, 2, 3, 4]
+for metric in metrics:
+    for threshold in thresholds:
+        rank_data = compute_nn_ranks(ll_adj, rr_adj, metric=metric, threshold=threshold)
+        frames.append(rank_data)
+
+results = pd.concat(frames, ignore_index=True)
+results
+
+#%%
+if results["pair_nn_rank"].min() == 0:
+    results["pair_nn_rank"] += 1
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+linestyles = ["solid", "dashed", "dashdot", "dotted"]
+linestyles = linestyles[::-1]
+for i, threshold in enumerate(thresholds[:-1][::-1]):
+    linestyle = linestyles[i]
+    sns.ecdfplot(
+        data=results[results["threshold"] == threshold],
+        x="pair_nn_rank",
+        hue="metric",
+        linestyle=linestyle,
+        ax=ax,
+    )
+stashfig("pair_nn_rank")
+
+#%%
+threshold = 0
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+colors = sns.color_palette("deep")
+palette = dict(zip(results["metric"].unique(), colors))
+sns.ecdfplot(
+    data=results[results["threshold"] == threshold],
+    x="pair_nn_rank",
+    hue="metric",
+    ax=ax,
+    palette=palette,
+)
+vals = [1, 5, 10, 15, 20]
+ax.set(
+    xlim=(0, 20),
+    ylim=(0.6, 1),
+    xticks=vals,
+    xlabel="K (# of nearest neighbors)",
+    ylabel="Recall @ K",
+    title=f"Threshold = {threshold}",
+)
+select_results = results[
+    (results["metric"] == "cosine") & (results["threshold"] == threshold)
+]
+for val in vals:
+    r_at_k = (select_results["pair_nn_rank"] <= val).mean()
+    ax.text(
+        val,
+        r_at_k + 0.005,
+        f"{r_at_k:.2f}",
+        ha="center",
+        va="bottom",
+        color=palette["cosine"],
+    )
+ax.axhline(1, linewidth=3, linestyle=":", color="lightgrey")
+stashfig(f"pair_nn_rank_zoom_threshold={threshold}")
+
+#%%
+
+#%%
+
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+sns.ecdfplot(left_match_rank + 1, ax=ax, color=palette["Left"])
+sns.ecdfplot(right_match_rank + 1, ax=ax, color=palette["Right"])
+ax.set(
+    xlim=(0, 20),
+    ylim=(0.7, 1),
+    xticks=[1, 5, 10, 15, 20],
+    xlabel="K (# of nearest neighbors)",
+    ylabel="Recall @ K",
+    title=f"Metric = {metric}, threshold = {threshold}",
+)
+ax.axhline(1, linewidth=3, linestyle=":", color="lightgrey")
+stashfig(f"recall-at-k-metric={metric}-threshold={threshold}")
+(left_match_rank < 20).mean()
+
+# %%
 
 # %% [markdown]
 # ## End
