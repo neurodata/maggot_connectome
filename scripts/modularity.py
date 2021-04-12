@@ -170,10 +170,11 @@ ax.set(ylabel="Modularity", xlabel="")
 stashfig("modularity-by-edge-type")
 
 #%% [markdown]
-# .. admonition:: Conclusion
+# ```{admonition} Conclusion
+# :class: tip
 # The different edge types have distinct modularities (we should be able to get
-# p-values for this). In particular, the :math:`A \to D` seems the least modular.
-
+# p-values for this). In particular, the A to D seems the least modular.
+# ````
 #%% [markdown]
 # ### Plot the similarities between modularity-maximizing partitions
 #%%
@@ -199,7 +200,7 @@ def compute_pairwise_ari(results):
     return pairwise
 
 
-pairwise_ari = compute_pairwise_ari(results.set_index("edge_type"))
+pairwise_ari = compute_pairwise_ari(results.set_index("nice_edge_type"))
 
 fig, ax = plt.subplots(1, 1, figsize=(6, 6))
 
@@ -218,14 +219,18 @@ sns.heatmap(
     cmap="RdBu_r",
     cbar=False,
 )
+ax.set(xlabel="Edge type", ylabel="Edge type", title="Partition ARIs")
+plt.setp(ax.get_yticklabels(), rotation=0)
 stashfig("pairwise-aris-modularity")
 
 
 #%% [markdown]
-# .. admonition:: Conclusion
+# ```{admonition} Conclusion
+# :class: tip
 # The modularity-maximizing partitions between the different edge types are quite
 # different. Put another way, the "modules" you get by looking at each edge type
 # separately don't seem very similar. This did not have to be the case!
+# ```
 # %% [markdown]
 # ## End
 #%%
