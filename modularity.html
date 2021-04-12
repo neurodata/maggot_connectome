@@ -527,7 +527,7 @@ require(['plotly'], function(Plotly) {
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>159.736 seconds elapsed to fit all partitions.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>119.597 seconds elapsed to fit all partitions.
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -559,20 +559,20 @@ require(['plotly'], function(Plotly) {
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.544078</td>
+      <td>0.544452</td>
       <td>1.0</td>
       <td>ad</td>
       <td>$A \to D$</td>
-      <td>[1, 9, 9, 3, 0, 2, 6, 3, 3, 0, 3, 2, 2, 2, 0, ...</td>
+      <td>[0, 1, 1, 2, 3, 9, 8, 2, 2, 3, 2, 9, 9, 9, 3, ...</td>
       <td>[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,...</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.747053</td>
+      <td>0.747031</td>
       <td>1.0</td>
       <td>aa</td>
       <td>$A \to A$</td>
-      <td>[0, 12, 4, 2, 0, 7, 2, 2, 6, 4, 2, None, 7, 7,...</td>
+      <td>[0, 5, 6, 1, 0, 23, 1, 1, 7, 6, 1, None, 23, 2...</td>
       <td>[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,...</td>
     </tr>
     <tr>
@@ -581,25 +581,25 @@ require(['plotly'], function(Plotly) {
       <td>1.0</td>
       <td>dd</td>
       <td>$D \to D$</td>
-      <td>[0, None, None, None, 0, None, None, 1, None, ...</td>
+      <td>[9, None, None, None, 9, None, None, 0, None, ...</td>
       <td>[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,...</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.798900</td>
+      <td>0.798872</td>
       <td>1.0</td>
       <td>da</td>
       <td>$D \to A$</td>
-      <td>[0, None, 13, None, None, None, None, 1, 20, 1...</td>
+      <td>[0, None, 1, None, None, None, None, 2, 27, 16...</td>
       <td>[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.568139</td>
+      <td>0.568130</td>
       <td>1.0</td>
       <td>sum</td>
       <td>Sum</td>
-      <td>[5, 0, 0, 2, 5, 6, 7, 7, 2, 6, 2, 6, 6, 6, 7, ...</td>
+      <td>[0, 1, 1, 2, 0, 5, 6, 6, 2, 5, 2, 5, 5, 5, 6, ...</td>
       <td>[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,...</td>
     </tr>
   </tbody>
@@ -669,7 +669,7 @@ require(['plotly'], function(Plotly) {
 <div class="tip admonition">
 <p class="admonition-title">Conclusion</p>
 <p>The different edge types have distinct modularities (we should be able to get
-p-values for this). In particular, the :math:<code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">\to</span> <span class="pre">D</span></code> seems the least modular.</p>
+p-values for this). In particular, the A to D seems the least modular.</p>
 </div>
 </div>
 <div class="section" id="plot-the-similarities-between-modularity-maximizing-partitions">
@@ -696,7 +696,7 @@ p-values for this). In particular, the :math:<code class="docutils literal notra
     <span class="k">return</span> <span class="n">pairwise</span>
 
 
-<span class="n">pairwise_ari</span> <span class="o">=</span> <span class="n">compute_pairwise_ari</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;edge_type&quot;</span><span class="p">))</span>
+<span class="n">pairwise_ari</span> <span class="o">=</span> <span class="n">compute_pairwise_ari</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;nice_edge_type&quot;</span><span class="p">))</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 
@@ -715,6 +715,8 @@ p-values for this). In particular, the :math:<code class="docutils literal notra
     <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">,</span>
     <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Edge type&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Edge type&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Partition ARIs&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;pairwise-aris-modularity&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -746,8 +748,8 @@ separately don’t seem very similar. This did not have to be the case!</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:03:28.690465
-Completed at 2021-04-12 19:21:18.544766
+Script took 0:02:39.840923
+Completed at 2021-04-12 19:43:54.163720
 ----
 </pre></div>
 </div>
