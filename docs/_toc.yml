@@ -34,6 +34,7 @@
 
 - part: Appendix
   chapters:
+  - file: modularity
   - file: flow_rank_hypothesis
   - file: flow_rank
   - file: visualizing_a_prior_sbm
