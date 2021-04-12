@@ -732,72 +732,81 @@ require(['plotly'], function(Plotly) {
         <span class="k">return</span> <span class="n">ax</span>
 
 
+<span class="n">dims</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">plot_latents</span><span class="p">(</span>
     <span class="n">op_known_left_out</span><span class="p">,</span>
     <span class="n">right_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
     <span class="sa">f</span><span class="s2">&quot;Out latent positions (Procrustes, align in </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
-    <span class="n">show</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">show</span><span class="o">=</span><span class="n">dims</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;paired-embed-dim</span><span class="si">{</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-dim</span><span class="si">{</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
+<span class="n">dims</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">plot_latents</span><span class="p">(</span>
     <span class="n">op_known_left_out</span><span class="p">,</span>
     <span class="n">right_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
     <span class="sa">f</span><span class="s2">&quot;Out latent positions (Procrustes, align in </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
-    <span class="n">show</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">show</span><span class="o">=</span><span class="n">dims</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;paired-embed-dim</span><span class="si">{</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-dim</span><span class="si">{</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
+<span class="n">dims</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">plot_latents</span><span class="p">(</span>
     <span class="n">op_known_left_out</span><span class="p">,</span>
     <span class="n">right_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
     <span class="sa">f</span><span class="s2">&quot;Out latent positions (Procrustes, align in </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
-    <span class="n">show</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">show</span><span class="o">=</span><span class="n">dims</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;paired-embed-dim</span><span class="si">{</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-dim</span><span class="si">{</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
+<span class="n">dims</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="n">plot_latents</span><span class="p">(</span>
     <span class="n">op_known_left_out</span><span class="p">,</span>
     <span class="n">right_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
     <span class="sa">f</span><span class="s2">&quot;Out latent positions (Procrustes, align in </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
-    <span class="n">show</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="n">show</span><span class="o">=</span><span class="n">dims</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;paired-embed-dim</span><span class="si">{</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-dim</span><span class="si">{</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
+<span class="n">dims</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="n">plot_latents</span><span class="p">(</span>
     <span class="n">op_known_left_out</span><span class="p">,</span>
     <span class="n">right_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
     <span class="sa">f</span><span class="s2">&quot;Out latent positions (Procrustes, align in </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
-    <span class="n">show</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="n">show</span><span class="o">=</span><span class="n">dims</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;paired-embed-dim</span><span class="si">{</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-dim</span><span class="si">{</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
+<span class="n">dims</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="n">plot_latents</span><span class="p">(</span>
     <span class="n">op_known_left_out</span><span class="p">,</span>
     <span class="n">right_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span>
     <span class="sa">f</span><span class="s2">&quot;Out latent positions (Procrustes, align in </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
-    <span class="n">show</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="n">show</span><span class="o">=</span><span class="n">dims</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;paired-embed-dim</span><span class="si">{</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-dim</span><span class="si">{</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:title={&#39;center&#39;:&#39;Out latent positions (Procrustes, align in 12)&#39;}, xlabel=&#39;Dimension 3&#39;, ylabel=&#39;Dimension 4&#39;&gt;
-</pre></div>
-</div>
+<img alt="_images/look_at_paired_embeddings_17_0.png" src="_images/look_at_paired_embeddings_17_0.png" />
 <img alt="_images/look_at_paired_embeddings_17_1.png" src="_images/look_at_paired_embeddings_17_1.png" />
 <img alt="_images/look_at_paired_embeddings_17_2.png" src="_images/look_at_paired_embeddings_17_2.png" />
 <img alt="_images/look_at_paired_embeddings_17_3.png" src="_images/look_at_paired_embeddings_17_3.png" />
 <img alt="_images/look_at_paired_embeddings_17_4.png" src="_images/look_at_paired_embeddings_17_4.png" />
 <img alt="_images/look_at_paired_embeddings_17_5.png" src="_images/look_at_paired_embeddings_17_5.png" />
-<img alt="_images/look_at_paired_embeddings_17_6.png" src="_images/look_at_paired_embeddings_17_6.png" />
 </div>
 </div>
 </div>
@@ -817,8 +826,8 @@ require(['plotly'], function(Plotly) {
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:01:48.880673
-Completed at 2021-04-09 14:18:33.096647
+Script took 0:01:56.082359
+Completed at 2021-04-12 09:25:09.803563
 ----
 </pre></div>
 </div>
