@@ -49,7 +49,7 @@ edge_types = [
 colors = sns.color_palette("deep", desat=None)
 edge_type_palette = dict(zip(edge_types, colors))
 nice_edge_types = dict(
-    zip(edge_types, [r"$A \to D$", r"$A \to A$", r"$D \to D$", r"$D \to A$", "Sum"])
+    zip(edge_types, [r"A $\to$ D", r"A $\to$ A", r"D $\to$ D", r"D $\to$ A", "Sum"])
 )
 
 mg = load_maggot_graph()

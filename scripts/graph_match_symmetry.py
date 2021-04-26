@@ -128,7 +128,7 @@ observed_dist = graph_match_distance(A_L, A_R, perm_inds)
 observed_mean_norm = 0.5 * np.linalg.norm(A_L, ord="fro") + 0.5 * np.linalg.norm(
     A_R, ord="fro"
 )
-rows.append({"dist": observed_dist, "type": r"$A$", "mean_norm": mean_norm})
+rows.append({"dist": observed_dist, "type": r"$A$", "mean_norm": observed_mean_norm})
 
 n_components_range = np.geomspace(1, n, 10)
 max_n_components = int(n_components_range[-1])

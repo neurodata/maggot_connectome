@@ -100,7 +100,7 @@ rl_adj = pad(adj[np.ix_(right_inds, left_inds)], max_n_side)
 
 for i in range(max_n_side - len(left_inds)):
     left_nodes = left_nodes.append(
-        pd.Series(name=-i, dtype="float"), ignore_index=False
+        pd.Series(name=-i - 1, dtype="float"), ignore_index=False
     )
 
 #%%

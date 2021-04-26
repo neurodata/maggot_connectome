@@ -6,11 +6,14 @@ import numpy as np
 import pandas as pd
 from sklearn.utils import Bunch
 
-from ..graph import MaggotGraph
-from ..utils import to_pandas_edgelist
+from giskard.graph import MaggotGraph
+from giskard.utils import to_pandas_edgelist
 
-DATA_VERSION = "2021-04-02"  # set to whatever the most recent one is
+version_loc = Path(__file__).parent / "version.txt"
+with open(version_loc) as f:
+    version = f.readline()
 
+DATA_VERSION = version
 DATA_PATH = Path(__file__).parent.parent.parent.parent  # don't judge me judge judy
 DATA_PATH = DATA_PATH / "data"
 
