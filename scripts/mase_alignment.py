@@ -124,11 +124,20 @@ def plot_pairs(
     return fig, axs
 
 
-def joint_procrustes(data1, data2):
+def joint_procrustes(data1, data2, method="orthogonal"):
     n = len(data1[0])
+    if method == "orthogonal":
+        procruster = OrthogonalProcrustes()
+    elif method == "seedless":
+        procruster = SeedlessProcrustes(init="sign_flips")
+    elif method == "seedless-oracle":
+        data1 = joint_procrustes(data1, data2, method="orthogonal")
+        procruster = SeedlessProcrustes(
+            init="custom", initial_Q=np.eye(data1[0].shape[1])
+        )
     data1 = np.concatenate(data1, axis=0)
     data2 = np.concatenate(data2, axis=0)
-    data1_mapped = OrthogonalProcrustes().fit_transform(data1, data2)
+    data1_mapped = procruster.fit_transform(data1, data2)
     data1 = (data1_mapped[:n], data1_mapped[n:])
     return data1
 
@@ -314,9 +323,8 @@ fig, axs = double_heatmap((true_phat_ll, true_phat_rr), figsize=(15, 7.5))
 #%%
 scaled = True
 
-for align_space in ["score", "latent"]:
-    for align_mode in ["joint", "separate"]:
-
+for align_space in ["score"]:
+    for align_mode in ["joint"]:
         Z_ll, S_ll, W_ll_T = selectSVD(R_ll, n_components=len(R_ll), algorithm="full")
         Z_rr, S_rr, W_rr_T = selectSVD(R_rr, n_components=len(R_rr), algorithm="full")
         W_ll = W_ll_T.T
@@ -379,51 +387,118 @@ for align_space in ["score", "latent"]:
         phat_rr = X_rr @ Y_rr.T
         fig, axs = double_heatmap((phat_ll, phat_rr), figsize=(15, 7.6))
 
-        print(align_space)
-        print(align_mode)
-        print(np.linalg.norm(phat_ll - true_phat_ll))
-        print(np.linalg.norm(phat_rr - true_phat_rr))
-        print()
+#%%
 
-# #%%
-# fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+from giskard.utils import get_paired_inds
+from sklearn.neighbors import NearestNeighbors
 
-# # cbar_ax = merge_axes(fig, axs, rows=1)
-# # vmax = np.max(ipsi_mase.scores_)
-# # vmin = np.min(ipsi_mase.scores_)
-# vmin = -1
-# vmax = 1
-# heatmap_kws = dict(
-#     square=True,
-#     vmin=vmin,
-#     vmax=vmax,
-#     center=0,
-#     cmap="RdBu_r",
-#     xticklabels=False,
-#     yticklabels=False,
-#     cbar=False,
-# )
-# ax = axs[0]
-# sns.heatmap(op_out.Q_, ax=ax, **heatmap_kws)
-# # ax.set(title=r"$\hat{R}_{LL}$")
-# ax = axs[1]
-# sns.heatmap(
-#     op_in.Q_,
-#     ax=ax,
-#     **heatmap_kws,
-# )
-# # ax.set(title=r"$\hat{R}_{RR}$")
-# ax = axs[2]
-# sns.heatmap(
-#     op_out.Q_ - op_in.Q_,
-#     ax=ax,
-#     **heatmap_kws,
-# )
-# # stashfig("ipsi-R-matrices")
 
-# #%%
-# sns.heatmap(op_out.Q_ @ op_in.Q_.T, **heatmap_kws)
+def compute_nn_ranks(left_X, right_X, max_n_neighbors=None, metric="cosine"):
+    if max_n_neighbors is None:
+        max_n_neighbors = len(left_X)
 
+    nn_kwargs = dict(n_neighbors=max_n_neighbors, metric=metric)
+    nn_left = NearestNeighbors(**nn_kwargs)
+    nn_right = NearestNeighbors(**nn_kwargs)
+    nn_left.fit(left_X)
+    nn_right.fit(right_X)
+
+    left_neighbors = nn_right.kneighbors(left_X, return_distance=False)
+    right_neighbors = nn_left.kneighbors(right_X, return_distance=False)
+
+    arange = np.arange(len(left_X))
+    _, left_match_rank = np.where(left_neighbors == arange[:, None])
+    _, right_match_rank = np.where(right_neighbors == arange[:, None])
+    left_match_rank += 1
+    right_match_rank += 1
+
+    rank_data = np.concatenate((left_match_rank, right_match_rank))
+    rank_data = pd.Series(rank_data, name="pair_nn_rank")
+    rank_data = rank_data.to_frame()
+    rank_data["metric"] = metric
+    rank_data["side"] = len(left_X) * ["Left"] + len(right_X) * ["Right"]
+    rank_data["n_components"] = left_X.shape[1]
+    rank_data["reciprocal_rank"] = 1 / rank_data["pair_nn_rank"]
+    return rank_data
+
+
+X = np.block([[X_ll, Y_ll], [X_rr, Y_rr]])
+U, _, _ = selectSVD(X, n_components=64, algorithm="full")
+n_pairs = len(X_ll)
+frames = []
+n_components_range = [2, 4, 6, 8, 12, 16, 24, 32, 40, 48, 56, 64]
+for n_components in n_components_range:
+    left_X = U[:n_pairs, :n_components]
+    right_X = U[n_pairs:, :n_components]
+    rank_data = compute_nn_ranks(left_X, right_X, metric="cosine")
+    frames.append(rank_data)
+results = pd.concat(frames, ignore_index=True)
+
+#%%
+left_composite_adj = np.concatenate((ll_adj, ll_adj.T), axis=1)
+right_composite_adj = np.concatenate((rr_adj, rr_adj.T), axis=1)
+rank_data = compute_nn_ranks(left_composite_adj, right_composite_adj, metric="jaccard")
+adj_mrr = rank_data["reciprocal_rank"].mean()
+#%%
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+sns.lineplot(
+    data=results,
+    x="n_components",
+    y="reciprocal_rank",
+    ax=ax,
+    estimator="mean",
+    ci=None,
+)
+ax.set(ylabel="Mean reciprocal rank", xlabel="# of components")
+ax.axhline(adj_mrr, color="darkred", linestyle=":", linewidth=3)
+ax.text(
+    n_components_range[-1],
+    adj_mrr,
+    "Adjacency",
+    ha="right",
+    va="bottom",
+    color="darkred",
+)
+
+#%%
+from graspologic.embed import AdjacencySpectralEmbed
+from graspologic.align import SeedlessProcrustes
+
+ase = AdjacencySpectralEmbed(n_components=16)
+X_ll, Y_ll = ase.fit_transform(ll_adj)
+X_rr, Y_rr = ase.fit_transform(rr_adj)
+X_ll, Y_ll = joint_procrustes((X_ll, Y_ll), (X_rr, Y_rr), method="seedless-oracle")
+
+#%%
+latent_stack = np.block([[X_ll, Y_ll], [X_rr, Y_rr]])
+U, _, _ = selectSVD(latent_stack, n_components=32, algorithm="full")
+frames = []
+n_components_range = np.arange(1, 32)
+for n_components in n_components_range:
+    left_X = U[:n_pairs, :n_components]
+    right_X = U[n_pairs:, :n_components]
+    rank_data = compute_nn_ranks(left_X, right_X, metric="cosine")
+    frames.append(rank_data)
+results = pd.concat(frames, ignore_index=True)
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+sns.lineplot(
+    data=results,
+    x="n_components",
+    y="reciprocal_rank",
+    ax=ax,
+    ci=None,
+)
+ax.set(ylabel="Mean reciprocal rank", xlabel="# of components")
+ax.axhline(adj_mrr, color="darkred", linestyle=":", linewidth=3)
+ax.text(
+    n_components_range[-1],
+    adj_mrr,
+    "Adjacency",
+    ha="right",
+    va="bottom",
+    color="darkred",
+)
+stashfig('ase-mrr')
 #%%
 elapsed = time.time() - t0
 delta = datetime.timedelta(seconds=elapsed)
