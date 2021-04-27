@@ -7,6 +7,8 @@
 #%% [markdown]
 # ## Preliminaries
 #%%
+from pkg.utils import set_warnings
+
 import datetime
 import time
 
@@ -15,15 +17,14 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from sklearn.metrics import adjusted_rand_score
-
+from giskard.plot import crosstabplot
 from graspologic.partition import leiden, modularity
 from graspologic.utils import symmetrize
-from pkg.data import load_maggot_graph
+from pkg.data import load_maggot_graph, load_palette
 from pkg.io import savefig
 from pkg.plot import set_theme
+from sklearn.metrics import adjusted_rand_score
 from src.hierarchy import signal_flow
-from src.visualization import CLASS_COLOR_DICT as palette
 from src.visualization import adjplot
 
 t0 = time.time()
@@ -51,12 +52,14 @@ edge_type_palette = dict(zip(edge_types, colors))
 nice_edge_types = dict(
     zip(edge_types, [r"A $\to$ D", r"A $\to$ A", r"D $\to$ D", r"D $\to$ A", "Sum"])
 )
-
+palette = load_palette()
 mg = load_maggot_graph()
 mg = mg[mg.nodes["paper_clustered_neurons"]]
 mg.to_largest_connected_component()
 adj = mg.sum.adj
-mg.nodes["sf"] = signal_flow(adj)
+sf = signal_flow(adj)
+mg.nodes["neg_sf"] = -sf
+mg.nodes["sf"] = sf
 
 #%% [markdown]
 # ## Optimize modularity
@@ -96,6 +99,7 @@ def optimize_leiden(g, n_restarts=25, resolution=1, randomness=0.001):
     return best_partition, best_modularity
 
 
+nodelist = mg.nodes.index
 n_restarts = 50
 randomness = 0.01
 resolution = 1.0
@@ -103,7 +107,6 @@ rows = []
 currtime = time.time()
 for edge_type in edge_types:
     edge_type_mg = mg.to_edge_type_graph(edge_type)
-    nodelist = edge_type_mg.nodes.index
     adj = edge_type_mg.adj
     sym_g = preprocess_for_leiden(adj)
     partition, modularity_score = optimize_leiden(
@@ -121,12 +124,12 @@ for edge_type in edge_types:
         "nice_edge_type": nice_edge_types[edge_type],
         "partition": flat_partition,
         "adj": adj,
+        "g": sym_g,
     }
     rows.append(row)
 
 print(f"{time.time() - currtime:.3f} seconds elapsed to fit all partitions.")
 results = pd.DataFrame(rows)
-results
 
 #%% [markdown]
 # ## Plot results
@@ -147,15 +150,16 @@ for _, row in results.iterrows():
         adj,
         meta=meta,
         sort_class="partition",
-        class_order=["is_unpartitioned", "sf"],
-        colors="merge_class",
+        class_order=["is_unpartitioned", "neg_sf"],
+        colors="simple_group",
         palette=palette,
         plot_type="scattermap",
-        item_order=["merge_class", "sf"],
+        item_order=["simple_group", "neg_sf"],
         ticks=False,
         sizes=(1, 2),
         gridline_kws=dict(linewidth=0),
         title=f"{nice_edge_type}, Modularity = {modularity_score:.2f}",
+        blocklines="partition",
     )
     stashfig(f"modularity-sorted-adj-edge_type={edge_type}")
 
@@ -164,7 +168,7 @@ for _, row in results.iterrows():
 #%%
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 sns.stripplot(
-    data=results, jitter=True, x="nice_edge_type", y="modularity_score", ax=ax
+    data=results, jitter=False, x="nice_edge_type", y="modularity_score", ax=ax
 )
 ax.set(ylabel="Modularity", xlabel="")
 stashfig("modularity-by-edge-type")
@@ -229,8 +233,70 @@ stashfig("pairwise-aris-modularity")
 # :class: tip
 # The modularity-maximizing partitions between the different edge types are quite
 # different. Put another way, the "modules" you get by looking at each edge type
-# separately don't seem very similar. This did not have to be the case!
+# separately don't seem very similar.
 # ```
+
+#%% [markdown]
+# ### Plot the modularity of one edge type graph under another's fit partition
+#%%
+edge_sorted_results = results.set_index("nice_edge_type")
+pairwise_modularity = pd.DataFrame(
+    index=edge_sorted_results.index, columns=edge_sorted_results.index, dtype=float
+)
+for idx1, row1 in edge_sorted_results.iterrows():
+    for idx2, row2 in edge_sorted_results.iterrows():
+        source_partition = row1["partition"]
+        source_partition = [str(s) for s in source_partition]
+        nodes = [str(s) for s in range(len(source_partition))]
+        partition_map = dict(zip(nodes, source_partition))
+        target_g = row2["g"]
+        modularity_score = modularity(target_g, partition_map)
+        pairwise_modularity.loc[idx1, idx2] = modularity_score
+pairwise_modularity
+
+fig, ax = plt.subplots(1, 1, figsize=(6, 6))
+sns.heatmap(
+    pairwise_modularity,
+    ax=ax,
+    square=True,
+    annot=True,
+    vmin=0,
+    vmax=1,
+    center=0,
+    cmap="RdBu_r",
+    cbar=False,
+)
+ax.set(
+    xlabel="Target modularity partition",
+    ylabel="Source modularity partition",
+    title="Modularity",
+)
+plt.setp(ax.get_yticklabels(), rotation=0)
+stashfig("pairwise-modularity")
+
+
+#%% [markdown]
+# ### Plot the composition of the predicted modules
+
+#%%
+for _, row in results.iterrows():
+    edge_type = row["edge_type"]
+    nice_edge_type = nice_edge_types[edge_type]
+    adj = row["adj"]
+    meta = mg.nodes
+    meta["partition"] = row["partition"]
+    ax = crosstabplot(
+        meta,
+        group="partition",
+        group_order="sf",
+        hue="simple_group",
+        hue_order="sf",
+        palette=palette,
+    )
+    ax.set(xlabel="Module", xticks=[])
+    stashfig(f"{edge_type}-crosstabplot")
+
+
 # %% [markdown]
 # ## End
 #%%
