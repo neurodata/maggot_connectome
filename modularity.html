@@ -343,6 +343,16 @@
      Plot the similarities between modularity-maximizing partitions
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-modularity-of-one-edge-type-graph-under-another-s-fit-partition">
+     Plot the modularity of one edge type graph under another’s fit partition
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-composition-of-the-predicted-modules">
+     Plot the composition of the predicted modules
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -371,7 +381,9 @@ edge types and compare various properties of the partitions and modularities.</p
 <h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">set_warnings</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -379,15 +391,14 @@ edge types and compare various properties of the partitions and modularities.</p
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">adjusted_rand_score</span>
-
+<span class="kn">from</span> <span class="nn">giskard.plot</span> <span class="kn">import</span> <span class="n">crosstabplot</span>
 <span class="kn">from</span> <span class="nn">graspologic.partition</span> <span class="kn">import</span> <span class="n">leiden</span><span class="p">,</span> <span class="n">modularity</span>
 <span class="kn">from</span> <span class="nn">graspologic.utils</span> <span class="kn">import</span> <span class="n">symmetrize</span>
-<span class="kn">from</span> <span class="nn">pkg.data</span> <span class="kn">import</span> <span class="n">load_maggot_graph</span>
+<span class="kn">from</span> <span class="nn">pkg.data</span> <span class="kn">import</span> <span class="n">load_maggot_graph</span><span class="p">,</span> <span class="n">load_palette</span>
 <span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">savefig</span>
 <span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">adjusted_rand_score</span>
 <span class="kn">from</span> <span class="nn">src.hierarchy</span> <span class="kn">import</span> <span class="n">signal_flow</span>
-<span class="kn">from</span> <span class="nn">src.visualization</span> <span class="kn">import</span> <span class="n">CLASS_COLOR_DICT</span> <span class="k">as</span> <span class="n">palette</span>
 <span class="kn">from</span> <span class="nn">src.visualization</span> <span class="kn">import</span> <span class="n">adjplot</span>
 
 <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -401,27 +412,6 @@ edge types and compare various properties of the partitions and modularities.</p
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/miniconda3/envs/maggot-revamp/lib/python3.8/site-packages/umap/__init__.py:9: UserWarning: Tensorflow not installed; ParametricUMAP will be unavailable
-  warn(&quot;Tensorflow not installed; ParametricUMAP will be unavailable&quot;)
-</pre></div>
-</div>
-<div class="output text_html"><script type="text/javascript">
-window.PlotlyConfig = {MathJaxConfig: 'local'};
-if (window.MathJax) {MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
-if (typeof require !== 'undefined') {
-require.undef("plotly");
-requirejs.config({
-    paths: {
-        'plotly': ['https://cdn.plot.ly/plotly-latest.min']
-    }
-});
-require(['plotly'], function(Plotly) {
-    window._Plotly = Plotly;
-});
-}
-</script>
-</div></div>
 </div>
 <div class="section" id="load-the-data">
 <h3>Load the data<a class="headerlink" href="#load-the-data" title="Permalink to this headline">¶</a></h3>
@@ -437,14 +427,16 @@ require(['plotly'], function(Plotly) {
 <span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;deep&quot;</span><span class="p">,</span> <span class="n">desat</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">edge_type_palette</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">edge_types</span><span class="p">,</span> <span class="n">colors</span><span class="p">))</span>
 <span class="n">nice_edge_types</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="nb">zip</span><span class="p">(</span><span class="n">edge_types</span><span class="p">,</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$A \to D$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$A \to A$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$D \to D$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$D \to A$&quot;</span><span class="p">,</span> <span class="s2">&quot;Sum&quot;</span><span class="p">])</span>
+    <span class="nb">zip</span><span class="p">(</span><span class="n">edge_types</span><span class="p">,</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;A $\to$ D&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;A $\to$ A&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;D $\to$ D&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;D $\to$ A&quot;</span><span class="p">,</span> <span class="s2">&quot;Sum&quot;</span><span class="p">])</span>
 <span class="p">)</span>
-
+<span class="n">palette</span> <span class="o">=</span> <span class="n">load_palette</span><span class="p">()</span>
 <span class="n">mg</span> <span class="o">=</span> <span class="n">load_maggot_graph</span><span class="p">()</span>
 <span class="n">mg</span> <span class="o">=</span> <span class="n">mg</span><span class="p">[</span><span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;paper_clustered_neurons&quot;</span><span class="p">]]</span>
 <span class="n">mg</span><span class="o">.</span><span class="n">to_largest_connected_component</span><span class="p">()</span>
 <span class="n">adj</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">sum</span><span class="o">.</span><span class="n">adj</span>
-<span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;sf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">signal_flow</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+<span class="n">sf</span> <span class="o">=</span> <span class="n">signal_flow</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+<span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;neg_sf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">sf</span>
+<span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;sf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sf</span>
 </pre></div>
 </div>
 </div>
@@ -488,6 +480,7 @@ require(['plotly'], function(Plotly) {
     <span class="k">return</span> <span class="n">best_partition</span><span class="p">,</span> <span class="n">best_modularity</span>
 
 
+<span class="n">nodelist</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">index</span>
 <span class="n">n_restarts</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">randomness</span> <span class="o">=</span> <span class="mf">0.01</span>
 <span class="n">resolution</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -495,7 +488,6 @@ require(['plotly'], function(Plotly) {
 <span class="n">currtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">edge_type</span> <span class="ow">in</span> <span class="n">edge_types</span><span class="p">:</span>
     <span class="n">edge_type_mg</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">to_edge_type_graph</span><span class="p">(</span><span class="n">edge_type</span><span class="p">)</span>
-    <span class="n">nodelist</span> <span class="o">=</span> <span class="n">edge_type_mg</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">index</span>
     <span class="n">adj</span> <span class="o">=</span> <span class="n">edge_type_mg</span><span class="o">.</span><span class="n">adj</span>
     <span class="n">sym_g</span> <span class="o">=</span> <span class="n">preprocess_for_leiden</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
     <span class="n">partition</span><span class="p">,</span> <span class="n">modularity_score</span> <span class="o">=</span> <span class="n">optimize_leiden</span><span class="p">(</span>
@@ -513,94 +505,20 @@ require(['plotly'], function(Plotly) {
         <span class="s2">&quot;nice_edge_type&quot;</span><span class="p">:</span> <span class="n">nice_edge_types</span><span class="p">[</span><span class="n">edge_type</span><span class="p">],</span>
         <span class="s2">&quot;partition&quot;</span><span class="p">:</span> <span class="n">flat_partition</span><span class="p">,</span>
         <span class="s2">&quot;adj&quot;</span><span class="p">:</span> <span class="n">adj</span><span class="p">,</span>
+        <span class="s2">&quot;g&quot;</span><span class="p">:</span> <span class="n">sym_g</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">currtime</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds elapsed to fit all partitions.&quot;</span><span class="p">)</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
-<span class="n">results</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>119.597 seconds elapsed to fit all partitions.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>124.985 seconds elapsed to fit all partitions.
 </pre></div>
 </div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>modularity_score</th>
-      <th>resolution</th>
-      <th>edge_type</th>
-      <th>nice_edge_type</th>
-      <th>partition</th>
-      <th>adj</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.544452</td>
-      <td>1.0</td>
-      <td>ad</td>
-      <td>$A \to D$</td>
-      <td>[0, 1, 1, 2, 3, 9, 8, 2, 2, 3, 2, 9, 9, 9, 3, ...</td>
-      <td>[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,...</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0.747031</td>
-      <td>1.0</td>
-      <td>aa</td>
-      <td>$A \to A$</td>
-      <td>[0, 5, 6, 1, 0, 23, 1, 1, 7, 6, 1, None, 23, 2...</td>
-      <td>[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,...</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.837812</td>
-      <td>1.0</td>
-      <td>dd</td>
-      <td>$D \to D$</td>
-      <td>[9, None, None, None, 9, None, None, 0, None, ...</td>
-      <td>[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,...</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0.798872</td>
-      <td>1.0</td>
-      <td>da</td>
-      <td>$D \to A$</td>
-      <td>[0, None, 1, None, None, None, None, 2, 27, 16...</td>
-      <td>[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,...</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.568130</td>
-      <td>1.0</td>
-      <td>sum</td>
-      <td>Sum</td>
-      <td>[0, 1, 1, 2, 0, 5, 6, 6, 2, 5, 2, 5, 5, 5, 6, ...</td>
-      <td>[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,...</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+</div>
 </div>
 </div>
 <div class="section" id="plot-results">
@@ -622,15 +540,16 @@ require(['plotly'], function(Plotly) {
         <span class="n">adj</span><span class="p">,</span>
         <span class="n">meta</span><span class="o">=</span><span class="n">meta</span><span class="p">,</span>
         <span class="n">sort_class</span><span class="o">=</span><span class="s2">&quot;partition&quot;</span><span class="p">,</span>
-        <span class="n">class_order</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;is_unpartitioned&quot;</span><span class="p">,</span> <span class="s2">&quot;sf&quot;</span><span class="p">],</span>
-        <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;merge_class&quot;</span><span class="p">,</span>
+        <span class="n">class_order</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;is_unpartitioned&quot;</span><span class="p">,</span> <span class="s2">&quot;neg_sf&quot;</span><span class="p">],</span>
+        <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;simple_group&quot;</span><span class="p">,</span>
         <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span>
         <span class="n">plot_type</span><span class="o">=</span><span class="s2">&quot;scattermap&quot;</span><span class="p">,</span>
-        <span class="n">item_order</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;merge_class&quot;</span><span class="p">,</span> <span class="s2">&quot;sf&quot;</span><span class="p">],</span>
+        <span class="n">item_order</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;simple_group&quot;</span><span class="p">,</span> <span class="s2">&quot;neg_sf&quot;</span><span class="p">],</span>
         <span class="n">ticks</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
         <span class="n">gridline_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
         <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nice_edge_type</span><span class="si">}</span><span class="s2">, Modularity = </span><span class="si">{</span><span class="n">modularity_score</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">blocklines</span><span class="o">=</span><span class="s2">&quot;partition&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;modularity-sorted-adj-edge_type=</span><span class="si">{</span><span class="n">edge_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
@@ -651,7 +570,7 @@ require(['plotly'], function(Plotly) {
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;nice_edge_type&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;modularity_score&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;nice_edge_type&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;modularity_score&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span>
 <span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Modularity&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 <span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;modularity-by-edge-type&quot;</span><span class="p">)</span>
@@ -725,7 +644,85 @@ p-values for this). In particular, the A to D seems the least modular.</p>
 <p class="admonition-title">Conclusion</p>
 <p>The modularity-maximizing partitions between the different edge types are quite
 different. Put another way, the “modules” you get by looking at each edge type
-separately don’t seem very similar. This did not have to be the case!</p>
+separately don’t seem very similar.</p>
+</div>
+</div>
+<div class="section" id="plot-the-modularity-of-one-edge-type-graph-under-another-s-fit-partition">
+<h3>Plot the modularity of one edge type graph under another’s fit partition<a class="headerlink" href="#plot-the-modularity-of-one-edge-type-graph-under-another-s-fit-partition" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">edge_sorted_results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;nice_edge_type&quot;</span><span class="p">)</span>
+<span class="n">pairwise_modularity</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">index</span><span class="o">=</span><span class="n">edge_sorted_results</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">edge_sorted_results</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span>
+<span class="p">)</span>
+<span class="k">for</span> <span class="n">idx1</span><span class="p">,</span> <span class="n">row1</span> <span class="ow">in</span> <span class="n">edge_sorted_results</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">idx2</span><span class="p">,</span> <span class="n">row2</span> <span class="ow">in</span> <span class="n">edge_sorted_results</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">source_partition</span> <span class="o">=</span> <span class="n">row1</span><span class="p">[</span><span class="s2">&quot;partition&quot;</span><span class="p">]</span>
+        <span class="n">source_partition</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">source_partition</span><span class="p">]</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">source_partition</span><span class="p">))]</span>
+        <span class="n">partition_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">source_partition</span><span class="p">))</span>
+        <span class="n">target_g</span> <span class="o">=</span> <span class="n">row2</span><span class="p">[</span><span class="s2">&quot;g&quot;</span><span class="p">]</span>
+        <span class="n">modularity_score</span> <span class="o">=</span> <span class="n">modularity</span><span class="p">(</span><span class="n">target_g</span><span class="p">,</span> <span class="n">partition_map</span><span class="p">)</span>
+        <span class="n">pairwise_modularity</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span><span class="p">]</span> <span class="o">=</span> <span class="n">modularity_score</span>
+<span class="n">pairwise_modularity</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span>
+    <span class="n">pairwise_modularity</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">square</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">center</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">,</span>
+    <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Target modularity partition&quot;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Source modularity partition&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Modularity&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;pairwise-modularity&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/modularity_17_0.png" src="_images/modularity_17_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-composition-of-the-predicted-modules">
+<h3>Plot the composition of the predicted modules<a class="headerlink" href="#plot-the-composition-of-the-predicted-modules" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">edge_type</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;edge_type&quot;</span><span class="p">]</span>
+    <span class="n">nice_edge_type</span> <span class="o">=</span> <span class="n">nice_edge_types</span><span class="p">[</span><span class="n">edge_type</span><span class="p">]</span>
+    <span class="n">adj</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;adj&quot;</span><span class="p">]</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">nodes</span>
+    <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;partition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;partition&quot;</span><span class="p">]</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">crosstabplot</span><span class="p">(</span>
+        <span class="n">meta</span><span class="p">,</span>
+        <span class="n">group</span><span class="o">=</span><span class="s2">&quot;partition&quot;</span><span class="p">,</span>
+        <span class="n">group_order</span><span class="o">=</span><span class="s2">&quot;sf&quot;</span><span class="p">,</span>
+        <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;simple_group&quot;</span><span class="p">,</span>
+        <span class="n">hue_order</span><span class="o">=</span><span class="s2">&quot;sf&quot;</span><span class="p">,</span>
+        <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Module&quot;</span><span class="p">,</span> <span class="n">xticks</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">edge_type</span><span class="si">}</span><span class="s2">-crosstabplot&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/modularity_19_0.png" src="_images/modularity_19_0.png" />
+<img alt="_images/modularity_19_1.png" src="_images/modularity_19_1.png" />
+<img alt="_images/modularity_19_2.png" src="_images/modularity_19_2.png" />
+<img alt="_images/modularity_19_3.png" src="_images/modularity_19_3.png" />
+<img alt="_images/modularity_19_4.png" src="_images/modularity_19_4.png" />
+</div>
 </div>
 </div>
 </div>
@@ -744,8 +741,8 @@ separately don’t seem very similar. This did not have to be the case!</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:02:39.840923
-Completed at 2021-04-12 19:43:54.163720
+Script took 0:02:58.067765
+Completed at 2021-04-26 20:17:28.671693
 ----
 </pre></div>
 </div>
