@@ -7,10 +7,9 @@
 #%% [markdown]
 # ## Preliminaries
 #%%
-from pkg.utils import set_warnings
-
 import datetime
 import time
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -23,13 +22,17 @@ from graspologic.utils import symmetrize
 from pkg.data import load_maggot_graph, load_palette
 from pkg.io import savefig
 from pkg.plot import set_theme
+from pkg.utils import set_warnings
 from sklearn.metrics import adjusted_rand_score
 from src.hierarchy import signal_flow
 from src.visualization import adjplot
+from tqdm import tqdm
 
 t0 = time.time()
 
 set_theme()
+
+out_path = Path("maggot_connectome/results/outputs/modularity")
 
 
 def stashfig(name, **kwargs):
@@ -81,16 +84,18 @@ def preprocess_for_leiden(adj):
     return undirected_g
 
 
-def optimize_leiden(g, n_restarts=25, resolution=1, randomness=0.001):
+def optimize_leiden(g, n_restarts=25, resolution=1, randomness=0.001, rng=None):
     best_modularity = -np.inf
     best_partition = {}
-    for i in range(n_restarts):
+    for i in tqdm(range(n_restarts)):
+        random_seed = int(rng.integers(np.iinfo(np.int32).max))
         partition = leiden(
             g,
             resolution=resolution,
             randomness=randomness,
             check_directed=False,
             extra_forced_iterations=10,
+            random_seed=random_seed,
         )
         modularity_score = modularity(g, partitions=partition, resolution=resolution)
         if modularity_score > best_modularity:
@@ -99,8 +104,11 @@ def optimize_leiden(g, n_restarts=25, resolution=1, randomness=0.001):
     return best_partition, best_modularity
 
 
+rng = np.random.default_rng(8888)
+
 nodelist = mg.nodes.index
-n_restarts = 50
+partitions = pd.DataFrame(index=nodelist)
+n_restarts = 100
 randomness = 0.01
 resolution = 1.0
 rows = []
@@ -114,9 +122,13 @@ for edge_type in edge_types:
         n_restarts=n_restarts,
         resolution=resolution,
         randomness=randomness,
+        rng=rng,
     )
     str_arange = [f"{i}" for i in range(len(sym_g))]
     flat_partition = list(map(partition.get, str_arange))
+    partitions[edge_type] = pd.Series(
+        data=flat_partition, index=nodelist, dtype="Int64"
+    )
     row = {
         "modularity_score": modularity_score,
         "resolution": resolution,
@@ -130,6 +142,8 @@ for edge_type in edge_types:
 
 print(f"{time.time() - currtime:.3f} seconds elapsed to fit all partitions.")
 results = pd.DataFrame(rows)
+
+partitions.to_csv(out_path / "modularity_partitions.csv")
 
 #%% [markdown]
 # ## Plot results
