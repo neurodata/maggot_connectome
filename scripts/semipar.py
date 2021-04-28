@@ -122,7 +122,7 @@ results = pd.read_csv(out_dir / "semipar_results", index_col=0)
 
 #%% [markdown]
 # ## Plot p-values
-
+#%%
 ax = scatterplot(
     data=results,
     x="n_components",

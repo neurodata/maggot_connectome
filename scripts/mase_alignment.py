@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from giskard.plot import merge_axes, simple_scatterplot
+from giskard.utils import get_paired_inds
 from graspologic.align import OrthogonalProcrustes, SeedlessProcrustes
 from graspologic.embed import (
     AdjacencySpectralEmbed,
@@ -32,11 +34,10 @@ from pkg.data import load_maggot_graph
 from pkg.io import savefig
 from pkg.plot import set_theme
 from pkg.utils import set_warnings
+from scipy.stats import ortho_group
+from sklearn.neighbors import NearestNeighbors
 from src.visualization import CLASS_COLOR_DICT as palette
 from src.visualization import add_connections, adjplot
-from scipy.stats import ortho_group
-from giskard.plot import simple_scatterplot
-from giskard.plot import merge_axes
 
 t0 = time.time()
 set_theme()
@@ -196,6 +197,35 @@ def double_heatmap(
         **heatmap_kws,
     )
     return fig, axs
+
+
+def compute_nn_ranks(left_X, right_X, max_n_neighbors=None, metric="cosine"):
+    if max_n_neighbors is None:
+        max_n_neighbors = len(left_X)
+
+    nn_kwargs = dict(n_neighbors=max_n_neighbors, metric=metric)
+    nn_left = NearestNeighbors(**nn_kwargs)
+    nn_right = NearestNeighbors(**nn_kwargs)
+    nn_left.fit(left_X)
+    nn_right.fit(right_X)
+
+    left_neighbors = nn_right.kneighbors(left_X, return_distance=False)
+    right_neighbors = nn_left.kneighbors(right_X, return_distance=False)
+
+    arange = np.arange(len(left_X))
+    _, left_match_rank = np.where(left_neighbors == arange[:, None])
+    _, right_match_rank = np.where(right_neighbors == arange[:, None])
+    left_match_rank += 1
+    right_match_rank += 1
+
+    rank_data = np.concatenate((left_match_rank, right_match_rank))
+    rank_data = pd.Series(rank_data, name="pair_nn_rank")
+    rank_data = rank_data.to_frame()
+    rank_data["metric"] = metric
+    rank_data["side"] = len(left_X) * ["Left"] + len(right_X) * ["Right"]
+    rank_data["n_components"] = left_X.shape[1]
+    rank_data["reciprocal_rank"] = 1 / rank_data["pair_nn_rank"]
+    return rank_data
 
 
 #%% [markdown]
@@ -388,103 +418,58 @@ for align_space in ["score"]:
         fig, axs = double_heatmap((phat_ll, phat_rr), figsize=(15, 7.6))
 
 #%%
-
-from giskard.utils import get_paired_inds
-from sklearn.neighbors import NearestNeighbors
-
-
-def compute_nn_ranks(left_X, right_X, max_n_neighbors=None, metric="cosine"):
-    if max_n_neighbors is None:
-        max_n_neighbors = len(left_X)
-
-    nn_kwargs = dict(n_neighbors=max_n_neighbors, metric=metric)
-    nn_left = NearestNeighbors(**nn_kwargs)
-    nn_right = NearestNeighbors(**nn_kwargs)
-    nn_left.fit(left_X)
-    nn_right.fit(right_X)
-
-    left_neighbors = nn_right.kneighbors(left_X, return_distance=False)
-    right_neighbors = nn_left.kneighbors(right_X, return_distance=False)
-
-    arange = np.arange(len(left_X))
-    _, left_match_rank = np.where(left_neighbors == arange[:, None])
-    _, right_match_rank = np.where(right_neighbors == arange[:, None])
-    left_match_rank += 1
-    right_match_rank += 1
-
-    rank_data = np.concatenate((left_match_rank, right_match_rank))
-    rank_data = pd.Series(rank_data, name="pair_nn_rank")
-    rank_data = rank_data.to_frame()
-    rank_data["metric"] = metric
-    rank_data["side"] = len(left_X) * ["Left"] + len(right_X) * ["Right"]
-    rank_data["n_components"] = left_X.shape[1]
-    rank_data["reciprocal_rank"] = 1 / rank_data["pair_nn_rank"]
-    return rank_data
-
-
-X = np.block([[X_ll, Y_ll], [X_rr, Y_rr]])
-U, _, _ = selectSVD(X, n_components=64, algorithm="full")
-n_pairs = len(X_ll)
-frames = []
-n_components_range = [2, 4, 6, 8, 12, 16, 24, 32, 40, 48, 56, 64]
-for n_components in n_components_range:
-    left_X = U[:n_pairs, :n_components]
-    right_X = U[n_pairs:, :n_components]
-    rank_data = compute_nn_ranks(left_X, right_X, metric="cosine")
-    frames.append(rank_data)
-results = pd.concat(frames, ignore_index=True)
-
-#%%
 left_composite_adj = np.concatenate((ll_adj, ll_adj.T), axis=1)
 right_composite_adj = np.concatenate((rr_adj, rr_adj.T), axis=1)
 rank_data = compute_nn_ranks(left_composite_adj, right_composite_adj, metric="jaccard")
 adj_mrr = rank_data["reciprocal_rank"].mean()
-#%%
-fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-sns.lineplot(
-    data=results,
-    x="n_components",
-    y="reciprocal_rank",
-    ax=ax,
-    estimator="mean",
-    ci=None,
-)
-ax.set(ylabel="Mean reciprocal rank", xlabel="# of components")
-ax.axhline(adj_mrr, color="darkred", linestyle=":", linewidth=3)
-ax.text(
-    n_components_range[-1],
-    adj_mrr,
-    "Adjacency",
-    ha="right",
-    va="bottom",
-    color="darkred",
-)
 
 #%%
-from graspologic.embed import AdjacencySpectralEmbed
-from graspologic.align import SeedlessProcrustes
-
+X_ll_mase = X_ll
+X_rr_mase = X_rr
+Y_ll_mase = Y_ll
+Y_rr_mase = Y_rr
+X_composite_mase = np.block([[X_ll, Y_ll], [X_rr, Y_rr]])
+U_mase, _, _ = selectSVD(X_composite_mase, n_components=64, algorithm="full")
+n_pairs = len(X_ll)
+frames = []
+n_components_range = [2, 4, 6, 8, 12, 16, 24, 32]
+for n_components in n_components_range:
+    left_X = U_mase[:n_pairs, :n_components]
+    right_X = U_mase[n_pairs:, :n_components]
+    rank_data = compute_nn_ranks(left_X, right_X, metric="cosine")
+    frames.append(rank_data)
+mase_results = pd.concat(frames, ignore_index=True)
+mase_results["method"] = "mase"
+#%%
 ase = AdjacencySpectralEmbed(n_components=16)
-X_ll, Y_ll = ase.fit_transform(ll_adj)
-X_rr, Y_rr = ase.fit_transform(rr_adj)
-X_ll, Y_ll = joint_procrustes((X_ll, Y_ll), (X_rr, Y_rr), method="seedless-oracle")
+X_ll_ase, Y_ll_ase = ase.fit_transform(ll_adj)
+X_rr_ase, Y_rr_ase = ase.fit_transform(rr_adj)
+X_ll_ase, Y_ll_ase = joint_procrustes(
+    (X_ll_ase, Y_ll_ase), (X_rr_ase, Y_rr_ase), method="seedless-oracle"
+)
+X_composite_ase = np.block([[X_ll_ase, Y_ll_ase], [X_rr_ase, Y_rr_ase]])
+U_ase, _, _ = selectSVD(X_composite_ase, n_components=32, algorithm="full")
+
 
 #%%
-latent_stack = np.block([[X_ll, Y_ll], [X_rr, Y_rr]])
-U, _, _ = selectSVD(latent_stack, n_components=32, algorithm="full")
 frames = []
 n_components_range = np.arange(1, 32)
 for n_components in n_components_range:
-    left_X = U[:n_pairs, :n_components]
-    right_X = U[n_pairs:, :n_components]
+    left_X = U_ase[:n_pairs, :n_components]
+    right_X = U_ase[n_pairs:, :n_components]
     rank_data = compute_nn_ranks(left_X, right_X, metric="cosine")
     frames.append(rank_data)
-results = pd.concat(frames, ignore_index=True)
+ase_results = pd.concat(frames, ignore_index=True)
+ase_results["method"] = "ase"
+#%%
+
+results = pd.concat((mase_results, ase_results), ignore_index=True)
 fig, ax = plt.subplots(1, 1, figsize=(8, 6))
 sns.lineplot(
     data=results,
     x="n_components",
     y="reciprocal_rank",
+    hue="method",
     ax=ax,
     ci=None,
 )
@@ -498,7 +483,54 @@ ax.text(
     va="bottom",
     color="darkred",
 )
-stashfig('ase-mrr')
+stashfig("mrr-by-dimension")
+
+#%%
+from graspologic.inference import latent_position_test
+from graspologic.simulations import rdpg_corr
+from tqdm import tqdm
+
+# latent_position_test(ll_adj, rr_adj, n_bootstraps=2)
+rho = 0.0
+n_bootstraps = 100
+
+
+def compute_test_statistics(A1, A2, n_components=16):
+    ase = AdjacencySpectralEmbed(n_components=n_components, check_lcc=False)
+    X1, Y1 = ase.fit_transform(A1)
+    X2, Y2 = ase.fit_transform(A2)
+    X1, Y1 = joint_procrustes((X1, Y1), (X2, Y2), method="orthogonal")
+    diff_norm = np.sqrt(np.linalg.norm(X1 - X2) ** 2 + np.linalg.norm(Y1 - Y2) ** 2)
+    row = dict(diff_norm=diff_norm, n_components=n_components)
+    
+    return row
+
+
+n_components = 16
+rows = []
+for i in tqdm(range(n_bootstraps)):
+    A1, A2 = rdpg_corr(
+        X_ll_ase, Y_ll_ase, float(rho), rescale=False, directed=True, loops=False
+    )
+    row = compute_test_statistics(A1, A2, n_components=n_components)
+    row["bootstrap_sample"] = i
+    row["type"] = "null"
+    row["rho"] = rho
+    rows.append(row)
+
+row = compute_test_statistics(ll_adj, rr_adj, n_components=n_components)
+row["rho"] = rho
+row["type"] = "observed"
+rows.append(row)
+
+results = pd.DataFrame(rows)
+
+
+from giskard.plot import histplot
+
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+histplot(results, x="diff_norm", hue="type", ax=ax)
+
 #%%
 elapsed = time.time() - t0
 delta = datetime.timedelta(seconds=elapsed)
