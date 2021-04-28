@@ -509,72 +509,82 @@ Number of pairs after taking LCC intersection: 1210
 </div>
 <div class="section" id="plot-p-values">
 <h2>Plot p-values<a class="headerlink" href="#plot-p-values" title="Permalink to this headline">¶</a></h2>
-<p>ax = scatterplot(
-data=results,
-x=”n_components”,
-y=”pvalue”,
-hue=”embedding”,
-shift=”embedding”,
-shade=True,
-)
-ax.set_yscale(“log”)
-styles = [“–”, “:”]
-line_locs = [0.05, 0.005]
-line_kws = dict(color=”black”, alpha=0.7, linewidth=1.5, zorder=-1)
-for loc, style in zip(line_locs, styles):
-ax.axhline(loc, linestyle=style, **line_kws)
-ax.text(ax.get_xlim()[-1] + 0.1, loc, loc, ha=”left”, va=”center”)
-stashfig(“semipar-pvalues-by-dimension”)</p>
-<p>#%%
-test_case = “rotation”
-embedding = “omnibus”
-n_components = 8
-n_bootstraps = 100
-n_repeats = 5
-rows = []
-for n_shuffle in [4, 8, 16]:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>for repeat in range(n_repeats):
-    inds = np.arange(len(rr_adj))
-    choice_inds = np.random.choice(len(rr_adj), size=n_shuffle, replace=False)
-    shuffle_inds = choice_inds.copy()
-    np.random.shuffle(shuffle_inds)
-    inds[choice_inds] = inds[shuffle_inds]
-    rr_adj_shuffle = rr_adj[np.ix_(inds, inds)]
-    currtime = time.time()
-    pvalue, tstat, misc = latent_position_test(
-        ll_adj,
-        rr_adj_shuffle,
-        embedding=embedding,
-        n_components=n_components,
-        test_case=test_case,
-        n_bootstraps=n_bootstraps,
-    )
-    row = {
-        &quot;pvalue&quot;: pvalue,
-        &quot;tstat&quot;: tstat,
-        &quot;n_shuffle&quot;: n_shuffle,
-        &quot;n_components&quot;: n_components,
-        &quot;n_bootstraps&quot;: n_bootstraps,
-        &quot;embedding&quot;: embedding,
-        &quot;test_case&quot;: test_case,
-        &quot;repeat&quot;: repeat,
-    }
-    rows.append(row)
-    print(f&quot;{time.time() - currtime:.3f} seconds elapsed.&quot;)
-    print(f&quot;n_shuffle: {n_shuffle}&quot;)
-    print(f&quot;test case: {test_case}&quot;)
-    print(f&quot;embedding: {embedding}&quot;)
-    print(f&quot;n_components: {n_components}&quot;)
-    print(f&quot;p-value: {pvalue}&quot;)
-    print(f&quot;tstat: {tstat}&quot;)
-    print()
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">scatterplot</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;n_components&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;pvalue&quot;</span><span class="p">,</span>
+    <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;embedding&quot;</span><span class="p">,</span>
+    <span class="n">shift</span><span class="o">=</span><span class="s2">&quot;embedding&quot;</span><span class="p">,</span>
+    <span class="n">shade</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">styles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">]</span>
+<span class="n">line_locs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">]</span>
+<span class="n">line_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">loc</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">line_locs</span><span class="p">,</span> <span class="n">styles</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="o">**</span><span class="n">line_kws</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;semipar-pvalues-by-dimension&quot;</span><span class="p">)</span>
+
+<span class="c1"># #%%</span>
+<span class="c1"># test_case = &quot;rotation&quot;</span>
+<span class="c1"># embedding = &quot;omnibus&quot;</span>
+<span class="c1"># n_components = 8</span>
+<span class="c1"># n_bootstraps = 100</span>
+<span class="c1"># n_repeats = 5</span>
+<span class="c1"># rows = []</span>
+<span class="c1"># for n_shuffle in [4, 8, 16]:</span>
+
+<span class="c1">#     for repeat in range(n_repeats):</span>
+<span class="c1">#         inds = np.arange(len(rr_adj))</span>
+<span class="c1">#         choice_inds = np.random.choice(len(rr_adj), size=n_shuffle, replace=False)</span>
+<span class="c1">#         shuffle_inds = choice_inds.copy()</span>
+<span class="c1">#         np.random.shuffle(shuffle_inds)</span>
+<span class="c1">#         inds[choice_inds] = inds[shuffle_inds]</span>
+<span class="c1">#         rr_adj_shuffle = rr_adj[np.ix_(inds, inds)]</span>
+<span class="c1">#         currtime = time.time()</span>
+<span class="c1">#         pvalue, tstat, misc = latent_position_test(</span>
+<span class="c1">#             ll_adj,</span>
+<span class="c1">#             rr_adj_shuffle,</span>
+<span class="c1">#             embedding=embedding,</span>
+<span class="c1">#             n_components=n_components,</span>
+<span class="c1">#             test_case=test_case,</span>
+<span class="c1">#             n_bootstraps=n_bootstraps,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         row = {</span>
+<span class="c1">#             &quot;pvalue&quot;: pvalue,</span>
+<span class="c1">#             &quot;tstat&quot;: tstat,</span>
+<span class="c1">#             &quot;n_shuffle&quot;: n_shuffle,</span>
+<span class="c1">#             &quot;n_components&quot;: n_components,</span>
+<span class="c1">#             &quot;n_bootstraps&quot;: n_bootstraps,</span>
+<span class="c1">#             &quot;embedding&quot;: embedding,</span>
+<span class="c1">#             &quot;test_case&quot;: test_case,</span>
+<span class="c1">#             &quot;repeat&quot;: repeat,</span>
+<span class="c1">#         }</span>
+<span class="c1">#         rows.append(row)</span>
+<span class="c1">#         print(f&quot;{time.time() - currtime:.3f} seconds elapsed.&quot;)</span>
+<span class="c1">#         print(f&quot;n_shuffle: {n_shuffle}&quot;)</span>
+<span class="c1">#         print(f&quot;test case: {test_case}&quot;)</span>
+<span class="c1">#         print(f&quot;embedding: {embedding}&quot;)</span>
+<span class="c1">#         print(f&quot;n_components: {n_components}&quot;)</span>
+<span class="c1">#         print(f&quot;p-value: {pvalue}&quot;)</span>
+<span class="c1">#         print(f&quot;tstat: {tstat}&quot;)</span>
+<span class="c1">#         print()</span>
+
+<span class="c1"># #%%</span>
+<span class="c1"># results = pd.DataFrame(rows)</span>
+<span class="c1"># fig, ax = plt.subplots(1, 1, figsize=(8, 6))</span>
+<span class="c1"># sns.scatterplot(data=results, x=&quot;n_shuffle&quot;, y=&quot;pvalue&quot;, ax=ax)</span>
+<span class="c1"># stashfig(&quot;shuffle-p-values&quot;)</span>
 </pre></div>
 </div>
-<p>#%%
-results = pd.DataFrame(rows)
-fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-sns.scatterplot(data=results, x=”n_shuffle”, y=”pvalue”, ax=ax)
-stashfig(“shuffle-p-values”)</p>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/semipar_10_0.png" src="_images/semipar_10_0.png" />
+</div>
+</div>
 </div>
 <div class="section" id="end">
 <h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
@@ -591,8 +601,8 @@ stashfig(“shuffle-p-values”)</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:00:01.268198
-Completed at 2021-04-26 21:54:11.696112
+Script took 0:00:02.892378
+Completed at 2021-04-27 12:59:46.906761
 ----
 </pre></div>
 </div>
