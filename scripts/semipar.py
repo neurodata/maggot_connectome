@@ -103,26 +103,58 @@ def difference_norm(A, B):
     return np.linalg.norm(A - B, ord="fro")
 
 
-def compute_ase_tstat(adjacency1, adjacency2, n_components, initial_n_components=None):
+def fix_P(P):
+    P = P - np.diag(np.diag(P))
+    P[P < 0] = 0
+    P[P > 1] = 1
+    return P
+
+
+def estimate_models_and_tstat(
+    adjacency1, adjacency2, n_components, method="ase", **kwargs
+):
+    if method == "ase" or method == "omni":
+        if method == "ase":
+            X1, Y1, X2, Y2 = aligned_ase(A1, A2, n_components, **kwargs)
+        elif method == "omni":
+            X1, Y1, X2, Y2 = omni(A1, A2, n_components, **kwargs)
+        P1 = fix_P(X1 @ Y1.T)
+        P2 = fix_P(X2 @ Y2.T)
+        tstat = np.sqrt(
+            np.linalg.norm(X1 - X2, ord="fro") ** 2
+            + np.linalg.norm(Y1 - Y2, ord="fro") ** 2
+        )
+    elif method == "mase":
+        U, V, R1, R2 = mase(A1, A2, n_components, **kwargs)
+        P1 = fix_P(U @ R1 @ V.T)
+        P2 = fix_P(U @ R2 @ V.T)
+        tstat = np.linalg.norm(R1 - R2, ord="fro")
+    return P1, P2, tstat
+
+
+def aligned_ase(adjacency1, adjacency2, n_components, initial_n_components=None):
     if initial_n_components is None:
         initial_n_components = n_components
     ase = AdjacencySpectralEmbed(
         n_components=initial_n_components, check_lcc=False, diag_aug=True
     )
+    n = len(adjacency1)
     X1, Y1 = ase.fit_transform(adjacency1)
     X2, Y2 = ase.fit_transform(adjacency2)
     data1 = np.concatenate((X1, Y1), axis=0)
     data2 = np.concatenate((X2, Y2), axis=0)
     data1 = OrthogonalProcrustes().fit_transform(data1, data2)
-    return difference_norm(data1[:, :n_components], data2[:, :n_components])
+    X1 = data1[:n]
+    Y1 = data1[n:]
+    return X1, Y1, X2, Y2
 
 
-def compute_omni_tstat(adjacency1, adjacency2, n_components):
+def omni(adjacency1, adjacency2, n_components, **kwargs):
     omni = OmnibusEmbed(
-        n_components=n_components, check_lcc=False, diag_aug=True, concat=True
+        n_components=n_components, check_lcc=False, diag_aug=True, concat=False
     )
-    XYs = omni.fit_transform([adjacency1, adjacency2])
-    return difference_norm(XYs[0], XYs[1])
+    Xs, Ys = omni.fit_transform([adjacency1, adjacency2])
+    return Xs[0], Ys[0], Xs[1], Ys[1]
 
 
 def decompose_scores(scores, scaled=True, align=True):
@@ -161,15 +193,16 @@ def project_to_node_space(mase, scaled=True, align=True):
     return X1, Y1, X2, Y2
 
 
-def compute_mase_tstats(adjacency1, adjacency2, n_components):
+def mase(adjacency1, adjacency2, n_components, **kwargs):
     mase = MultipleASE(n_components=n_components, scaled=True, diag_aug=True)
     mase.fit([adjacency1, adjacency2])
-    X1, Y1, X2, Y2 = project_to_node_space(mase)
-    XY1 = np.concatenate((X1, Y1), axis=0)
-    XY2 = np.concatenate((X2, Y2), axis=0)
-    node_diff_norm = difference_norm(XY1, XY2)
-    R_diff_norm = difference_norm(mase.scores_[0], mase.scores_[1])
-    return node_diff_norm, R_diff_norm
+    return mase.latent_left_, mase.latent_right_, mase.scores_[0], mase.scores_[1]
+    # X1, Y1, X2, Y2 = project_to_node_space(mase)
+    # XY1 = np.concatenate((X1, Y1), axis=0)
+    # XY2 = np.concatenate((X2, Y2), axis=0)
+    # node_diff_norm = difference_norm(XY1, XY2)
+    # R_diff_norm = difference_norm(mase.scores_[0], mase.scores_[1])
+    # return node_diff_norm, R_diff_norm
 
 
 def compute_tstats(
@@ -208,93 +241,173 @@ def compute_tstats(
     return rows
 
 
-# @jit(nopython=True)
-def sample_rdpg(P, seed):
-    np.random.seed(seed)
-    A = np.random.binomial(1, P)
-    A[np.arange(len(A)), np.arange(len(A))] = 0
-    return A
+from pkg.inference import sample_rdpg
 
 
-def bootstrap_sample_tstats(P, n_components, seed):
+def bootstrap_sample(P, seed):
     rng = np.random.default_rng(seed)
     A1 = sample_rdpg(P, rng.integers(np.iinfo(np.int32).max))
     A2 = sample_rdpg(P, rng.integers(np.iinfo(np.int32).max))
-    rows = compute_tstats(A1, A2, n_components, info=dict(seed=seed, type="null"))
-    return rows
+    return A1, A2
 
 
-def compute_null_tstats(A, n_bootstraps, n_components=2, rng=None):
-    ase = AdjacencySpectralEmbed(n_components=n_components, check_lcc=False)
-    X, Y = ase.fit_transform(A)
-    P = p_from_latent(X, Y, rescale=False, loops=False)
+# def compute_null_tstats(P, n_bootstraps, n_components=2, rng=None):
+#     ase = AdjacencySpectralEmbed(n_components=n_components, check_lcc=False)
+#     X, Y = ase.fit_transform(A)
+#     P = p_from_latent(X, Y, rescale=False, loops=False)
+#     seeds = rng.integers(np.iinfo(np.int32).max, size=n_bootstraps)
+
+#     def _bootstrap(seed):
+#         return bootstrap_sample_tstats(P, n_components, seed)
+
+#     all_rows = Parallel(n_jobs=-2)(delayed(_bootstrap)(seed) for seed in seeds)
+#     rows = []
+#     for row_set in all_rows:
+#         rows += row_set
+#     # rows = []
+#     # for seed in seeds:
+#     #     rows += _bootstrap(seed)
+#     return rows
+
+
+def compute_tstat(A1, A2, method="ase", n_components=2, **kwargs):
+    if method == "ase" or method == "omni":
+        if method == "ase":
+            X1, Y1, X2, Y2 = aligned_ase(A1, A2, n_components, **kwargs)
+        elif method == "omni":
+            X1, Y1, X2, Y2 = omni(A1, A2, n_components, **kwargs)
+        tstat = np.sqrt(
+            np.linalg.norm(X1 - X2, ord="fro") ** 2
+            + np.linalg.norm(Y1 - Y2, ord="fro") ** 2
+        )
+    elif method == "mase":
+        _, _, R1, R2 = mase(A1, A2, n_components, **kwargs)
+        tstat = np.linalg.norm(R1 - R2, ord="fro")
+    return tstat
+
+
+def compute_null_distribution(P, n_bootstraps, rng=None, n_jobs=None, **kwargs):
+    if rng is None:
+        rng = np.random.default_rng()
     seeds = rng.integers(np.iinfo(np.int32).max, size=n_bootstraps)
 
-    def _bootstrap(seed):
-        return bootstrap_sample_tstats(P, n_components, seed)
+    def sample_and_compute_tstat(seed, **kwargs):
+        A1, A2 = bootstrap_sample(P, seed)
+        tstat = compute_tstat(A1, A2, **kwargs)
+        return tstat
 
-    all_rows = Parallel(n_jobs=-2)(delayed(_bootstrap)(seed) for seed in seeds)
-    rows = []
-    for row_set in all_rows:
-        rows += row_set
-    # rows = []
-    # for seed in seeds:
-    #     rows += _bootstrap(seed)
-    return rows
+    tstats = Parallel(n_jobs=n_jobs)(
+        delayed(sample_and_compute_tstat)(seed) for seed in seeds
+    )
+    tstats = np.array(tstats)
+    return tstats
 
 
+def compute_pvalue(observed, null):
+    pvalue = (null > observed).mean()
+    if pvalue == 0:
+        pvalue = 1 / len(null)
+    return pvalue
+
+
+# n_components = 6
+# X1, Y1, X2, Y2 = aligned_ase(ll_adj, rr_adj, n_components)
+# P1 = fix_P(X1 @ Y1.T)
+# P2 = fix_P(X2 @ Y2.T)
+# A1, A2 = bootstrap_sample(P1, 1)
 A1 = ll_adj
 A2 = rr_adj
 
 n_bootstraps = 100
 verbose = 1
 workers = -2
+n_jobs = -2
 min_n_components = 2
 max_n_components = 10
 initial_n_components = 24  # only relevant for ASE
 n_components_range = np.arange(min_n_components, max_n_components)
-methods = ["ase", "omni", "mase-node", "mase-R"]
+methods = ["omni", "mase"]
 
 rng = np.random.default_rng(8888)
 
-RECOMPUTE = False
+RECOMPUTE = True
+rows = []
 if RECOMPUTE:
     preprocess = [binarize, remove_loops]
-    graphs = [ll_adj, rr_adj]
+    graphs = [A1, A2]
 
     for func in preprocess:
         for i, graph in enumerate(graphs):
             graphs[i] = func(graph)
 
-    ll_adj = graphs[0]
-    rr_adj = graphs[1]
+    A1 = graphs[0]
+    A2 = graphs[1]
 
-    rows = []
     for n_components in n_components_range:
-        # compute the observed test statistics
-        obs_rows = compute_tstats(
-            A1,
-            A2,
-            n_components,
-            initial_n_components=initial_n_components,
-            info=dict(type="observed"),
-        )
-        rows += obs_rows
-
-        # TODO should this have initial_n_components?
-        null_rows = compute_null_tstats(
-            A1, n_bootstraps, n_components=n_components, rng=rng
-        )
-        rows += null_rows
-
-        # compute_p_values(obs_rows, null_rows)
-        # results = pd.DataFrame(rows)
-        # results.to_csv(out_dir / "semipar_results")
-        # if verbose > 0:
-        #     pprint.pprint(row)
-        #     print()
+        for method in methods:
+            P1, P2, observed_tstat = estimate_models_and_tstat(
+                A1,
+                A2,
+                n_components,
+                method=method,
+                initial_n_components=initial_n_components,
+            )
+            null_dist1 = compute_null_distribution(
+                P1,
+                n_bootstraps,
+                rng=rng,
+                n_jobs=-1,
+                n_components=n_components,
+                method=method,
+                initial_n_components=initial_n_components,
+            )
+            null_dist2 = compute_null_distribution(
+                P2,
+                n_bootstraps,
+                rng=rng,
+                n_jobs=-1,
+                method=method,
+                n_components=n_components,
+                initial_n_components=initial_n_components,
+            )
+            pvalue1 = compute_pvalue(observed_tstat, null_dist1)
+            pvalue2 = compute_pvalue(observed_tstat, null_dist2)
+            pvalue = max(pvalue1, pvalue2)
+            row = {
+                "n_components": n_components,
+                "method": method,
+                "pvalue": pvalue,
+                "pvalue1": pvalue1,
+                "pvalue2": pvalue2,
+                "tstat": observed_tstat,
+            }
+            rows.append(row)
+            if verbose > 0:
+                pprint.pprint(row)
+                print()
         results = pd.DataFrame(rows)
-        results.to_csv(out_dir / "semipar_tstats")
+        results.to_csv(out_dir / "semipar_pvalues")
+    #     # compute the observed test statistics
+    #     obs_rows = compute_tstats(
+    #         A1,
+    #         A2,
+    #         n_components,
+    #         initial_n_components=initial_n_components,
+    #         info=dict(type="observed"),
+    #     )
+    #     rows += obs_rows
+
+    #     # TODO should this have initial_n_components?
+    #     null_rows = compute_null_tstats(
+    #         A1, n_bootstraps, n_components=n_components, rng=rng
+    #     )
+    #     rows += null_rows
+
+    #     # compute_p_values(obs_rows, null_rows)
+    #     # results = pd.DataFrame(rows)
+    #     # results.to_csv(out_dir / "semipar_results")
+
+    #
 
 #%%
 results = pd.read_csv(
