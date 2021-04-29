@@ -142,8 +142,7 @@ docs/_build
 pkg/pkg/pymaid/pymaid_credentials.json
 
 # not storing the data for now 
-data/processed/2020-09-23
-data
+/data
 
 # not storing figures
 results
