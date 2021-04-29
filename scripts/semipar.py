@@ -3,40 +3,44 @@
 #%% [markdown]
 # ## Preliminaries
 #%%
+from pkg.utils import set_warnings
+import ast
 import datetime
 import pprint
 import time
 
+
 import matplotlib.pyplot as plt
+from matplotlib.transforms import blended_transform_factory
+
 import numpy as np
 import pandas as pd
 import seaborn as sns
-
-from giskard.plot import scatterplot
+from giskard.plot import histplot, scatterplot
+from graspologic.align import OrthogonalProcrustes
+from graspologic.embed import (
+    AdjacencySpectralEmbed,
+    MultipleASE,
+    OmnibusEmbed,
+    selectSVD,
+)
 from graspologic.inference import latent_position_test
-from graspologic.utils import binarize, multigraph_lcc_intersection, symmetrize
+from graspologic.simulations import p_from_latent
+from graspologic.utils import (
+    binarize,
+    multigraph_lcc_intersection,
+    remove_loops,
+    symmetrize,
+)
+from joblib import Parallel, delayed
+from numba import jit
 from pkg.data import load_adjacency, load_node_meta
+from pkg.inference import sample_rdpg
 from pkg.io import get_out_dir, savefig
 from pkg.plot import set_theme
 from pkg.utils import get_paired_inds, get_paired_subgraphs, set_warnings
 
-from graspologic.align import OrthogonalProcrustes
-from graspologic.embed import AdjacencySpectralEmbed, OmnibusEmbed, selectSVD
-from numba import jit
-
-from graspologic.embed import MultipleASE
-
-from graspologic.simulations import p_from_latent
-from joblib import Parallel, delayed
-
-
-from graspologic.utils import remove_loops
-from giskard.plot import histplot
-
-# from src.visualization import adjplot  # TODO fix graspologic version and replace here
-
 set_warnings()
-
 
 t0 = time.time()
 
@@ -88,21 +92,6 @@ print(f"Number of pairs after taking LCC intersection: {n_pairs}")
 #%%
 
 
-def joint_procrustes(data1, data2, method="orthogonal"):
-    n = len(data1[0])
-    procruster = OrthogonalProcrustes()
-    data1 = np.concatenate(data1, axis=0)
-    data2 = np.concatenate(data2, axis=0)
-    data1_mapped = procruster.fit_transform(data1, data2)
-    data1 = (data1_mapped[:n], data1_mapped[n:])
-    return data1
-
-
-# @jit(nopython=True)
-def difference_norm(A, B):
-    return np.linalg.norm(A - B, ord="fro")
-
-
 def fix_P(P):
     P = P - np.diag(np.diag(P))
     P[P < 0] = 0
@@ -115,9 +104,9 @@ def estimate_models_and_tstat(
 ):
     if method == "ase" or method == "omni":
         if method == "ase":
-            X1, Y1, X2, Y2 = aligned_ase(A1, A2, n_components, **kwargs)
+            X1, Y1, X2, Y2 = aligned_ase(adjacency1, adjacency2, n_components, **kwargs)
         elif method == "omni":
-            X1, Y1, X2, Y2 = omni(A1, A2, n_components, **kwargs)
+            X1, Y1, X2, Y2 = omni(adjacency1, adjacency2, n_components, **kwargs)
         P1 = fix_P(X1 @ Y1.T)
         P2 = fix_P(X2 @ Y2.T)
         tstat = np.sqrt(
@@ -125,7 +114,7 @@ def estimate_models_and_tstat(
             + np.linalg.norm(Y1 - Y2, ord="fro") ** 2
         )
     elif method == "mase":
-        U, V, R1, R2 = mase(A1, A2, n_components, **kwargs)
+        U, V, R1, R2 = mase(adjacency1, adjacency2, n_components, **kwargs)
         P1 = fix_P(U @ R1 @ V.T)
         P2 = fix_P(U @ R2 @ V.T)
         tstat = np.linalg.norm(R1 - R2, ord="fro")
@@ -144,8 +133,10 @@ def aligned_ase(adjacency1, adjacency2, n_components, initial_n_components=None)
     data1 = np.concatenate((X1, Y1), axis=0)
     data2 = np.concatenate((X2, Y2), axis=0)
     data1 = OrthogonalProcrustes().fit_transform(data1, data2)
-    X1 = data1[:n]
-    Y1 = data1[n:]
+    X1 = data1[:n, :n_components]
+    Y1 = data1[n:, :n_components]
+    X2 = X2[:, :n_components]
+    Y2 = Y2[:, :n_components]
     return X1, Y1, X2, Y2
 
 
@@ -157,91 +148,10 @@ def omni(adjacency1, adjacency2, n_components, **kwargs):
     return Xs[0], Ys[0], Xs[1], Ys[1]
 
 
-def decompose_scores(scores, scaled=True, align=True):
-    R1 = scores[0]
-    R2 = scores[1]
-    Z1, S1, W1t = selectSVD(R1, n_components=len(R1), algorithm="full")
-    W1 = W1t.T
-    Z2, S2, W2t = selectSVD(R2, n_components=len(R2), algorithm="full")
-    W2 = W2t.T
-    if scaled:
-        S1_sqrt = np.diag(np.sqrt(S1))
-        S2_sqrt = np.diag(np.sqrt(S2))
-        Z1 = Z1 @ S1_sqrt
-        Z2 = Z2 @ S2_sqrt
-        W1 = W1 @ S1_sqrt
-        W2 = W2 @ S2_sqrt
-    if align:
-        op = OrthogonalProcrustes()
-        n = len(Z1)
-        U1 = np.concatenate((Z1, W1), axis=0)
-        U2 = np.concatenate((Z2, W2), axis=0)
-        U1_mapped = op.fit_transform(U1, U2)
-        Z1 = U1_mapped[:n]
-        W1 = U1_mapped[n:]
-    return Z1, W1, Z2, W2
-
-
-def project_to_node_space(mase, scaled=True, align=True):
-    U = mase.latent_left_
-    V = mase.latent_right_
-    Z1, W1, Z2, W2 = decompose_scores(mase.scores_, scaled=scaled, align=align)
-    X1 = U @ Z1
-    Y1 = V @ W1
-    X2 = U @ Z2
-    Y2 = V @ W2
-    return X1, Y1, X2, Y2
-
-
 def mase(adjacency1, adjacency2, n_components, **kwargs):
     mase = MultipleASE(n_components=n_components, scaled=True, diag_aug=True)
     mase.fit([adjacency1, adjacency2])
     return mase.latent_left_, mase.latent_right_, mase.scores_[0], mase.scores_[1]
-    # X1, Y1, X2, Y2 = project_to_node_space(mase)
-    # XY1 = np.concatenate((X1, Y1), axis=0)
-    # XY2 = np.concatenate((X2, Y2), axis=0)
-    # node_diff_norm = difference_norm(XY1, XY2)
-    # R_diff_norm = difference_norm(mase.scores_[0], mase.scores_[1])
-    # return node_diff_norm, R_diff_norm
-
-
-def compute_tstats(
-    adjacency1, adjacency2, n_components, initial_n_components=None, info={}
-):
-    rows = []
-    master_row = {"n_components": n_components, **info}
-
-    ase_tstat = compute_ase_tstat(
-        adjacency1, adjacency2, n_components, initial_n_components=initial_n_components
-    )
-    row = master_row.copy()
-    row["tstat"] = ase_tstat
-    row["method"] = "ase"
-    row["initial_n_components"] = initial_n_components
-    rows.append(row)
-
-    omni_tstat = compute_omni_tstat(adjacency1, adjacency2, n_components)
-    row = master_row.copy()
-    row["tstat"] = omni_tstat
-    row["method"] = "omni"
-    rows.append(row)
-
-    mase_node_tstat, mase_R_tstat = compute_mase_tstats(
-        adjacency1, adjacency2, n_components
-    )
-    row = master_row.copy()
-    row["tstat"] = mase_node_tstat
-    row["method"] = "mase-node"
-    rows.append(row)
-    row = master_row.copy()
-    row["tstat"] = mase_R_tstat
-    row["method"] = "mase-R"
-    rows.append(row)
-
-    return rows
-
-
-from pkg.inference import sample_rdpg
 
 
 def bootstrap_sample(P, seed):
@@ -249,25 +159,6 @@ def bootstrap_sample(P, seed):
     A1 = sample_rdpg(P, rng.integers(np.iinfo(np.int32).max))
     A2 = sample_rdpg(P, rng.integers(np.iinfo(np.int32).max))
     return A1, A2
-
-
-# def compute_null_tstats(P, n_bootstraps, n_components=2, rng=None):
-#     ase = AdjacencySpectralEmbed(n_components=n_components, check_lcc=False)
-#     X, Y = ase.fit_transform(A)
-#     P = p_from_latent(X, Y, rescale=False, loops=False)
-#     seeds = rng.integers(np.iinfo(np.int32).max, size=n_bootstraps)
-
-#     def _bootstrap(seed):
-#         return bootstrap_sample_tstats(P, n_components, seed)
-
-#     all_rows = Parallel(n_jobs=-2)(delayed(_bootstrap)(seed) for seed in seeds)
-#     rows = []
-#     for row_set in all_rows:
-#         rows += row_set
-#     # rows = []
-#     # for seed in seeds:
-#     #     rows += _bootstrap(seed)
-#     return rows
 
 
 def compute_tstat(A1, A2, method="ase", n_components=2, **kwargs):
@@ -303,6 +194,10 @@ def compute_null_distribution(P, n_bootstraps, rng=None, n_jobs=None, **kwargs):
     return tstats
 
 
+def arrayize(string):
+    return np.array(ast.literal_eval(string), dtype=float)
+
+
 def compute_pvalue(observed, null):
     pvalue = (null > observed).mean()
     if pvalue == 0:
@@ -310,39 +205,28 @@ def compute_pvalue(observed, null):
     return pvalue
 
 
-# n_components = 6
-# X1, Y1, X2, Y2 = aligned_ase(ll_adj, rr_adj, n_components)
-# P1 = fix_P(X1 @ Y1.T)
-# P2 = fix_P(X2 @ Y2.T)
-# A1, A2 = bootstrap_sample(P1, 1)
-A1 = ll_adj
-A2 = rr_adj
+def prescale_for_embed(adjs):
+    norms = [np.linalg.norm(adj, ord="fro") for adj in adjs]
+    mean_norm = np.mean(norms)
+    adjs = [adjs[i] * mean_norm / norms[i] for i in range(len(adjs))]
+    return adjs
 
-n_bootstraps = 100
-verbose = 1
-workers = -2
-n_jobs = -2
-min_n_components = 2
-max_n_components = 10
-initial_n_components = 24  # only relevant for ASE
-n_components_range = np.arange(min_n_components, max_n_components)
-methods = ["omni", "mase"]
 
-rng = np.random.default_rng(8888)
-
-RECOMPUTE = True
-rows = []
-if RECOMPUTE:
-    preprocess = [binarize, remove_loops]
-    graphs = [A1, A2]
-
-    for func in preprocess:
-        for i, graph in enumerate(graphs):
-            graphs[i] = func(graph)
-
-    A1 = graphs[0]
-    A2 = graphs[1]
-
+def run_semipar_experiment(
+    A1,
+    A2,
+    min_n_components=6,
+    max_n_components=10,
+    n_bootstraps=50,
+    methods=["omni", "mase"],
+    random_seed=8888,
+    initial_n_components=24,
+    verbose=1,
+    n_jobs=-2,
+):
+    rng = np.random.default_rng(8888)
+    rows = []
+    n_components_range = np.arange(min_n_components, max_n_components)
     for n_components in n_components_range:
         for method in methods:
             P1, P2, observed_tstat = estimate_models_and_tstat(
@@ -356,7 +240,7 @@ if RECOMPUTE:
                 P1,
                 n_bootstraps,
                 rng=rng,
-                n_jobs=-1,
+                n_jobs=n_jobs,
                 n_components=n_components,
                 method=method,
                 initial_n_components=initial_n_components,
@@ -365,14 +249,18 @@ if RECOMPUTE:
                 P2,
                 n_bootstraps,
                 rng=rng,
-                n_jobs=-1,
+                n_jobs=n_jobs,
                 method=method,
                 n_components=n_components,
                 initial_n_components=initial_n_components,
             )
             pvalue1 = compute_pvalue(observed_tstat, null_dist1)
             pvalue2 = compute_pvalue(observed_tstat, null_dist2)
-            pvalue = max(pvalue1, pvalue2)
+            pvalues = (pvalue1, pvalue2)
+            max_pvalue_ind = np.argmax(pvalues)
+            pvalue = pvalues[max_pvalue_ind]
+            null_dists = (null_dist1, null_dist2)
+            max_pvalue_ind = np.argmax(pvalues)
             row = {
                 "n_components": n_components,
                 "method": method,
@@ -380,96 +268,195 @@ if RECOMPUTE:
                 "pvalue1": pvalue1,
                 "pvalue2": pvalue2,
                 "tstat": observed_tstat,
+                "null_dist": list(null_dists[max_pvalue_ind]),
             }
             rows.append(row)
             if verbose > 0:
-                pprint.pprint(row)
-                print()
-        results = pd.DataFrame(rows)
-        results.to_csv(out_dir / "semipar_pvalues")
-    #     # compute the observed test statistics
-    #     obs_rows = compute_tstats(
-    #         A1,
-    #         A2,
-    #         n_components,
-    #         initial_n_components=initial_n_components,
-    #         info=dict(type="observed"),
-    #     )
-    #     rows += obs_rows
+                print(
+                    f"n_components = {n_components}, method={method}, pvalue={pvalue}"
+                )
+    results = pd.DataFrame(rows)
+    return results
 
-    #     # TODO should this have initial_n_components?
-    #     null_rows = compute_null_tstats(
-    #         A1, n_bootstraps, n_components=n_components, rng=rng
-    #     )
-    #     rows += null_rows
 
-    #     # compute_p_values(obs_rows, null_rows)
-    #     # results = pd.DataFrame(rows)
-    #     # results.to_csv(out_dir / "semipar_results")
-
-    #
-
-#%%
-results = pd.read_csv(
-    out_dir / "semipar_tstats", index_col=0, na_values="", keep_default_na=False
-)
-results
-#%%
-pvalue_rows = []
-for n_components in n_components_range:
-    for method in methods:
-        sub_results = results[
-            (results["method"] == method) & (results["n_components"] == n_components)
-        ]
-        obs_row = sub_results[sub_results["type"] == "observed"].iloc[0]
-        obs_tstat = obs_row["tstat"]
-        null = sub_results[sub_results["type"] != "observed"]
-        null_tstat = null["tstat"]
-        pvalue = (null_tstat > obs_tstat).mean()
-        if pvalue == 0:
-            pvalue = 1 / len(null)
-        pvalue_rows.append(
-            {"n_components": n_components, "method": method, "pvalue": pvalue}
-        )
-pvalues = pd.DataFrame(pvalue_rows)
-pvalues.to_csv(out_dir / "semipar_pvalues")
-#%%
-
-n_components = 6
-for method in methods:
-    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-    histplot(
-        data=results[
-            (results["method"] == method) & (results["n_components"] == n_components)
-        ],
-        x="tstat",
-        hue="type",
-        kde=True,
-        ax=ax,
+def plot_tstat_distributions(results):
+    sns.set_theme(style="white", rc={"axes.facecolor": (0, 0, 0, 0)})
+    set_theme()
+    # expand out the test statistic null distributions
+    explode_results = results[["n_components", "method", "null_dist"]].explode(
+        "null_dist"
     )
-    ax.set(title=method)
+    explode_results["tstat"] = explode_results["null_dist"].astype(float)
 
+    # set up facet grid
+    grid = sns.FacetGrid(
+        explode_results,
+        row="n_components",
+        col="method",
+        hue="method",
+        aspect=10,
+        height=1,
+        sharex="col",
+    )
+
+    # plot kdes and a thin line for the bottom of the axis
+    grid.map(sns.kdeplot, "tstat", fill=True, alpha=1, linewidth=1.5)
+    grid.map(sns.kdeplot, "tstat", color="w", lw=2)
+    grid.map(plt.axhline, y=0, lw=2, alpha=0.2, clip_on=False)
+
+    # adjust
+    grid.set_titles("")
+    grid.set(yticks=[], xticks=[])
+    grid.despine(bottom=True, left=True)
+
+    # add some lines and labels
+    for (n_components, method), ax in grid.axes_dict.items():
+        obs_results = results[
+            (results["method"] == method) & (results["n_components"] == n_components)
+        ].iloc[0]
+        tstat = obs_results["tstat"]
+        pvalue = obs_results["pvalue"]
+
+        # plot a line for the observed test statistic
+        ax.axvline(tstat, 0, 0.6, color="black", linewidth=2, linestyle="-")
+        if (
+            n_components == results["n_components"].min()
+            and method == results["method"].iloc[0]
+        ):
+            ax.text(
+                tstat,
+                0.63,
+                "Observed",
+                color="black",
+                fontweight="bold",
+                ha="center",
+                va="bottom",
+                transform=blended_transform_factory(ax.transData, ax.transAxes),
+            )
+
+        # plot the p value
+        t = ax.text(
+            0.95,
+            0.25,
+            f"p={pvalue:0.2f}",
+            color="black",
+            fontweight="bold",
+            transform=ax.transAxes,
+            va="center",
+            ha="right",
+            zorder=10,
+        )
+        t.set_bbox(dict(facecolor="white", alpha=0.7))
+
+        # set the xaxis labels based on what is in that column
+        if n_components == explode_results["n_components"].max():
+            ax.set_xlabel(
+                method.upper() + " test statistic", fontweight="bold", labelpad=10
+            )
+
+        # plot the number of components
+        if method == results["method"].iloc[0]:
+            ax.text(
+                0,
+                0.2,
+                n_components,
+                color="black",
+                ha="left",
+                va="center",
+                transform=ax.transAxes,
+            )
+
+    grid.fig.subplots_adjust(hspace=-0.5)
+    grid.fig.text(
+        0, 0.45, "# of dimensions", rotation=90, fontweight="bold", va="center"
+    )
+    return grid
+
+
+def saveload(results, name):
+    results.to_csv(out_dir / name)
+    results = pd.read_csv(
+        out_dir / name,
+        index_col=0,
+        na_values="",
+        keep_default_na=False,
+        converters=dict(null_dist=arrayize),
+    )
+    return results
+
+
+RECOMPUTE = True
+experiment_kws = dict(
+    min_n_components=1,
+    max_n_components=10,
+    n_bootstraps=100,
+    methods=["ase", "omni", "mase"],
+    random_seed=8888,
+    initial_n_components=16,
+    verbose=1,
+    n_jobs=-2,
+)
+prescale = False
+if RECOMPUTE:
+    for null_n_components in [4, 8]:
+        X1, Y1, X2, Y2 = aligned_ase(ll_adj, rr_adj, null_n_components)
+        P1 = fix_P(X1 @ Y1.T)
+        P2 = fix_P(X2 @ Y2.T)
+        A1, A2 = bootstrap_sample(P1, 1)
+        results = run_semipar_experiment(A1, A2, **experiment_kws)
+        name = f"semipar-results-data=null-n_components={null_n_components}"
+        results = saveload(results, name)
+        grid = plot_tstat_distributions(results)
+        grid.fig.suptitle(f"Data = RDPG, n_components={null_n_components}")
+        stashfig(name)
+
+    # compute on the real data
+    A1 = ll_adj
+    A2 = rr_adj
+    preprocess = [binarize, remove_loops]
+    graphs = [A1, A2]
+    new_graphs = []
+    for func in preprocess:
+        for i, graph in enumerate(graphs):
+            new_graphs.append(func(graph))
+    if prescale:
+        new_graphs = prescale_for_embed(new_graphs)
+    A1 = new_graphs[0]
+    A2 = new_graphs[1]
+    results = run_semipar_experiment(A1, A2, **experiment_kws)
+    name = "semipar-results-data=real"
+    results = saveload(results, name)
+    grid = plot_tstat_distributions(results)
+    grid.fig.suptitle("Data = real")
+    stashfig(name)
+
+
+#%%
+
+
+# stashfig("distribution-plot")
+#
 
 #%% [markdown]
 # ## Plot p-values
 #%%
-ax = scatterplot(
-    data=pvalues,
-    x="n_components",
-    y="pvalue",
-    hue="method",
-    shift="method",
-    shade=True,
-    shift_bounds=(-0.2, 0.2),
-)
-ax.set_yscale("log")
-styles = ["--", ":"]
-line_locs = [0.05, 1 / n_bootstraps]
-line_kws = dict(color="black", alpha=0.7, linewidth=1.5, zorder=-1)
-for loc, style in zip(line_locs, styles):
-    ax.axhline(loc, linestyle=style, **line_kws)
-    ax.text(ax.get_xlim()[-1] + 0.1, loc, loc, ha="left", va="center")
-stashfig("semipar-pvalues-by-dimension")
+# ax = scatterplot(
+#     data=pvalues,
+#     x="n_components",
+#     y="pvalue",
+#     hue="method",
+#     shift="method",
+#     shade=True,
+#     shift_bounds=(-0.2, 0.2),
+# )
+# ax.set_yscale("log")
+# styles = ["--", ":"]
+# line_locs = [0.05, 1 / n_bootstraps]
+# line_kws = dict(color="black", alpha=0.7, linewidth=1.5, zorder=-1)
+# for loc, style in zip(line_locs, styles):
+#     ax.axhline(loc, linestyle=style, **line_kws)
+#     ax.text(ax.get_xlim()[-1] + 0.1, loc, loc, ha="left", va="center")
+# stashfig("semipar-pvalues-by-dimension")
 
 # #%%
 # test_case = "rotation"
