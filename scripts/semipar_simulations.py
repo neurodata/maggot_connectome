@@ -120,7 +120,7 @@ def saveload(name, results):
     return results
 
 
-n_trials = 500
+n_trials = 256
 RECOMPUTE = False
 if RECOMPUTE:
     rng = np.random.default_rng(8888)
