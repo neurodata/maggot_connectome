@@ -19,6 +19,7 @@
   chapters:
   - file: look_at_paired_embeddings
   - file: bilateral_symmetry
+  - file: semipar_simulations
   - file: semipar
   - file: align_investigation
   - file: off_diagonal

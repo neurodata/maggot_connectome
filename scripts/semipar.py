@@ -34,7 +34,7 @@ from graspologic.utils import (
 )
 from joblib import Parallel, delayed
 from numba import jit
-from pkg.data import load_adjacency, load_node_meta
+from pkg.data import load_adjacency, load_node_meta, load_maggot_graph
 from pkg.inference import sample_rdpg
 from pkg.io import get_out_dir, savefig
 from pkg.plot import set_theme
@@ -61,33 +61,29 @@ set_theme()
 
 #%% [markdown]
 # ## Load the data
-#%% [markdown]
-# ### Load node metadata and select the subgraphs of interest
+# %% [markdown]
+# ## Load and process data
 #%%
-meta = load_node_meta()
-meta = meta[meta["paper_clustered_neurons"]]
+mg = load_maggot_graph()
+mg = mg[mg.nodes["paper_clustered_neurons"]]
 
-adj = load_adjacency(graph_type="G", nodelist=meta.index)
+ll_mg, rr_mg, lr_mg, rl_mg = mg.bisect(paired=True)
+ll_adj = ll_mg.sum.adj.copy()
+rr_adj = rr_mg.sum.adj.copy()
 
-lp_inds, rp_inds = get_paired_inds(meta)
-left_meta = meta.iloc[lp_inds]
-right_meta = meta.iloc[rp_inds]
+nodes = ll_mg.nodes
+nodes["_inds"] = range(len(nodes))
+sorted_nodes = nodes.sort_values(["simple_group", "merge_class"])
+sort_inds = sorted_nodes["_inds"]
 
-ll_adj, rr_adj, lr_adj, rl_adj = get_paired_subgraphs(adj, lp_inds, rp_inds)
+ll_adj = ll_adj[np.ix_(sort_inds, sort_inds)]
+rr_adj = rr_adj[np.ix_(sort_inds, sort_inds)]
 
 adjs, lcc_inds = multigraph_lcc_intersection([ll_adj, rr_adj], return_inds=True)
 ll_adj = adjs[0]
 rr_adj = adjs[1]
+sorted_nodes = sorted_nodes.iloc[lcc_inds]
 print(f"{len(lcc_inds)} in intersection of largest connected components.")
-
-print(f"Original number of valid pairs: {len(lp_inds)}")
-
-left_meta = left_meta.iloc[lcc_inds]
-right_meta = right_meta.iloc[lcc_inds]
-meta = pd.concat((left_meta, right_meta))
-n_pairs = len(ll_adj)
-print(f"Number of pairs after taking LCC intersection: {n_pairs}")
-
 
 #%%
 
@@ -154,10 +150,18 @@ def mase(adjacency1, adjacency2, n_components, **kwargs):
     return mase.latent_left_, mase.latent_right_, mase.scores_[0], mase.scores_[1]
 
 
+from graspologic.simulations import sample_edges
+
+
 def bootstrap_sample(P, seed):
     rng = np.random.default_rng(seed)
     A1 = sample_rdpg(P, rng.integers(np.iinfo(np.int32).max))
     A2 = sample_rdpg(P, rng.integers(np.iinfo(np.int32).max))
+    # np.random.seed(seed)
+    # print(P)
+    # print(type(P))
+    # A1 = sample_edges(P, loops=False, directed=True)
+    # A2 = sample_edges(P, loops=False, directed=True)
     return A1, A2
 
 
@@ -224,7 +228,7 @@ def run_semipar_experiment(
     verbose=1,
     n_jobs=-2,
 ):
-    rng = np.random.default_rng(8888)
+    rng = np.random.default_rng(random_seed)
     rows = []
     n_components_range = np.arange(min_n_components, max_n_components)
     for n_components in n_components_range:
@@ -387,48 +391,58 @@ def saveload(results, name):
 
 RECOMPUTE = True
 experiment_kws = dict(
-    min_n_components=1,
-    max_n_components=10,
+    min_n_components=11,
+    max_n_components=13,
     n_bootstraps=100,
     methods=["ase", "omni", "mase"],
     random_seed=8888,
-    initial_n_components=16,
+    initial_n_components=None,
     verbose=1,
     n_jobs=-2,
 )
-prescale = False
+prescale = True
+
+#%%
 if RECOMPUTE:
-    for null_n_components in [4, 8]:
-        X1, Y1, X2, Y2 = aligned_ase(ll_adj, rr_adj, null_n_components)
-        P1 = fix_P(X1 @ Y1.T)
-        P2 = fix_P(X2 @ Y2.T)
+    null_n_components = 4
+    n_trials = 2
+    X1, Y1, X2, Y2 = aligned_ase(ll_adj, rr_adj, null_n_components)
+    P1 = fix_P(X1 @ Y1.T)
+    P2 = fix_P(X2 @ Y2.T)
+    frames = []
+    name = f"semipar-results-data=null-n_components={null_n_components}"
+    for i in range(n_trials):
         A1, A2 = bootstrap_sample(P1, 1)
         results = run_semipar_experiment(A1, A2, **experiment_kws)
-        name = f"semipar-results-data=null-n_components={null_n_components}"
-        results = saveload(results, name)
-        grid = plot_tstat_distributions(results)
-        grid.fig.suptitle(f"Data = RDPG, n_components={null_n_components}")
-        stashfig(name)
-
-    # compute on the real data
-    A1 = ll_adj
-    A2 = rr_adj
-    preprocess = [binarize, remove_loops]
-    graphs = [A1, A2]
-    new_graphs = []
-    for func in preprocess:
-        for i, graph in enumerate(graphs):
-            new_graphs.append(func(graph))
-    if prescale:
-        new_graphs = prescale_for_embed(new_graphs)
-    A1 = new_graphs[0]
-    A2 = new_graphs[1]
-    results = run_semipar_experiment(A1, A2, **experiment_kws)
-    name = "semipar-results-data=real"
+        results["trial"] = i
+        frames.append(results)
+        if i == 0:
+            grid = plot_tstat_distributions(results)
+            grid.fig.suptitle(f"Data = RDPG, n_components={null_n_components}")
+            stashfig(name)
+    results = pd.concate(frames, ignore_index=True)
     results = saveload(results, name)
-    grid = plot_tstat_distributions(results)
-    grid.fig.suptitle("Data = real")
-    stashfig(name)
+
+#%%
+# compute on the real data
+A1 = ll_adj
+A2 = rr_adj
+preprocess = [binarize, remove_loops]
+graphs = [A1, A2]
+new_graphs = []
+for func in preprocess:
+    for i, graph in enumerate(graphs):
+        new_graphs.append(func(graph))
+if prescale:
+    new_graphs = prescale_for_embed(new_graphs)
+A1 = new_graphs[0]
+A2 = new_graphs[1]
+results = run_semipar_experiment(A1, A2, **experiment_kws)
+name = "semipar-results-data=real"
+results = saveload(results, name)
+grid = plot_tstat_distributions(results)
+grid.fig.suptitle("Data = real")
+stashfig(name)
 
 
 #%%

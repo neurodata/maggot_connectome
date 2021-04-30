@@ -506,7 +506,7 @@ def compute_test_statistics(A1, A2, n_components=16):
     return row
 
 
-n_components = 16
+n_components = 12
 rows = []
 for i in tqdm(range(n_bootstraps)):
     A1, A2 = rdpg_corr(
