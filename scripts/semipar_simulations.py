@@ -2,16 +2,24 @@
 # # Semiparametric latent position test - simulations
 #%%
 from pkg.utils import set_warnings
+
+import ast
+import datetime
+import time
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 from graspologic.inference import latent_position_test
+from graspologic.plot import heatmap
 from graspologic.simulations import rdpg
 from joblib import Parallel, delayed
-from pkg.io import savefig
+from pkg.io import get_out_dir, savefig
 from pkg.plot import set_theme
-from tqdm import tqdm
+from scipy.stats import kstest
+
+t0 = time.time()
 
 foldername = "semipar_simulations"
 
@@ -27,8 +35,9 @@ def stashfig(name, **kwargs):
 # Here we sample from a simple RDPG model:
 # - $d = 1$
 # - $n = 64$
-# - $X_i \overset{iid}{\sim} Uniform(0.1, 0.9)$
-# - $Y_i \overset{iid}{\sim} Uniform(0.1, 0.9)$, independent of $X$
+# - $X_i \overset{iid}{\sim} Uniform2D(0.1, 0.7)$, where $Uniform2D(0.1, 0.7)$ means
+#   uniform on a square from [0.1, 0.7] in two dimensions.
+# - $Y_i \overset{iid}{\sim} Uniform2D(0.1, 0.7)$, independent of $X$
 # - If directed, $P = X Y^T$
 # - If undirected, $P = XX^T$
 # - $A_1, A_2 \overset{iid}{\sim} Bernoulli(P)$
@@ -43,10 +52,19 @@ def stashfig(name, **kwargs):
 # For running semipar, I use $n_{bootstraps} = 200$. This is how many samples are used
 # to compute the null distribution to compute the p-value _for each trial_.
 #
-# The above simulation is run using $ASE$ as the embedding method/test statistic.
+# The above simulation is run using ASE or Omni as the embedding method/test statistic.
 #%%
 
+n_verts = 64
+X1 = np.random.uniform(0.15, 0.7, size=(n_verts, 2))
+Y1 = np.random.uniform(0.15, 0.7, size=(n_verts, 2))
+P = X1 @ Y1.T
+print(f"Maximum expected degree: {np.max(P.sum(axis=0))}")
+print(f"Minimum expected_degree: {np.min(P.sum(axis=0))}")
+A1 = rdpg(X1, Y1, directed=True)
+heatmap(A1)
 
+#%%
 def run_semipar_experiment(
     seed=None,
     directed=True,
@@ -57,9 +75,9 @@ def run_semipar_experiment(
 ):
     np.random.seed(seed)
     # sample latent positions
-    X1 = np.random.uniform(0.1, 0.9, size=(n_verts, 1))
+    X1 = np.random.uniform(0.15, 0.7, size=(n_verts, 2))
     if directed:
-        Y1 = np.random.uniform(0.1, 0.9, size=(n_verts, 1))
+        Y1 = np.random.uniform(0.15, 0.7, size=(n_verts, 2))
     else:
         Y1 = None
 
@@ -68,8 +86,8 @@ def run_semipar_experiment(
         Y2 = Y1
 
     # sample networks
-    A1 = rdpg(X1, Y1, directed=directed, loops=False)
-    A2 = rdpg(X2, Y2, directed=directed, loops=False)
+    A1 = rdpg(X1, Y1, directed=directed, loops=False, rescale=False)
+    A2 = rdpg(X2, Y2, directed=directed, loops=False, rescale=False)
 
     # run the tests
     rows = []
@@ -77,7 +95,7 @@ def run_semipar_experiment(
         lpt_result = latent_position_test(
             A1,
             A2,
-            n_components=1,
+            n_components=2,
             workers=1,
             embedding=method,
             n_bootstraps=n_bootstraps,
@@ -93,9 +111,6 @@ def run_semipar_experiment(
         rows.append(lpt_result)
     return rows
 
-
-from pkg.io import get_out_dir
-import ast
 
 out_dir = get_out_dir(foldername=foldername)
 
@@ -129,6 +144,7 @@ if RECOMPUTE:
     all_rows += Parallel(n_jobs=-2, verbose=10)(
         delayed(run_semipar_experiment)(seed, False) for seed in seeds
     )
+    seeds = rng.integers(np.iinfo(np.int32).max, size=n_trials)
     all_rows += Parallel(n_jobs=-2, verbose=10)(
         delayed(run_semipar_experiment)(seed, True) for seed in seeds
     )
@@ -156,4 +172,32 @@ for directed in [False, True]:
         xlabel="p-value",
         ylabel="Cumulative frequency",
     )
+    legend = ax.get_legend()
+    handles = legend.legendHandles
+    labels = legend.get_texts()
+    legend.remove()
+    labels = [label.get_text() for label in labels]
+    new_labels = []
+    for method in labels:
+        pvalues = results[results["method"] == method]["p_value"]
+        stat, pvalue = kstest(pvalues, "uniform", args=(0, 1), alternative="greater")
+        new_labels.append(f"{method}\np={pvalue:0.2g}")
+    ax.legend(
+        handles=handles,
+        labels=new_labels,
+        bbox_to_anchor=(1, 1),
+        loc="upper left",
+        title="KS-test against\nUniform(0,1)",
+    )
     stashfig(f"semipar-null-ecdf-directed={directed}")
+
+#%% [markdown]
+# ## End
+
+#%%
+elapsed = time.time() - t0
+delta = datetime.timedelta(seconds=elapsed)
+print("----")
+print(f"Script took {delta}")
+print(f"Completed at {datetime.datetime.now()}")
+print("----")
