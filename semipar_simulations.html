@@ -328,6 +328,11 @@
    Plot ECDFs of p-values under the null
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#end">
+   End
+  </a>
+ </li>
 </ul>
 
             </nav>
@@ -344,16 +349,24 @@
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">set_warnings</span>
+
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">from</span> <span class="nn">graspologic.inference</span> <span class="kn">import</span> <span class="n">latent_position_test</span>
+<span class="kn">from</span> <span class="nn">graspologic.plot</span> <span class="kn">import</span> <span class="n">heatmap</span>
 <span class="kn">from</span> <span class="nn">graspologic.simulations</span> <span class="kn">import</span> <span class="n">rdpg</span>
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
-<span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">savefig</span>
+<span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">get_out_dir</span><span class="p">,</span> <span class="n">savefig</span>
 <span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">kstest</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
 <span class="n">foldername</span> <span class="o">=</span> <span class="s2">&quot;semipar_simulations&quot;</span>
 
@@ -372,8 +385,9 @@
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(d = 1\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(n = 64\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(X_i \overset{iid}{\sim} Uniform(0.1, 0.9)\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(Y_i \overset{iid}{\sim} Uniform(0.1, 0.9)\)</span>, independent of <span class="math notranslate nohighlight">\(X\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(X_i \overset{iid}{\sim} Uniform2D(0.1, 0.7)\)</span>, where <span class="math notranslate nohighlight">\(Uniform2D(0.1, 0.7)\)</span> means
+uniform on a square from [0.1, 0.7] in two dimensions.</p></li>
+<li><p><span class="math notranslate nohighlight">\(Y_i \overset{iid}{\sim} Uniform2D(0.1, 0.7)\)</span>, independent of <span class="math notranslate nohighlight">\(X\)</span></p></li>
 <li><p>If directed, <span class="math notranslate nohighlight">\(P = X Y^T\)</span></p></li>
 <li><p>If undirected, <span class="math notranslate nohighlight">\(P = XX^T\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(A_1, A_2 \overset{iid}{\sim} Bernoulli(P)\)</span></p></li>
@@ -390,7 +404,31 @@
 </ul>
 <p>For running semipar, I use <span class="math notranslate nohighlight">\(n_{bootstraps} = 200\)</span>. This is how many samples are used
 to compute the null distribution to compute the p-value <em>for each trial</em>.</p>
-<p>The above simulation is run using <span class="math notranslate nohighlight">\(ASE\)</span> as the embedding method/test statistic.</p>
+<p>The above simulation is run using ASE or Omni as the embedding method/test statistic.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_verts</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_verts</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">Y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_verts</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">X1</span> <span class="o">@</span> <span class="n">Y1</span><span class="o">.</span><span class="n">T</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Maximum expected degree: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Minimum expected_degree: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">A1</span> <span class="o">=</span> <span class="n">rdpg</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">Y1</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">heatmap</span><span class="p">(</span><span class="n">A1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Maximum expected degree: 35.58650928605349
+Minimum expected_degree: 10.471348334562961
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:&gt;
+</pre></div>
+</div>
+<img alt="_images/semipar_simulations_3_2.png" src="_images/semipar_simulations_3_2.png" />
+</div>
+</div>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_semipar_experiment</span><span class="p">(</span>
@@ -403,9 +441,9 @@ to compute the null distribution to compute the p-value <em>for each trial</em>.
 <span class="p">):</span>
     <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="c1"># sample latent positions</span>
-    <span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_verts</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_verts</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">directed</span><span class="p">:</span>
-        <span class="n">Y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_verts</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">Y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_verts</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">Y1</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -414,8 +452,8 @@ to compute the null distribution to compute the p-value <em>for each trial</em>.
         <span class="n">Y2</span> <span class="o">=</span> <span class="n">Y1</span>
 
     <span class="c1"># sample networks</span>
-    <span class="n">A1</span> <span class="o">=</span> <span class="n">rdpg</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">Y1</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="n">directed</span><span class="p">,</span> <span class="n">loops</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">A2</span> <span class="o">=</span> <span class="n">rdpg</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span> <span class="n">Y2</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="n">directed</span><span class="p">,</span> <span class="n">loops</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">A1</span> <span class="o">=</span> <span class="n">rdpg</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">Y1</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="n">directed</span><span class="p">,</span> <span class="n">loops</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rescale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">A2</span> <span class="o">=</span> <span class="n">rdpg</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span> <span class="n">Y2</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="n">directed</span><span class="p">,</span> <span class="n">loops</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rescale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># run the tests</span>
     <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
@@ -423,7 +461,7 @@ to compute the null distribution to compute the p-value <em>for each trial</em>.
         <span class="n">lpt_result</span> <span class="o">=</span> <span class="n">latent_position_test</span><span class="p">(</span>
             <span class="n">A1</span><span class="p">,</span>
             <span class="n">A2</span><span class="p">,</span>
-            <span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="n">workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">embedding</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
             <span class="n">n_bootstraps</span><span class="o">=</span><span class="n">n_bootstraps</span><span class="p">,</span>
@@ -439,9 +477,6 @@ to compute the null distribution to compute the p-value <em>for each trial</em>.
         <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lpt_result</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">rows</span>
 
-
-<span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">get_out_dir</span>
-<span class="kn">import</span> <span class="nn">ast</span>
 
 <span class="n">out_dir</span> <span class="o">=</span> <span class="n">get_out_dir</span><span class="p">(</span><span class="n">foldername</span><span class="o">=</span><span class="n">foldername</span><span class="p">)</span>
 
@@ -475,6 +510,7 @@ to compute the null distribution to compute the p-value <em>for each trial</em>.
     <span class="n">all_rows</span> <span class="o">+=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">10</span><span class="p">)(</span>
         <span class="n">delayed</span><span class="p">(</span><span class="n">run_semipar_experiment</span><span class="p">)(</span><span class="n">seed</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">seeds</span>
     <span class="p">)</span>
+    <span class="n">seeds</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_trials</span><span class="p">)</span>
     <span class="n">all_rows</span> <span class="o">+=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">10</span><span class="p">)(</span>
         <span class="n">delayed</span><span class="p">(</span><span class="n">run_semipar_experiment</span><span class="p">)(</span><span class="n">seed</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">seeds</span>
     <span class="p">)</span>
@@ -507,13 +543,53 @@ to compute the null distribution to compute the p-value <em>for each trial</em>.
         <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;p-value&quot;</span><span class="p">,</span>
         <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Cumulative frequency&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">legend</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span>
+    <span class="n">handles</span> <span class="o">=</span> <span class="n">legend</span><span class="o">.</span><span class="n">legendHandles</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">legend</span><span class="o">.</span><span class="n">get_texts</span><span class="p">()</span>
+    <span class="n">legend</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">label</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">]</span>
+    <span class="n">new_labels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+        <span class="n">pvalues</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">method</span><span class="p">][</span><span class="s2">&quot;p_value&quot;</span><span class="p">]</span>
+        <span class="n">stat</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="n">kstest</span><span class="p">(</span><span class="n">pvalues</span><span class="p">,</span> <span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+        <span class="n">new_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="se">\n</span><span class="s2">p=</span><span class="si">{</span><span class="n">pvalue</span><span class="si">:</span><span class="s2">0.2g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+        <span class="n">handles</span><span class="o">=</span><span class="n">handles</span><span class="p">,</span>
+        <span class="n">labels</span><span class="o">=</span><span class="n">new_labels</span><span class="p">,</span>
+        <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;KS-test against</span><span class="se">\n</span><span class="s2">Uniform(0,1)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;semipar-null-ecdf-directed=</span><span class="si">{</span><span class="n">directed</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/semipar_simulations_5_0.png" src="_images/semipar_simulations_5_0.png" />
-<img alt="_images/semipar_simulations_5_1.png" src="_images/semipar_simulations_5_1.png" />
+<img alt="_images/semipar_simulations_6_0.png" src="_images/semipar_simulations_6_0.png" />
+<img alt="_images/semipar_simulations_6_1.png" src="_images/semipar_simulations_6_1.png" />
+</div>
+</div>
+</div>
+<div class="section" id="end">
+<h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Script took </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completed at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
+Script took 0:00:02.491038
+Completed at 2021-05-03 09:04:20.007807
+----
+</pre></div>
+</div>
 </div>
 </div>
 </div>
