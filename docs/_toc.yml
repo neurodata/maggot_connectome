@@ -15,6 +15,10 @@
   chapters:
   - file: look_at_it_rdpg
 
+- part: Figure 3 - Nonparametric two-sample testing
+  chapters: 
+  - file: nonpar
+
 - part: Look at it
   chapters:
   - file: simple_statistics
@@ -26,7 +30,6 @@
 - part: Bilateral symmetry
   chapters:
   - file: look_at_paired_embeddings
-  - file: bilateral_symmetry
   - file: semipar_simulations
   - file: semipar
   - file: align_investigation

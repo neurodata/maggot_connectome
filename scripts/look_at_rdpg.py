@@ -56,25 +56,6 @@ set_theme()
 
 # %% [markdown]
 # ## Load and process data
-#%%
-# mg = load_maggot_graph()
-# mg = mg[mg.nodes["paper_clustered_neurons"]]
-
-# ll_mg, rr_mg, lr_mg, rl_mg = mg.bisect(paired=True)
-
-# ll_adj = ll_mg.sum.adj.copy()
-# rr_adj = rr_mg.sum.adj.copy()
-
-# left_nodes = ll_mg.nodes
-# right_nodes = rr_mg.nodes
-
-# adjs, lcc_inds = multigraph_lcc_intersection([ll_adj, rr_adj], return_inds=True)
-# ll_adj = adjs[0]
-# rr_adj = adjs[1]
-# print(f"{len(lcc_inds)} in intersection of largest connected components.")
-
-# left_nodes = left_nodes.iloc[lcc_inds]
-# right_nodes = right_nodes.iloc[lcc_inds]
 
 #%%
 CLASS_KEY = "merge_class"
@@ -97,8 +78,6 @@ mg.nodes.sort_values("hemisphere", inplace=True)
 mg.nodes["_inds"] = range(len(mg.nodes))
 nodes = mg.nodes
 
-#%%
-
 raw_adj = mg.sum.adj.copy()
 
 left_nodes = mg.nodes[mg.nodes["hemisphere"] == "L"]
@@ -112,30 +91,8 @@ left_paired_inds, right_paired_inds = get_paired_inds(
 right_paired_inds_shifted = right_paired_inds - len(left_inds)
 
 
-def split_adj(adj):
-    ll_adj = adj[np.ix_(left_inds, left_inds)]
-    rr_adj = adj[np.ix_(right_inds, right_inds)]
-    lr_adj = adj[np.ix_(left_inds, right_inds)]
-    rl_adj = adj[np.ix_(right_inds, left_inds)]
-    return ll_adj, rr_adj, lr_adj, rl_adj
-
-
-def prescale_for_embed(adjs):
-    norms = [np.linalg.norm(adj, ord="fro") for adj in adjs]
-    mean_norm = np.mean(norms)
-    adjs = [adjs[i] * mean_norm / norms[i] for i in range(len(adjs))]
-    return adjs
-
-
-def ase(adj, n_components=None):
-    U, S, Vt = selectSVD(adj, n_components=n_components, algorithm="full")
-    S_sqrt = np.diag(np.sqrt(S))
-    X = U @ S_sqrt
-    Y = Vt.T @ S_sqrt
-    return X, Y
-
-
 #%% [markdown]
+# ## Embed the network using adjacency spectral embedding
 #%%
 def preprocess_for_embed(ll_adj, rr_adj, preprocess):
     if "binarize" in preprocess:
@@ -159,6 +116,29 @@ def embed(adj, n_components=40, ptr=False):
     ase = AdjacencySpectralEmbed(n_components=n_components)
     out_latent, in_latent = ase.fit_transform(adj)
     return out_latent, in_latent, ase.singular_values_, elbow_inds
+
+
+def split_adj(adj):
+    ll_adj = adj[np.ix_(left_inds, left_inds)]
+    rr_adj = adj[np.ix_(right_inds, right_inds)]
+    lr_adj = adj[np.ix_(left_inds, right_inds)]
+    rl_adj = adj[np.ix_(right_inds, left_inds)]
+    return ll_adj, rr_adj, lr_adj, rl_adj
+
+
+def prescale_for_embed(adjs):
+    norms = [np.linalg.norm(adj, ord="fro") for adj in adjs]
+    mean_norm = np.mean(norms)
+    adjs = [adjs[i] * mean_norm / norms[i] for i in range(len(adjs))]
+    return adjs
+
+
+def ase(adj, n_components=None):
+    U, S, Vt = selectSVD(adj, n_components=n_components, algorithm="full")
+    S_sqrt = np.diag(np.sqrt(S))
+    X = U @ S_sqrt
+    Y = Vt.T @ S_sqrt
+    return X, Y
 
 
 max_n_components = 40
@@ -201,6 +181,8 @@ ax.legend()
 stashfig(f"screeplot")
 
 
+#%% [markdown]
+# ## Align the left and the right embeddings
 #%%
 
 
@@ -277,6 +259,8 @@ n_final_components = 20
 Z_ll, _ = ase(XY_ll, n_components=n_final_components)
 Z_rr, _ = ase(XY_rr, n_components=n_final_components)
 
+#%% [markdown]
+# ### Plot the left and the right embeddings in the same space after the alignment
 #%%
 
 
@@ -339,6 +323,46 @@ def plot_latents(
 
 plot_latents(X_ll, X_rr, palette=palette, connections=False)
 
+#%% [markdown]
+# ## Examine the models
+
+#%% [markdown]
+# ### Plot the RDPG $\hat{P}$ for the left and the right hemispheres
+#%%
+
+vmin = -1
+vmax = 1
+cmap = cm.get_cmap("RdBu_r")
+norm = Normalize(vmin, vmax)
+norm = SymLogNorm(linthresh=0.1, linscale=2, vmin=vmin, vmax=vmax, base=10)
+
+
+n_components = 16
+P_ll = X_ll[:, :n_components] @ Y_ll[:, :n_components].T
+P_ll[P_ll < 0] = 0
+P_rr = X_rr[:, :n_components] @ Y_rr[:, :n_components].T
+P_rr[P_rr < 0] = 0
+
+adjplot_kws = dict(
+    colors="merge_class",
+    palette=CLASS_COLOR_DICT,
+    cmap=cmap,
+    norm=norm,
+    center=0,
+    vmin=vmin,
+    vmax=vmax,
+    item_order="merge_class",
+    cbar=False,
+)
+fig, axs = plt.subplots(1, 2, figsize=(20, 10))
+ax = axs[0]
+adjplot(P_ll, meta=left_nodes, ax=ax, title=r"Left $\to$ left", **adjplot_kws)
+ax = axs[1]
+adjplot(P_rr, meta=right_nodes, ax=ax, title=r"Right $\to$ right", **adjplot_kws)
+stashfig("phat-comparison")
+
+#%% [markdown]
+# ### Experimental: try to make sense of the individual components
 #%%
 n_components = 20
 
@@ -355,8 +379,6 @@ X_ll_varimax = X_concat[:n_left]
 X_rr_varimax = X_concat[n_left:]
 plot_latents(X_ll_varimax, X_rr_varimax, palette=palette)
 
-#%%
-
 XY_rr = np.concatenate((X_rr[:, :n_components], Y_rr[:, :n_components]), axis=0)
 XY_rr_varimax = varimax(XY_rr)
 
@@ -365,7 +387,7 @@ Y_rr_varimax = XY_rr_varimax[len(X_rr) :]
 
 
 #%% [markdown]
-# ## Just for the left, examine the varimax components
+# #### Just for the right, examine the individual components
 #%%
 
 for dimension in X_rr_varimax.T[:16]:
@@ -384,17 +406,10 @@ for dimension in X_rr_varimax.T[:16]:
         linewidth=0,
         s=5,
     )
-    # sns.histplot(data=nodes, x="dimension", hue="merge_class", palette=CLASS_COLOR_DICT)
 
 #%% [markdown]
-# ## Look at what the components mean in the probability space
+# #### Look at what the components mean in the probability space
 #%%
-
-vmin = -1
-vmax = 1
-cmap = cm.get_cmap("RdBu_r")
-norm = Normalize(vmin, vmax)
-norm = SymLogNorm(linthresh=0.1, linscale=2, vmin=vmin, vmax=vmax, base=10)
 
 nodes = right_nodes.copy()
 alpha = 10
@@ -433,30 +448,7 @@ for i in range(16):
     )
     stashfig(f"right-phat-component-{i}")
 
-#%%
-n_components = 16
-P_ll = X_ll[:, :n_components] @ Y_ll[:, :n_components].T
-P_ll[P_ll < 0] = 0
-P_rr = X_rr[:, :n_components] @ Y_rr[:, :n_components].T
-P_rr[P_rr < 0] = 0
 
-adjplot_kws = dict(
-    colors="merge_class",
-    palette=CLASS_COLOR_DICT,
-    cmap=cmap,
-    norm=norm,
-    center=0,
-    vmin=vmin,
-    vmax=vmax,
-    item_order="merge_class",
-    cbar=False,
-)
-fig, axs = plt.subplots(1, 2, figsize=(20, 10))
-ax = axs[0]
-adjplot(P_ll, meta=left_nodes, ax=ax, title=r"Left $\to$ left", **adjplot_kws)
-ax = axs[1]
-adjplot(P_rr, meta=right_nodes, ax=ax, title=r"Right $\to$ right", **adjplot_kws)
-stashfig("phat-comparison")
 #%%
 elapsed = time.time() - t0
 delta = datetime.timedelta(seconds=elapsed)
