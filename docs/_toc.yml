@@ -7,9 +7,13 @@
   - file: outline
   - file: introduction
 
-- part: Figure 1
+- part: Figure 1 - Look at it
   chapters:
   - file: look_at_it
+
+- part: Figure 2 - RDPG modeling
+  chapters:
+  - file: look_at_it_rdpg
 
 - part: Look at it
   chapters:
