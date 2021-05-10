@@ -7,6 +7,10 @@
   - file: outline
   - file: introduction
 
+- part: Figure 1
+  chapters:
+  - file: look_at_it
+
 - part: Look at it
   chapters:
   - file: simple_statistics

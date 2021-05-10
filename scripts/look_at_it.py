@@ -1,5 +1,5 @@
 #%% [markdown]
-# # Look at the paired embeddings
+# # Look at it (left vs. right induced subgraphs)
 
 #%% [markdown]
 # ## Preliminaries
@@ -12,6 +12,12 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+from graspologic.embed import selectSVD
+from sklearn.preprocessing import normalize
+from graspologic.utils import pass_to_ranks
+from umap import AlignedUMAP
+from giskard.plot import graphplot
+from src.visualization import CLASS_COLOR_DICT
 
 from graspologic.align import OrthogonalProcrustes, SeedlessProcrustes
 from graspologic.embed import (
@@ -38,7 +44,7 @@ t0 = time.time()
 
 
 def stashfig(name, **kwargs):
-    foldername = "look_at_it_adj_models"
+    foldername = "look_at_it"
     savefig(name, foldername=foldername, **kwargs)
 
 
@@ -60,12 +66,6 @@ rr_adj = rr_mg.sum.adj.copy()
 
 left_nodes = ll_mg.nodes
 right_nodes = rr_mg.nodes
-# nodes["_inds"] = range(len(nodes))
-# sorted_nodes = nodes.sort_values(["simple_group"])
-# sort_inds = sorted_nodes["_inds"]
-
-# ll_adj = ll_adj[np.ix_(sort_inds, sort_inds)]
-# rr_adj = rr_adj[np.ix_(sort_inds, sort_inds)]
 
 adjs, lcc_inds = multigraph_lcc_intersection([ll_adj, rr_adj], return_inds=True)
 ll_adj = adjs[0]
@@ -74,6 +74,9 @@ print(f"{len(lcc_inds)} in intersection of largest connected components.")
 
 left_nodes = left_nodes.iloc[lcc_inds]
 right_nodes = right_nodes.iloc[lcc_inds]
+
+#%% [markdown]
+# ## Plot the ipsilateral subgraph adjacency matrices
 # %%
 
 
@@ -112,8 +115,6 @@ stashfig("ipsilateral-adj-degree")
 #%%
 n_pairs = len(ll_adj)
 relation_dict = dict(zip(np.arange(n_pairs), np.arange(n_pairs)))
-
-from graspologic.embed import selectSVD
 
 
 def joint_procrustes(
@@ -160,8 +161,6 @@ def joint_procrustes(
     return data1
 
 
-# def paired_ase(A1, A2, n_components=16, n_initial_components=32):
-#     ase = AdjacencySpectralEmbed(n_components=n_initial_components)
 def ase(adj, n_components=None):
     U, S, Vt = selectSVD(adj, n_components=n_components, algorithm="full")
     S_sqrt = np.diag(np.sqrt(S))
@@ -177,12 +176,10 @@ def prescale_for_embed(adjs):
     return adjs
 
 
+#%% [markdown]
+# ## Plot a graph layout for each hemisphere
 #%%
 n_components = 32  # 24 looked fine
-# ll_adj, rr_adj = prescale_for_embed([ll_adj, rr_adj])
-
-from sklearn.preprocessing import normalize
-from graspologic.utils import pass_to_ranks
 
 ll_adj_for_umap = normalize(pass_to_ranks(ll_adj), axis=1)
 rr_adj_for_umap = normalize(pass_to_ranks(rr_adj), axis=1)
@@ -198,7 +195,6 @@ Z_rr = np.concatenate((X_rr, Y_rr), axis=1)
 Z_ll, _ = ase(Z_ll, n_components=n_components)
 Z_rr, _ = ase(Z_rr, n_components=n_components)
 
-from umap import AlignedUMAP
 
 aumap = AlignedUMAP(
     n_neighbors=64,
@@ -207,8 +203,6 @@ aumap = AlignedUMAP(
     alignment_regularisation=1e-1,
 )
 umap_embeds = aumap.fit_transform([Z_ll, Z_rr], relations=[relation_dict])
-from giskard.plot import graphplot
-from src.visualization import CLASS_COLOR_DICT
 
 graphplot_kws = dict(sizes=(30, 60))
 fig, axs = plt.subplots(1, 2, figsize=(20, 10))
@@ -230,5 +224,22 @@ graphplot(
     ax=axs[1],
     **graphplot_kws,
 )
+stashfig("aligned-umap-layout")
+
+#%% [markdown]
+# ## Simple statistics for the left hemisphere induced subgraph
+#%%
+ll_mg.sum
+
+#%% [markdown]
+# ## Simple statistics for the right hemisphere induced subgraph
+#%%
+rr_mg.sum
 
 #%%
+elapsed = time.time() - t0
+delta = datetime.timedelta(seconds=elapsed)
+print("----")
+print(f"Script took {delta}")
+print(f"Completed at {datetime.datetime.now()}")
+print("----")
