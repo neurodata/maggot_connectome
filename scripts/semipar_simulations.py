@@ -55,7 +55,7 @@ def stashfig(name, **kwargs):
 # The above simulation is run using ASE or Omni as the embedding method/test statistic.
 #%%
 
-n_verts = 64
+n_verts = 1024
 X1 = np.random.uniform(0.15, 0.7, size=(n_verts, 2))
 Y1 = np.random.uniform(0.15, 0.7, size=(n_verts, 2))
 P = X1 @ Y1.T
@@ -69,7 +69,7 @@ def run_semipar_experiment(
     seed=None,
     directed=True,
     perturbation="none",
-    n_verts=64,
+    n_verts=n_verts,
     n_bootstraps=200,
     methods=["ase", "omnibus"],
 ):
@@ -135,8 +135,8 @@ def saveload(name, results):
     return results
 
 
-n_trials = 256
-RECOMPUTE = False
+n_trials = 16
+RECOMPUTE = True
 if RECOMPUTE:
     rng = np.random.default_rng(8888)
     all_rows = []
@@ -154,7 +154,7 @@ if RECOMPUTE:
     results = pd.DataFrame(results)
 else:
     results = None
-results = saveload("null-simulation-results", results)
+results = saveload(f"null-simulation-results-n_verts={n_verts}", results)
 
 #%% [markdown]
 # ## Plot ECDFs of p-values under the null
@@ -189,7 +189,7 @@ for directed in [False, True]:
         loc="upper left",
         title="KS-test against\nUniform(0,1)",
     )
-    stashfig(f"semipar-null-ecdf-directed={directed}")
+    stashfig(f"semipar-null-ecdf-directed={directed}-n_verts={n_verts}")
 
 #%% [markdown]
 # ## End

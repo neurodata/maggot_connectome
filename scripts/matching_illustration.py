@@ -17,6 +17,7 @@ import seaborn as sns
 
 
 from graspologic.match import GraphMatch
+from graspologic.utils import to_laplacian
 
 from pkg.data import load_maggot_graph
 from pkg.io import savefig, get_out_dir
@@ -56,6 +57,9 @@ sort_inds = sorted_nodes["_inds"]
 
 ll_adj = ll_adj[np.ix_(sort_inds, sort_inds)]
 rr_adj = rr_adj[np.ix_(sort_inds, sort_inds)]
+# Match ratio with this went down to like .7
+# ll_adj = to_laplacian(ll_adj, form="R-DAD")
+# rr_adj = to_laplacian(rr_adj, form="R-DAD")
 
 
 def plot_adjs(left, right, title=""):
