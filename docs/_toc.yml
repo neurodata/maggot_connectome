@@ -13,7 +13,7 @@
 
 - part: Figure 2 - RDPG modeling
   chapters:
-  - file: look_at_it_rdpg
+  - file: look_at_rdpg
 
 - part: Figure 3 - Nonparametric two-sample testing
   chapters: 

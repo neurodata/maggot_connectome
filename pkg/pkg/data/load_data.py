@@ -4,10 +4,10 @@ from pathlib import Path
 import networkx as nx
 import numpy as np
 import pandas as pd
-from sklearn.utils import Bunch
-
+import seaborn as sns
 from giskard.graph import MaggotGraph
 from giskard.utils import to_pandas_edgelist
+from sklearn.utils import Bunch
 
 version_loc = Path(__file__).parent / "version.txt"
 with open(version_loc) as f:
@@ -90,6 +90,18 @@ def load_maggot_graph(path=None, version=None):
     edges = to_pandas_edgelist(g)
 
     return MaggotGraph(g, nodes, edges)
+
+
+def load_network_palette():
+    colors = sns.color_palette("Set2")
+    palette = dict(zip(["Left", "Right"], [colors[0], colors[1]]))
+    return palette, "Side"
+
+
+def load_node_palette():
+    from src.visualization import CLASS_COLOR_DICT
+
+    return CLASS_COLOR_DICT, "merge_class"
 
 
 # def load_networkx(graph_type, base_path=None, version=DATA_VERSION):

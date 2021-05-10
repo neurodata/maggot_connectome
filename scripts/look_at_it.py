@@ -33,14 +33,18 @@ from graspologic.utils import (
     multigraph_lcc_intersection,
     pass_to_ranks,
 )
-from pkg.data import load_maggot_graph, load_palette
+from pkg.data import (
+    load_maggot_graph,
+    load_palette,
+    select_nice_nodes,
+    load_node_palette,
+    load_network_palette,
+)
 from pkg.io import savefig
 from pkg.plot import set_theme
-
+from giskard.utils import get_paired_inds
 
 from src.visualization import adjplot  # TODO fix graspologic version and replace here
-
-t0 = time.time()
 
 
 def stashfig(name, **kwargs):
@@ -48,32 +52,31 @@ def stashfig(name, **kwargs):
     savefig(name, foldername=foldername, **kwargs)
 
 
-colors = sns.color_palette("Paired")
-
-palette = dict(zip(["Left", "Right"], [colors[1], colors[3]]))
-set_theme()
-
 # %% [markdown]
 # ## Load and process data
 #%%
+
+t0 = time.time()
+set_theme()
+
+network_palette, NETWORK_KEY = load_network_palette()
+node_palette, NODE_KEY = load_node_palette()
+
 mg = load_maggot_graph()
-mg = mg[mg.nodes["paper_clustered_neurons"]]
+mg = select_nice_nodes(mg)
+nodes = mg.nodes
+left_nodes = nodes[nodes["hemisphere"] == "L"]
+left_inds = left_nodes["_inds"]
+right_nodes = nodes[nodes["hemisphere"] == "R"]
+right_inds = right_nodes["_inds"]
+left_paired_inds, right_paired_inds = get_paired_inds(
+    nodes, pair_key="predicted_pair", pair_id_key="predicted_pair_id"
+)
+right_paired_inds_shifted = right_paired_inds - len(left_inds)
+adj = mg.sum.adj
+ll_adj = adj[np.ix_(left_inds, left_inds)]
+rr_adj = adj[np.ix_(right_inds, right_inds)]
 
-ll_mg, rr_mg, lr_mg, rl_mg = mg.bisect(paired=True)
-
-ll_adj = ll_mg.sum.adj.copy()
-rr_adj = rr_mg.sum.adj.copy()
-
-left_nodes = ll_mg.nodes
-right_nodes = rr_mg.nodes
-
-adjs, lcc_inds = multigraph_lcc_intersection([ll_adj, rr_adj], return_inds=True)
-ll_adj = adjs[0]
-rr_adj = adjs[1]
-print(f"{len(lcc_inds)} in intersection of largest connected components.")
-
-left_nodes = left_nodes.iloc[lcc_inds]
-right_nodes = right_nodes.iloc[lcc_inds]
 
 #%% [markdown]
 # ## Plot the ipsilateral subgraph adjacency matrices
@@ -94,7 +97,7 @@ def plot_adjs(left, right, title=""):
         sizes=(2, 2),
         ax=axs[0],
         title=r"Left $\to$ left",
-        color=palette["Left"],
+        color=network_palette["Left"],
     )
     adjplot(
         right,
@@ -103,7 +106,7 @@ def plot_adjs(left, right, title=""):
         sizes=(2, 2),
         ax=axs[1],
         title=r"Right $\to$ right",
-        color=palette["Right"],
+        color=network_palette["Right"],
     )
     fig.suptitle(title, ha="center", x=0.51)
     return fig, axs
@@ -113,52 +116,6 @@ plot_adjs(ll_adj, rr_adj, title="Ipsilateral adjacencies, ordered by degree")
 stashfig("ipsilateral-adj-degree")
 
 #%%
-n_pairs = len(ll_adj)
-relation_dict = dict(zip(np.arange(n_pairs), np.arange(n_pairs)))
-
-
-def joint_procrustes(
-    data1,
-    data2,
-    method="orthogonal",
-    paired_inds1=None,
-    paired_inds2=None,
-    swap=False,
-    verbose=False,
-):
-    n = len(data1[0])
-    if method == "orthogonal":
-        procruster = OrthogonalProcrustes()
-    elif method == "seedless":
-        procruster = SeedlessProcrustes(init="sign_flips")
-    elif method == "seedless-oracle":
-        X1_paired = data1[0][paired_inds1, :]
-        X2_paired = data2[0][paired_inds2, :]
-        if swap:
-            Y1_paired = data1[1][paired_inds2, :]
-            Y2_paired = data2[1][paired_inds1, :]
-        else:
-            Y1_paired = data1[1][paired_inds1, :]
-            Y2_paired = data2[1][paired_inds2, :]
-        data1_paired = np.concatenate((X1_paired, Y1_paired), axis=0)
-        data2_paired = np.concatenate((X2_paired, Y2_paired), axis=0)
-        op = OrthogonalProcrustes()
-        op.fit(data1_paired, data2_paired)
-        procruster = SeedlessProcrustes(
-            init="custom",
-            initial_Q=op.Q_,
-            optimal_transport_eps=1.0,
-            optimal_transport_num_reps=100,
-            iterative_num_reps=10,
-        )
-    data1 = np.concatenate(data1, axis=0)
-    data2 = np.concatenate(data2, axis=0)
-    currtime = time.time()
-    data1_mapped = procruster.fit_transform(data1, data2)
-    if verbose > 1:
-        print(f"{time.time() - currtime:.3f} seconds elapsed for SeedlessProcrustes.")
-    data1 = (data1_mapped[:n], data1_mapped[n:])
-    return data1
 
 
 def ase(adj, n_components=None):
@@ -179,28 +136,37 @@ def prescale_for_embed(adjs):
 #%% [markdown]
 # ## Plot a graph layout for each hemisphere
 #%%
-n_components = 32  # 24 looked fine
-
-ll_adj_for_umap = normalize(pass_to_ranks(ll_adj), axis=1)
-rr_adj_for_umap = normalize(pass_to_ranks(rr_adj), axis=1)
-ll_adj_for_umap = ll_adj_for_umap @ ll_adj_for_umap
-rr_adj_for_umap = rr_adj_for_umap @ rr_adj_for_umap
+n_components = 16  # 24 looked fine
+power = True
+normed = False
+if power:
+    ll_adj_for_umap = pass_to_ranks(ll_adj)
+    rr_adj_for_umap = pass_to_ranks(rr_adj)
+    if normed:
+        ll_adj_for_umap = normalize(ll_adj_for_umap, axis=1)
+        rr_adj_for_umap = normalize(rr_adj_for_umap, axis=1)
+    ll_adj_for_umap = ll_adj_for_umap @ ll_adj_for_umap
+    rr_adj_for_umap = rr_adj_for_umap @ rr_adj_for_umap
+else:
+    ll_adj_for_umap = pass_to_ranks(ll_adj)
+    rr_adj_for_umap = pass_to_ranks(rr_adj)
 
 X_ll, Y_ll = ase(ll_adj_for_umap, n_components=n_components)
 X_rr, Y_rr = ase(rr_adj_for_umap, n_components=n_components)
-# X_ll, Y_ll = joint_procrustes((X_ll, Y_ll), (X_rr, Y_rr), method="orthogonal")
 
 Z_ll = np.concatenate((X_ll, Y_ll), axis=1)
 Z_rr = np.concatenate((X_rr, Y_rr), axis=1)
-Z_ll, _ = ase(Z_ll, n_components=n_components)
-Z_rr, _ = ase(Z_rr, n_components=n_components)
+# Z_ll, _ = ase(Z_ll, n_components=n_components)
+# Z_rr, _ = ase(Z_rr, n_components=n_components)
 
+relation_dict = dict(zip(left_paired_inds, right_paired_inds_shifted))
 
 aumap = AlignedUMAP(
-    n_neighbors=64,
-    min_dist=0.9,
+    random_state=88888,
+    n_neighbors=32,
+    min_dist=0.95,
     metric="cosine",
-    alignment_regularisation=1e-1,
+    alignment_regularisation=1e-2,
 )
 umap_embeds = aumap.fit_transform([Z_ll, Z_rr], relations=[relation_dict])
 
@@ -229,8 +195,8 @@ stashfig("aligned-umap-layout")
 #%% [markdown]
 # ## Simple statistics for the left hemisphere induced subgraph
 #%%
+ll_mg, rr_mg, _, _ = mg.bisect(paired=False)
 ll_mg.sum
-
 #%% [markdown]
 # ## Simple statistics for the right hemisphere induced subgraph
 #%%
