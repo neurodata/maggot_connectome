@@ -1,0 +1,1034 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Look at RDPG models &#8212; Maggot Connectome</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet" />
+  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.acff12b8f9c144ce68a297486a2fa670.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="shortcut icon" href="_static/nd_logo_small.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      <img src="_static/nd_logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Maggot Connectome</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="landing.html">
+   Welcome
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="outline.html">
+   Outline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="introduction.html">
+   Introduction
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Figure 1 - Look at it
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="look_at_it.html">
+   Look at it (left vs. right induced subgraphs)
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Look at it
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="simple_statistics.html">
+   Simple summary statistics
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  A priori modeling
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="a_priori_sbm.html">
+   A priori SBMs
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Bilateral symmetry
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="look_at_paired_embeddings.html">
+   Look at the paired embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="semipar_simulations.html">
+   Semiparametric latent position test - simulations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="semipar.html">
+   Testing bilateral symmetry - semiparametric test
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="align_investigation.html">
+   Investigating alignment
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="off_diagonal.html">
+   Off-diagonal and off-script
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Matching
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="matching_illustration.html">
+   Matching the two sides of the brain
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="match_with_contra.html">
+   Matching when including the contralateral connections
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Feedforwardness
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="feedforwardness_sims.html">
+   One-sample feedforwardness testing: simulation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="feedforwardness_data.html">
+   One-sample feedforwardness testing: data
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Appendix
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="modularity.html">
+   Modularity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="flow_rank_hypothesis.html">
+   Flow ranking and hypothesis testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="flow_rank.html">
+   Flow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="visualizing_a_prior_sbm.html">
+   Visualizing a priori SBMs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/look_at_rdpg.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/neurodata/maggot_connectome"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/neurodata/maggot_connectome/issues/new?title=Issue%20on%20page%20%2Flook_at_rdpg.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preliminaries">
+   Preliminaries
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-and-process-data">
+   Load and process data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#embed-the-network-using-adjacency-spectral-embedding">
+   Embed the network using adjacency spectral embedding
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-screeplots">
+     Plot screeplots
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#align-the-left-and-the-right-embeddings">
+   Align the left and the right embeddings
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-left-and-the-right-embeddings-in-the-same-space-after-the-alignment">
+     Plot the left and the right embeddings in the same space after the alignment
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#examine-the-models">
+   Examine the models
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-rdpg-hat-p-for-the-left-and-the-right-hemispheres">
+     Plot the RDPG
+     <span class="math notranslate nohighlight">
+      \(\hat{P}\)
+     </span>
+     for the left and the right hemispheres
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#experimental-try-to-make-sense-of-the-individual-components">
+     Experimental: try to make sense of the individual components
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#just-for-the-right-examine-the-individual-components">
+       Just for the right, examine the individual components
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#look-at-what-the-components-mean-in-the-probability-space">
+       Look at what the components mean in the probability space
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="look-at-rdpg-models">
+<h1>Look at RDPG models<a class="headerlink" href="#look-at-rdpg-models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="preliminaries">
+<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">giskard.plot</span> <span class="kn">import</span> <span class="n">graphplot</span>
+<span class="kn">from</span> <span class="nn">graspologic.align</span> <span class="kn">import</span> <span class="n">OrthogonalProcrustes</span><span class="p">,</span> <span class="n">SeedlessProcrustes</span>
+<span class="kn">from</span> <span class="nn">graspologic.embed</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AdjacencySpectralEmbed</span><span class="p">,</span>
+    <span class="n">OmnibusEmbed</span><span class="p">,</span>
+    <span class="n">select_dimension</span><span class="p">,</span>
+    <span class="n">selectSVD</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">graspologic.match</span> <span class="kn">import</span> <span class="n">GraphMatch</span>
+<span class="kn">from</span> <span class="nn">graspologic.plot</span> <span class="kn">import</span> <span class="n">pairplot</span>
+<span class="kn">from</span> <span class="nn">graspologic.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">augment_diagonal</span><span class="p">,</span>
+    <span class="n">binarize</span><span class="p">,</span>
+    <span class="n">multigraph_lcc_intersection</span><span class="p">,</span>
+    <span class="n">pass_to_ranks</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <span class="n">LineCollection</span>
+<span class="kn">from</span> <span class="nn">pkg.data</span> <span class="kn">import</span> <span class="n">load_maggot_graph</span><span class="p">,</span> <span class="n">load_palette</span>
+<span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">savefig</span>
+<span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
+
+<span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">set_warnings</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">normalize</span>
+<span class="kn">from</span> <span class="nn">src.visualization</span> <span class="kn">import</span> <span class="n">adjplot</span>
+<span class="kn">from</span> <span class="nn">src.visualization</span> <span class="kn">import</span> <span class="n">CLASS_COLOR_DICT</span>
+<span class="kn">from</span> <span class="nn">umap</span> <span class="kn">import</span> <span class="n">AlignedUMAP</span>
+<span class="kn">from</span> <span class="nn">factor_analyzer</span> <span class="kn">import</span> <span class="n">Rotator</span>
+<span class="kn">from</span> <span class="nn">src.visualization</span> <span class="kn">import</span> <span class="n">matrixplot</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">Normalize</span><span class="p">,</span> <span class="n">SymLogNorm</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
+<span class="kn">from</span> <span class="nn">giskard.utils</span> <span class="kn">import</span> <span class="n">get_paired_inds</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">stashfig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">foldername</span> <span class="o">=</span> <span class="s2">&quot;look_at_it_rdpg&quot;</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">foldername</span><span class="o">=</span><span class="n">foldername</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;Set2&quot;</span><span class="p">)</span>
+
+<span class="n">palette</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="s2">&quot;Left&quot;</span><span class="p">,</span> <span class="s2">&quot;Right&quot;</span><span class="p">],</span> <span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span>
+<span class="n">set_theme</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/miniconda3/envs/maggot-revamp/lib/python3.8/site-packages/umap/__init__.py:9: UserWarning: Tensorflow not installed; ParametricUMAP will be unavailable
+  warn(&quot;Tensorflow not installed; ParametricUMAP will be unavailable&quot;)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="load-and-process-data">
+<h2>Load and process data<a class="headerlink" href="#load-and-process-data" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CLASS_KEY</span> <span class="o">=</span> <span class="s2">&quot;merge_class&quot;</span>
+<span class="n">node_palette</span> <span class="o">=</span> <span class="n">CLASS_COLOR_DICT</span>
+<span class="n">mg</span> <span class="o">=</span> <span class="n">load_maggot_graph</span><span class="p">()</span>
+<span class="n">mg</span> <span class="o">=</span> <span class="n">mg</span><span class="p">[</span><span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;paper_clustered_neurons&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;accessory_neurons&quot;</span><span class="p">]]</span>
+<span class="n">mg</span> <span class="o">=</span> <span class="n">mg</span><span class="p">[</span><span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">])]</span>
+<span class="n">mg</span><span class="o">.</span><span class="n">to_largest_connected_component</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">out_degrees</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">sum</span><span class="o">.</span><span class="n">adj</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">in_degrees</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">sum</span><span class="o">.</span><span class="n">adj</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">max_in_out_degree</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">out_degrees</span><span class="p">,</span> <span class="n">in_degrees</span><span class="p">)</span>
+<span class="c1"># TODO ideally we would OOS these back in?</span>
+<span class="n">keep_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">))[</span><span class="n">max_in_out_degree</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">remove_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">keep_inds</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">remove_ids</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes when removing pendants.&quot;</span><span class="p">)</span>
+<span class="n">mg</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">keep_inds</span><span class="p">]</span>
+<span class="n">mg</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">remove_nodes_from</span><span class="p">(</span><span class="n">remove_ids</span><span class="p">)</span>
+<span class="n">mg</span><span class="o">.</span><span class="n">to_largest_connected_component</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;_inds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">))</span>
+<span class="n">nodes</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">nodes</span>
+
+<span class="n">raw_adj</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">sum</span><span class="o">.</span><span class="n">adj</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">left_nodes</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;L&quot;</span><span class="p">]</span>
+<span class="n">left_inds</span> <span class="o">=</span> <span class="n">left_nodes</span><span class="p">[</span><span class="s2">&quot;_inds&quot;</span><span class="p">]</span>
+<span class="n">right_nodes</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;R&quot;</span><span class="p">]</span>
+<span class="n">right_inds</span> <span class="o">=</span> <span class="n">right_nodes</span><span class="p">[</span><span class="s2">&quot;_inds&quot;</span><span class="p">]</span>
+
+<span class="n">left_paired_inds</span><span class="p">,</span> <span class="n">right_paired_inds</span> <span class="o">=</span> <span class="n">get_paired_inds</span><span class="p">(</span>
+    <span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">pair_key</span><span class="o">=</span><span class="s2">&quot;predicted_pair&quot;</span><span class="p">,</span> <span class="n">pair_id_key</span><span class="o">=</span><span class="s2">&quot;predicted_pair_id&quot;</span>
+<span class="p">)</span>
+<span class="n">right_paired_inds_shifted</span> <span class="o">=</span> <span class="n">right_paired_inds</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">left_inds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Removed 13 nodes when taking the largest connected component.
+Removed 38 nodes when removing pendants.
+Removed 0 nodes when taking the largest connected component.
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="embed-the-network-using-adjacency-spectral-embedding">
+<h2>Embed the network using adjacency spectral embedding<a class="headerlink" href="#embed-the-network-using-adjacency-spectral-embedding" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">preprocess_for_embed</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">,</span> <span class="n">preprocess</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s2">&quot;binarize&quot;</span> <span class="ow">in</span> <span class="n">preprocess</span><span class="p">:</span>
+        <span class="n">ll_adj_to_embed</span> <span class="o">=</span> <span class="n">binarize</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">)</span>
+        <span class="n">rr_adj_to_embed</span> <span class="o">=</span> <span class="n">binarize</span><span class="p">(</span><span class="n">rr_adj</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;rescale&quot;</span> <span class="ow">in</span> <span class="n">preprocess</span><span class="p">:</span>
+        <span class="n">ll_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">ll_adj_to_embed</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="s2">&quot;fro&quot;</span><span class="p">)</span>
+        <span class="n">rr_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rr_adj_to_embed</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="s2">&quot;fro&quot;</span><span class="p">)</span>
+        <span class="n">mean_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">ll_norm</span> <span class="o">+</span> <span class="n">rr_norm</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">ll_adj_to_embed</span> <span class="o">*=</span> <span class="n">mean_norm</span> <span class="o">/</span> <span class="n">ll_norm</span>
+        <span class="n">rr_adj_to_embed</span> <span class="o">*=</span> <span class="n">mean_norm</span> <span class="o">/</span> <span class="n">rr_norm</span>
+    <span class="k">return</span> <span class="n">ll_adj_to_embed</span><span class="p">,</span> <span class="n">rr_adj_to_embed</span>
+
+
+<span class="k">def</span> <span class="nf">embed</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">ptr</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ptr</span><span class="p">:</span>
+        <span class="n">adj</span> <span class="o">=</span> <span class="n">pass_to_ranks</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+    <span class="n">elbow_inds</span><span class="p">,</span> <span class="n">elbow_vals</span> <span class="o">=</span> <span class="n">select_dimension</span><span class="p">(</span><span class="n">augment_diagonal</span><span class="p">(</span><span class="n">adj</span><span class="p">),</span> <span class="n">n_elbows</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">elbow_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">elbow_inds</span><span class="p">)</span>
+    <span class="n">ase</span> <span class="o">=</span> <span class="n">AdjacencySpectralEmbed</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">)</span>
+    <span class="n">out_latent</span><span class="p">,</span> <span class="n">in_latent</span> <span class="o">=</span> <span class="n">ase</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out_latent</span><span class="p">,</span> <span class="n">in_latent</span><span class="p">,</span> <span class="n">ase</span><span class="o">.</span><span class="n">singular_values_</span><span class="p">,</span> <span class="n">elbow_inds</span>
+
+
+<span class="k">def</span> <span class="nf">split_adj</span><span class="p">(</span><span class="n">adj</span><span class="p">):</span>
+    <span class="n">ll_adj</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">left_inds</span><span class="p">,</span> <span class="n">left_inds</span><span class="p">)]</span>
+    <span class="n">rr_adj</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">right_inds</span><span class="p">,</span> <span class="n">right_inds</span><span class="p">)]</span>
+    <span class="n">lr_adj</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">left_inds</span><span class="p">,</span> <span class="n">right_inds</span><span class="p">)]</span>
+    <span class="n">rl_adj</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">right_inds</span><span class="p">,</span> <span class="n">left_inds</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">,</span> <span class="n">lr_adj</span><span class="p">,</span> <span class="n">rl_adj</span>
+
+
+<span class="k">def</span> <span class="nf">prescale_for_embed</span><span class="p">(</span><span class="n">adjs</span><span class="p">):</span>
+    <span class="n">norms</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="s2">&quot;fro&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">adj</span> <span class="ow">in</span> <span class="n">adjs</span><span class="p">]</span>
+    <span class="n">mean_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">norms</span><span class="p">)</span>
+    <span class="n">adjs</span> <span class="o">=</span> <span class="p">[</span><span class="n">adjs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">mean_norm</span> <span class="o">/</span> <span class="n">norms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">adjs</span><span class="p">))]</span>
+    <span class="k">return</span> <span class="n">adjs</span>
+
+
+<span class="k">def</span> <span class="nf">ase</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">Vt</span> <span class="o">=</span> <span class="n">selectSVD</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">)</span>
+    <span class="n">S_sqrt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">U</span> <span class="o">@</span> <span class="n">S_sqrt</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">Vt</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">S_sqrt</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span>
+
+
+<span class="n">max_n_components</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="n">preprocess</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;binarize&quot;</span><span class="p">,</span> <span class="s2">&quot;rescale&quot;</span><span class="p">]</span>
+
+
+<span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">split_adj</span><span class="p">(</span><span class="n">raw_adj</span><span class="p">)</span>
+
+<span class="n">ll_adj_to_embed</span><span class="p">,</span> <span class="n">rr_adj_to_embed</span> <span class="o">=</span> <span class="n">preprocess_for_embed</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">,</span> <span class="n">preprocess</span><span class="p">)</span>
+
+<span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span><span class="p">,</span> <span class="n">left_sing_vals</span><span class="p">,</span> <span class="n">left_elbow_inds</span> <span class="o">=</span> <span class="n">embed</span><span class="p">(</span>
+    <span class="n">ll_adj_to_embed</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">max_n_components</span>
+<span class="p">)</span>
+<span class="n">X_rr</span><span class="p">,</span> <span class="n">Y_rr</span><span class="p">,</span> <span class="n">right_sing_vals</span><span class="p">,</span> <span class="n">right_elbow_inds</span> <span class="o">=</span> <span class="n">embed</span><span class="p">(</span>
+    <span class="n">rr_adj_to_embed</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">max_n_components</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/JHU_code/maggot/graspologic/graspologic/embed/ase.py:166: UserWarning:
+
+Input graph is not fully connected. Results may notbe optimal. You can compute the largest connected component byusing ``graspologic.utils.largest_connected_component``.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="plot-screeplots">
+<h3>Plot screeplots<a class="headerlink" href="#plot-screeplots" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">screeplot</span><span class="p">(</span><span class="n">sing_vals</span><span class="p">,</span> <span class="n">elbow_inds</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sing_vals</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">sing_vals</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+        <span class="n">elbow_inds</span><span class="p">,</span> <span class="n">sing_vals</span><span class="p">[</span><span class="n">elbow_inds</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Singular value&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Index&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">screeplot</span><span class="p">(</span><span class="n">left_sing_vals</span><span class="p">,</span> <span class="n">left_elbow_inds</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">palette</span><span class="p">[</span><span class="s2">&quot;Left&quot;</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Left&quot;</span><span class="p">)</span>
+<span class="n">screeplot</span><span class="p">(</span>
+    <span class="n">right_sing_vals</span><span class="p">,</span> <span class="n">right_elbow_inds</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">palette</span><span class="p">[</span><span class="s2">&quot;Right&quot;</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Right&quot;</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;screeplot&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/look_at_rdpg_8_0.png" src="_images/look_at_rdpg_8_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="align-the-left-and-the-right-embeddings">
+<h2>Align the left and the right embeddings<a class="headerlink" href="#align-the-left-and-the-right-embeddings" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">joint_procrustes</span><span class="p">(</span>
+    <span class="n">data1</span><span class="p">,</span>
+    <span class="n">data2</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;orthogonal&quot;</span><span class="p">,</span>
+    <span class="n">paired_inds1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">paired_inds2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">swap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;orthogonal&quot;</span><span class="p">:</span>
+        <span class="n">procruster</span> <span class="o">=</span> <span class="n">OrthogonalProcrustes</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;seedless&quot;</span><span class="p">:</span>
+        <span class="n">procruster</span> <span class="o">=</span> <span class="n">SeedlessProcrustes</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s2">&quot;sign_flips&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;seedless-oracle&quot;</span><span class="p">:</span>
+        <span class="n">X1_paired</span> <span class="o">=</span> <span class="n">data1</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">paired_inds1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">X2_paired</span> <span class="o">=</span> <span class="n">data2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">paired_inds2</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">if</span> <span class="n">swap</span><span class="p">:</span>
+            <span class="n">Y1_paired</span> <span class="o">=</span> <span class="n">data1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">paired_inds2</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">Y2_paired</span> <span class="o">=</span> <span class="n">data2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">paired_inds1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Y1_paired</span> <span class="o">=</span> <span class="n">data1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">paired_inds1</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">Y2_paired</span> <span class="o">=</span> <span class="n">data2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">paired_inds2</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">data1_paired</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X1_paired</span><span class="p">,</span> <span class="n">Y1_paired</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">data2_paired</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X2_paired</span><span class="p">,</span> <span class="n">Y2_paired</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="n">OrthogonalProcrustes</span><span class="p">()</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data1_paired</span><span class="p">,</span> <span class="n">data2_paired</span><span class="p">)</span>
+        <span class="n">procruster</span> <span class="o">=</span> <span class="n">SeedlessProcrustes</span><span class="p">(</span>
+            <span class="n">init</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+            <span class="n">initial_Q</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="n">Q_</span><span class="p">,</span>
+            <span class="n">optimal_transport_eps</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">optimal_transport_num_reps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">iterative_num_reps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">data1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">data2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">currtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">data1_mapped</span> <span class="o">=</span> <span class="n">procruster</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">currtime</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds elapsed for SeedlessProcrustes.&quot;</span><span class="p">)</span>
+    <span class="n">data1</span> <span class="o">=</span> <span class="p">(</span><span class="n">data1_mapped</span><span class="p">[:</span><span class="n">n</span><span class="p">],</span> <span class="n">data1_mapped</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span>
+    <span class="k">return</span> <span class="n">data1</span>
+
+
+<span class="k">def</span> <span class="nf">ase</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">Vt</span> <span class="o">=</span> <span class="n">selectSVD</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">)</span>
+    <span class="n">S_sqrt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">U</span> <span class="o">@</span> <span class="n">S_sqrt</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">Vt</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">S_sqrt</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span>
+
+
+<span class="n">n_align_components</span> <span class="o">=</span> <span class="mi">32</span>
+
+<span class="n">X_ll</span> <span class="o">=</span> <span class="n">X_ll</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_align_components</span><span class="p">]</span>
+<span class="n">Y_ll</span> <span class="o">=</span> <span class="n">Y_ll</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_align_components</span><span class="p">]</span>
+<span class="n">X_rr</span> <span class="o">=</span> <span class="n">X_rr</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_align_components</span><span class="p">]</span>
+<span class="n">Y_rr</span> <span class="o">=</span> <span class="n">Y_rr</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_align_components</span><span class="p">]</span>
+
+<span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span> <span class="o">=</span> <span class="n">joint_procrustes</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">X_rr</span><span class="p">,</span> <span class="n">Y_rr</span><span class="p">),</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;seedless-oracle&quot;</span><span class="p">,</span>
+    <span class="n">paired_inds1</span><span class="o">=</span><span class="n">left_paired_inds</span><span class="p">,</span>
+    <span class="n">paired_inds2</span><span class="o">=</span><span class="n">right_paired_inds_shifted</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">XY_ll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">XY_rr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X_rr</span><span class="p">,</span> <span class="n">Y_rr</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">n_final_components</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">Z_ll</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ase</span><span class="p">(</span><span class="n">XY_ll</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">n_final_components</span><span class="p">)</span>
+<span class="n">Z_rr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ase</span><span class="p">(</span><span class="n">XY_rr</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">n_final_components</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-left-and-the-right-embeddings-in-the-same-space-after-the-alignment">
+<h3>Plot the left and the right embeddings in the same space after the alignment<a class="headerlink" href="#plot-the-left-and-the-right-embeddings-in-the-same-space-after-the-alignment" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_connections</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y1</span><span class="p">)</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+    <span class="n">coords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x1</span><span class="p">)):</span>
+        <span class="n">coords</span><span class="o">.</span><span class="n">append</span><span class="p">([[</span><span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y1</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="p">[</span><span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y2</span><span class="p">[</span><span class="n">i</span><span class="p">]]])</span>
+    <span class="n">lc</span> <span class="o">=</span> <span class="n">LineCollection</span><span class="p">(</span>
+        <span class="n">coords</span><span class="p">,</span>
+        <span class="n">colors</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+        <span class="n">linewidths</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+        <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">lc</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">plot_latents</span><span class="p">(</span>
+    <span class="n">left</span><span class="p">,</span>
+    <span class="n">right</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">n_show</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+    <span class="n">connections</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">n_show</span> <span class="o">&gt;</span> <span class="n">left</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">n_show</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">plot_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;Left&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Right&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
+    <span class="n">pg</span> <span class="o">=</span> <span class="n">pairplot</span><span class="p">(</span>
+        <span class="n">plot_data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_show</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">connections</span><span class="p">:</span>
+        <span class="n">axs</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">axes</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_show</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_show</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                    <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                    <span class="n">add_connections</span><span class="p">(</span>
+                        <span class="n">left</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span>
+                        <span class="n">right</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span>
+                        <span class="n">left</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span>
+                        <span class="n">right</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span>
+                        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                        <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+                        <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
+                    <span class="p">)</span>
+    <span class="n">pg</span><span class="o">.</span><span class="n">_legend</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">pg</span>
+
+
+<span class="n">plot_latents</span><span class="p">(</span><span class="n">X_ll</span><span class="p">,</span> <span class="n">X_rr</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span> <span class="n">connections</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.PairGrid at 0x7ff0c2708940&gt;
+</pre></div>
+</div>
+<img alt="_images/look_at_rdpg_12_1.png" src="_images/look_at_rdpg_12_1.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="examine-the-models">
+<h2>Examine the models<a class="headerlink" href="#examine-the-models" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="plot-the-rdpg-hat-p-for-the-left-and-the-right-hemispheres">
+<h3>Plot the RDPG <span class="math notranslate nohighlight">\(\hat{P}\)</span> for the left and the right hemispheres<a class="headerlink" href="#plot-the-rdpg-hat-p-for-the-left-and-the-right-hemispheres" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">)</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">SymLogNorm</span><span class="p">(</span><span class="n">linthresh</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">linscale</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+
+<span class="n">n_components</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">P_ll</span> <span class="o">=</span> <span class="n">X_ll</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span> <span class="o">@</span> <span class="n">Y_ll</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+<span class="n">P_ll</span><span class="p">[</span><span class="n">P_ll</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">P_rr</span> <span class="o">=</span> <span class="n">X_rr</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span> <span class="o">@</span> <span class="n">Y_rr</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+<span class="n">P_rr</span><span class="p">[</span><span class="n">P_rr</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">adjplot_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;merge_class&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="n">CLASS_COLOR_DICT</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+    <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span>
+    <span class="n">center</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
+    <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
+    <span class="n">item_order</span><span class="o">=</span><span class="s2">&quot;merge_class&quot;</span><span class="p">,</span>
+    <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">adjplot</span><span class="p">(</span><span class="n">P_ll</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">left_nodes</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Left $\to$ left&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">adjplot_kws</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">adjplot</span><span class="p">(</span><span class="n">P_rr</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">right_nodes</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Right $\to$ right&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">adjplot_kws</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;phat-comparison&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/look_at_rdpg_15_0.png" src="_images/look_at_rdpg_15_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="experimental-try-to-make-sense-of-the-individual-components">
+<h3>Experimental: try to make sense of the individual components<a class="headerlink" href="#experimental-try-to-make-sense-of-the-individual-components" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_components</span> <span class="o">=</span> <span class="mi">20</span>
+
+
+<span class="k">def</span> <span class="nf">varimax</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Rotator</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+
+<span class="n">n_left</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_ll</span><span class="p">)</span>
+<span class="n">X_concat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X_ll</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">X_rr</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">X_concat</span> <span class="o">=</span> <span class="n">varimax</span><span class="p">(</span><span class="n">X_concat</span><span class="p">)</span>
+<span class="n">X_ll_varimax</span> <span class="o">=</span> <span class="n">X_concat</span><span class="p">[:</span><span class="n">n_left</span><span class="p">]</span>
+<span class="n">X_rr_varimax</span> <span class="o">=</span> <span class="n">X_concat</span><span class="p">[</span><span class="n">n_left</span><span class="p">:]</span>
+<span class="n">plot_latents</span><span class="p">(</span><span class="n">X_ll_varimax</span><span class="p">,</span> <span class="n">X_rr_varimax</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">)</span>
+
+<span class="n">XY_rr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X_rr</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">Y_rr</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">XY_rr_varimax</span> <span class="o">=</span> <span class="n">varimax</span><span class="p">(</span><span class="n">XY_rr</span><span class="p">)</span>
+
+<span class="n">X_rr_varimax</span> <span class="o">=</span> <span class="n">XY_rr_varimax</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_rr</span><span class="p">)]</span>
+<span class="n">Y_rr_varimax</span> <span class="o">=</span> <span class="n">XY_rr_varimax</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">X_rr</span><span class="p">)</span> <span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/look_at_rdpg_17_0.png" src="_images/look_at_rdpg_17_0.png" />
+</div>
+</div>
+<div class="section" id="just-for-the-right-examine-the-individual-components">
+<h4>Just for the right, examine the individual components<a class="headerlink" href="#just-for-the-right-examine-the-individual-components" title="Permalink to this headline">¶</a></h4>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">dimension</span> <span class="ow">in</span> <span class="n">X_rr_varimax</span><span class="o">.</span><span class="n">T</span><span class="p">[:</span><span class="mi">16</span><span class="p">]:</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">right_nodes</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;dimension&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dimension</span>
+    <span class="n">nodes</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;dimension&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;dimension&quot;</span><span class="p">,</span>
+        <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;merge_class&quot;</span><span class="p">,</span>
+        <span class="n">palette</span><span class="o">=</span><span class="n">CLASS_COLOR_DICT</span><span class="p">,</span>
+        <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/look_at_rdpg_19_0.png" src="_images/look_at_rdpg_19_0.png" />
+<img alt="_images/look_at_rdpg_19_1.png" src="_images/look_at_rdpg_19_1.png" />
+<img alt="_images/look_at_rdpg_19_2.png" src="_images/look_at_rdpg_19_2.png" />
+<img alt="_images/look_at_rdpg_19_3.png" src="_images/look_at_rdpg_19_3.png" />
+<img alt="_images/look_at_rdpg_19_4.png" src="_images/look_at_rdpg_19_4.png" />
+<img alt="_images/look_at_rdpg_19_5.png" src="_images/look_at_rdpg_19_5.png" />
+<img alt="_images/look_at_rdpg_19_6.png" src="_images/look_at_rdpg_19_6.png" />
+<img alt="_images/look_at_rdpg_19_7.png" src="_images/look_at_rdpg_19_7.png" />
+<img alt="_images/look_at_rdpg_19_8.png" src="_images/look_at_rdpg_19_8.png" />
+<img alt="_images/look_at_rdpg_19_9.png" src="_images/look_at_rdpg_19_9.png" />
+<img alt="_images/look_at_rdpg_19_10.png" src="_images/look_at_rdpg_19_10.png" />
+<img alt="_images/look_at_rdpg_19_11.png" src="_images/look_at_rdpg_19_11.png" />
+<img alt="_images/look_at_rdpg_19_12.png" src="_images/look_at_rdpg_19_12.png" />
+<img alt="_images/look_at_rdpg_19_13.png" src="_images/look_at_rdpg_19_13.png" />
+<img alt="_images/look_at_rdpg_19_14.png" src="_images/look_at_rdpg_19_14.png" />
+<img alt="_images/look_at_rdpg_19_15.png" src="_images/look_at_rdpg_19_15.png" />
+</div>
+</div>
+</div>
+<div class="section" id="look-at-what-the-components-mean-in-the-probability-space">
+<h4>Look at what the components mean in the probability space<a class="headerlink" href="#look-at-what-the-components-mean-in-the-probability-space" title="Permalink to this headline">¶</a></h4>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nodes</span> <span class="o">=</span> <span class="n">right_nodes</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">quantile</span> <span class="o">=</span> <span class="mf">0.99</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">X_rr_varimax</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Y_rr_varimax</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">Phat</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">@</span> <span class="n">y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">abs_Phat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Phat</span><span class="p">)</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">abs_Phat</span><span class="p">,</span> <span class="n">quantile</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">abs_Phat</span> <span class="o">&gt;</span> <span class="n">q</span>
+    <span class="n">row_used</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">col_used</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">col_nodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">col_used</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">row_nodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">row_used</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">sub_Phat</span> <span class="o">=</span> <span class="n">Phat</span><span class="p">[</span><span class="n">row_used</span><span class="p">][:,</span> <span class="n">col_used</span><span class="p">]</span>
+    <span class="n">expected_out_degree</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sub_Phat</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">expected_in_degree</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sub_Phat</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">row_nodes</span><span class="p">[</span><span class="s2">&quot;expected_out_degree&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">expected_out_degree</span>
+    <span class="n">col_nodes</span><span class="p">[</span><span class="s2">&quot;expected_in_degree&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">expected_in_degree</span>
+    <span class="n">matrixplot</span><span class="p">(</span>
+        <span class="n">sub_Phat</span><span class="p">,</span>
+        <span class="n">row_meta</span><span class="o">=</span><span class="n">row_nodes</span><span class="p">,</span>
+        <span class="n">col_meta</span><span class="o">=</span><span class="n">col_nodes</span><span class="p">,</span>
+        <span class="n">row_colors</span><span class="o">=</span><span class="s2">&quot;merge_class&quot;</span><span class="p">,</span>
+        <span class="n">col_colors</span><span class="o">=</span><span class="s2">&quot;merge_class&quot;</span><span class="p">,</span>
+        <span class="n">row_palette</span><span class="o">=</span><span class="n">CLASS_COLOR_DICT</span><span class="p">,</span>
+        <span class="n">col_palette</span><span class="o">=</span><span class="n">CLASS_COLOR_DICT</span><span class="p">,</span>
+        <span class="n">row_item_order</span><span class="o">=</span><span class="s2">&quot;expected_out_degree&quot;</span><span class="p">,</span>
+        <span class="n">col_item_order</span><span class="o">=</span><span class="s2">&quot;expected_in_degree&quot;</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+        <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span>
+        <span class="n">center</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
+        <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">stashfig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;right-phat-component-</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/look_at_rdpg_21_0.png" src="_images/look_at_rdpg_21_0.png" />
+<img alt="_images/look_at_rdpg_21_1.png" src="_images/look_at_rdpg_21_1.png" />
+<img alt="_images/look_at_rdpg_21_2.png" src="_images/look_at_rdpg_21_2.png" />
+<img alt="_images/look_at_rdpg_21_3.png" src="_images/look_at_rdpg_21_3.png" />
+<img alt="_images/look_at_rdpg_21_4.png" src="_images/look_at_rdpg_21_4.png" />
+<img alt="_images/look_at_rdpg_21_5.png" src="_images/look_at_rdpg_21_5.png" />
+<img alt="_images/look_at_rdpg_21_6.png" src="_images/look_at_rdpg_21_6.png" />
+<img alt="_images/look_at_rdpg_21_7.png" src="_images/look_at_rdpg_21_7.png" />
+<img alt="_images/look_at_rdpg_21_8.png" src="_images/look_at_rdpg_21_8.png" />
+<img alt="_images/look_at_rdpg_21_9.png" src="_images/look_at_rdpg_21_9.png" />
+<img alt="_images/look_at_rdpg_21_10.png" src="_images/look_at_rdpg_21_10.png" />
+<img alt="_images/look_at_rdpg_21_11.png" src="_images/look_at_rdpg_21_11.png" />
+<img alt="_images/look_at_rdpg_21_12.png" src="_images/look_at_rdpg_21_12.png" />
+<img alt="_images/look_at_rdpg_21_13.png" src="_images/look_at_rdpg_21_13.png" />
+<img alt="_images/look_at_rdpg_21_14.png" src="_images/look_at_rdpg_21_14.png" />
+<img alt="_images/look_at_rdpg_21_15.png" src="_images/look_at_rdpg_21_15.png" />
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Script took </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completed at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
+Script took 0:02:10.024765
+Completed at 2021-05-10 17:35:29.526520
+----
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By NeuroData<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>
