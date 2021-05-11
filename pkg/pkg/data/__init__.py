@@ -8,6 +8,7 @@ from .load_data import (
     load_maggot_graph,
     load_node_palette,
     load_network_palette,
+    load_navis_neurons,
 )
 
 from .preprocess import select_nice_nodes

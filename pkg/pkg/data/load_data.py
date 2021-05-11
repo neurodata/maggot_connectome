@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-
+import pickle
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -102,6 +102,13 @@ def load_node_palette():
     from src.visualization import CLASS_COLOR_DICT
 
     return CLASS_COLOR_DICT, "merge_class"
+
+
+def load_navis_neurons(ids=None, path=None, version=None):
+    folder = _get_folder(path, version)
+    with open(folder / "neurons.pickle", "rb") as f:
+        neuron_list = pickle.load(f)
+    return neuron_list
 
 
 # def load_networkx(graph_type, base_path=None, version=DATA_VERSION):

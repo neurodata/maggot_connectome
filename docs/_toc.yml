@@ -19,6 +19,11 @@
   chapters: 
   - file: latent_distribution_test
 
+- part: Figure 4 - A set of node-paired networks
+  chapters: 
+  - file: plot_pairs
+
+
 - part: Look at it
   chapters:
   - file: simple_statistics
