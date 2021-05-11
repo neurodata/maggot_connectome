@@ -111,7 +111,7 @@ def preprocess_for_embed(ll_adj, rr_adj, preprocess):
 def embed(adj, n_components=40, ptr=False):
     if ptr:
         adj = pass_to_ranks(adj)
-    elbow_inds, elbow_vals = select_dimension(augment_diagonal(adj), n_elbows=5)
+    elbow_inds, _ = select_dimension(augment_diagonal(adj), n_elbows=5)
     elbow_inds = np.array(elbow_inds)
     ase = AdjacencySpectralEmbed(n_components=n_components)
     out_latent, in_latent = ase.fit_transform(adj)
@@ -239,7 +239,6 @@ def ase(adj, n_components=None):
 
 
 n_align_components = 32
-
 X_ll = X_ll[:, :n_align_components]
 Y_ll = Y_ll[:, :n_align_components]
 X_rr = X_rr[:, :n_align_components]

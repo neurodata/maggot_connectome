@@ -15,9 +15,9 @@
   chapters:
   - file: look_at_rdpg
 
-- part: Figure 3 - Nonparametric two-sample testing
+- part: Figure 3 - Latent distribution test
   chapters: 
-  - file: nonpar
+  - file: latent_distribution_test
 
 - part: Look at it
   chapters:
