@@ -1,0 +1,803 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test for bilateral symmetry - latent distribution test &#8212; Maggot Connectome</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet" />
+  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.acff12b8f9c144ce68a297486a2fa670.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="_static/nd_logo_small.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Simple summary statistics" href="simple_statistics.html" />
+    <link rel="prev" title="Look at RDPG models" href="look_at_rdpg.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      <img src="_static/nd_logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Maggot Connectome</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="landing.html">
+   Welcome
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Preliminaries
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="outline.html">
+   Outline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="introduction.html">
+   Introduction
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Figure 1 - Look at it
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="look_at_it.html">
+   Look at it (left vs. right induced subgraphs)
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Figure 2 - RDPG modeling
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="look_at_rdpg.html">
+   Look at RDPG models
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Figure 3 - Latent distribution test
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Test for bilateral symmetry - latent distribution test
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Look at it
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="simple_statistics.html">
+   Simple summary statistics
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  A priori modeling
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="a_priori_sbm.html">
+   A priori SBMs
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Bilateral symmetry
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="look_at_paired_embeddings.html">
+   Look at the paired embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="semipar_simulations.html">
+   Semiparametric latent position test - simulations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="semipar.html">
+   Testing bilateral symmetry - semiparametric test
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="align_investigation.html">
+   Investigating alignment
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="off_diagonal.html">
+   Off-diagonal and off-script
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Matching
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="matching_illustration.html">
+   Matching the two sides of the brain
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="match_with_contra.html">
+   Matching when including the contralateral connections
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Feedforwardness
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="feedforwardness_sims.html">
+   One-sample feedforwardness testing: simulation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="feedforwardness_data.html">
+   One-sample feedforwardness testing: data
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Appendix
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="modularity.html">
+   Modularity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="flow_rank_hypothesis.html">
+   Flow ranking and hypothesis testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="flow_rank.html">
+   Flow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="visualizing_a_prior_sbm.html">
+   Visualizing a priori SBMs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/latent_distribution_test.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/neurodata/maggot_connectome"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/neurodata/maggot_connectome/issues/new?title=Issue%20on%20page%20%2Flatent_distribution_test.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preliminaries">
+   Preliminaries
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-and-process-data">
+   Load and process data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#embed-the-network-using-adjacency-spectral-embedding">
+   Embed the network using adjacency spectral embedding
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#hypothesis-testing-on-the-embeddings">
+   Hypothesis testing on the embeddings
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#run-the-two-sample-test-for-varying-embedding-dimension">
+     Run the two-sample test for varying embedding dimension
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-2-sample-test-p-values-by-varying-dimension">
+     Plot the 2-sample test p-values by varying dimension
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#end">
+   End
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="test-for-bilateral-symmetry-latent-distribution-test">
+<h1>Test for bilateral symmetry - latent distribution test<a class="headerlink" href="#test-for-bilateral-symmetry-latent-distribution-test" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="preliminaries">
+<h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">set_warnings</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">giskard.utils</span> <span class="kn">import</span> <span class="n">get_paired_inds</span>
+<span class="kn">from</span> <span class="nn">graspologic.align</span> <span class="kn">import</span> <span class="n">OrthogonalProcrustes</span><span class="p">,</span> <span class="n">SeedlessProcrustes</span>
+<span class="kn">from</span> <span class="nn">graspologic.embed</span> <span class="kn">import</span> <span class="n">AdjacencySpectralEmbed</span><span class="p">,</span> <span class="n">select_dimension</span>
+<span class="kn">from</span> <span class="nn">graspologic.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">augment_diagonal</span><span class="p">,</span>
+    <span class="n">binarize</span><span class="p">,</span>
+    <span class="n">pass_to_ranks</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">hyppo.ksample</span> <span class="kn">import</span> <span class="n">KSample</span>
+<span class="kn">from</span> <span class="nn">pkg.data</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">load_maggot_graph</span><span class="p">,</span>
+    <span class="n">load_network_palette</span><span class="p">,</span>
+    <span class="n">load_node_palette</span><span class="p">,</span>
+    <span class="n">select_nice_nodes</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">savefig</span>
+<span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
+
+
+<span class="k">def</span> <span class="nf">stashfig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">foldername</span> <span class="o">=</span> <span class="s2">&quot;latent_distribution_test&quot;</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">foldername</span><span class="o">=</span><span class="n">foldername</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="load-and-process-data">
+<h2>Load and process data<a class="headerlink" href="#load-and-process-data" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">set_theme</span><span class="p">()</span>
+
+<span class="n">network_palette</span><span class="p">,</span> <span class="n">NETWORK_KEY</span> <span class="o">=</span> <span class="n">load_network_palette</span><span class="p">()</span>
+<span class="n">node_palette</span><span class="p">,</span> <span class="n">NODE_KEY</span> <span class="o">=</span> <span class="n">load_node_palette</span><span class="p">()</span>
+
+<span class="n">mg</span> <span class="o">=</span> <span class="n">load_maggot_graph</span><span class="p">()</span>
+<span class="n">mg</span> <span class="o">=</span> <span class="n">select_nice_nodes</span><span class="p">(</span><span class="n">mg</span><span class="p">)</span>
+<span class="n">nodes</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">nodes</span>
+<span class="n">left_nodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;L&quot;</span><span class="p">]</span>
+<span class="n">left_inds</span> <span class="o">=</span> <span class="n">left_nodes</span><span class="p">[</span><span class="s2">&quot;_inds&quot;</span><span class="p">]</span>
+<span class="n">right_nodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;hemisphere&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;R&quot;</span><span class="p">]</span>
+<span class="n">right_inds</span> <span class="o">=</span> <span class="n">right_nodes</span><span class="p">[</span><span class="s2">&quot;_inds&quot;</span><span class="p">]</span>
+<span class="n">left_paired_inds</span><span class="p">,</span> <span class="n">right_paired_inds</span> <span class="o">=</span> <span class="n">get_paired_inds</span><span class="p">(</span>
+    <span class="n">nodes</span><span class="p">,</span> <span class="n">pair_key</span><span class="o">=</span><span class="s2">&quot;predicted_pair&quot;</span><span class="p">,</span> <span class="n">pair_id_key</span><span class="o">=</span><span class="s2">&quot;predicted_pair_id&quot;</span>
+<span class="p">)</span>
+<span class="n">right_paired_inds_shifted</span> <span class="o">=</span> <span class="n">right_paired_inds</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">left_inds</span><span class="p">)</span>
+<span class="n">adj</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">sum</span><span class="o">.</span><span class="n">adj</span>
+<span class="n">ll_adj</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">left_inds</span><span class="p">,</span> <span class="n">left_inds</span><span class="p">)]</span>
+<span class="n">rr_adj</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">right_inds</span><span class="p">,</span> <span class="n">right_inds</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Removed 13 nodes when taking the largest connected component.
+Removed 38 nodes when removing pendants.
+Removed 0 nodes when taking the largest connected component.
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="embed-the-network-using-adjacency-spectral-embedding">
+<h2>Embed the network using adjacency spectral embedding<a class="headerlink" href="#embed-the-network-using-adjacency-spectral-embedding" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">preprocess_for_embed</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">,</span> <span class="n">preprocess</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s2">&quot;binarize&quot;</span> <span class="ow">in</span> <span class="n">preprocess</span><span class="p">:</span>
+        <span class="n">ll_adj_to_embed</span> <span class="o">=</span> <span class="n">binarize</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">)</span>
+        <span class="n">rr_adj_to_embed</span> <span class="o">=</span> <span class="n">binarize</span><span class="p">(</span><span class="n">rr_adj</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;rescale&quot;</span> <span class="ow">in</span> <span class="n">preprocess</span><span class="p">:</span>
+        <span class="n">ll_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">ll_adj_to_embed</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="s2">&quot;fro&quot;</span><span class="p">)</span>
+        <span class="n">rr_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rr_adj_to_embed</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="s2">&quot;fro&quot;</span><span class="p">)</span>
+        <span class="n">mean_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">ll_norm</span> <span class="o">+</span> <span class="n">rr_norm</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">ll_adj_to_embed</span> <span class="o">*=</span> <span class="n">mean_norm</span> <span class="o">/</span> <span class="n">ll_norm</span>
+        <span class="n">rr_adj_to_embed</span> <span class="o">*=</span> <span class="n">mean_norm</span> <span class="o">/</span> <span class="n">rr_norm</span>
+    <span class="k">return</span> <span class="n">ll_adj_to_embed</span><span class="p">,</span> <span class="n">rr_adj_to_embed</span>
+
+
+<span class="k">def</span> <span class="nf">embed</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">ptr</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ptr</span><span class="p">:</span>
+        <span class="n">adj</span> <span class="o">=</span> <span class="n">pass_to_ranks</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+    <span class="n">elbow_inds</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">select_dimension</span><span class="p">(</span><span class="n">augment_diagonal</span><span class="p">(</span><span class="n">adj</span><span class="p">),</span> <span class="n">n_elbows</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">elbow_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">elbow_inds</span><span class="p">)</span>
+    <span class="n">ase</span> <span class="o">=</span> <span class="n">AdjacencySpectralEmbed</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">)</span>
+    <span class="n">out_latent</span><span class="p">,</span> <span class="n">in_latent</span> <span class="o">=</span> <span class="n">ase</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out_latent</span><span class="p">,</span> <span class="n">in_latent</span><span class="p">,</span> <span class="n">ase</span><span class="o">.</span><span class="n">singular_values_</span><span class="p">,</span> <span class="n">elbow_inds</span>
+
+
+<span class="k">def</span> <span class="nf">split_adj</span><span class="p">(</span><span class="n">adj</span><span class="p">):</span>
+    <span class="n">ll_adj</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">left_inds</span><span class="p">,</span> <span class="n">left_inds</span><span class="p">)]</span>
+    <span class="n">rr_adj</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">right_inds</span><span class="p">,</span> <span class="n">right_inds</span><span class="p">)]</span>
+    <span class="n">lr_adj</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">left_inds</span><span class="p">,</span> <span class="n">right_inds</span><span class="p">)]</span>
+    <span class="n">rl_adj</span> <span class="o">=</span> <span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">right_inds</span><span class="p">,</span> <span class="n">left_inds</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">,</span> <span class="n">lr_adj</span><span class="p">,</span> <span class="n">rl_adj</span>
+
+
+<span class="n">align_n_components</span> <span class="o">=</span> <span class="mi">24</span>
+<span class="n">preprocess</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;binarize&quot;</span><span class="p">,</span> <span class="s2">&quot;rescale&quot;</span><span class="p">]</span>
+
+<span class="n">raw_adj</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">sum</span><span class="o">.</span><span class="n">adj</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">split_adj</span><span class="p">(</span><span class="n">raw_adj</span><span class="p">)</span>
+
+<span class="n">ll_adj_to_embed</span><span class="p">,</span> <span class="n">rr_adj_to_embed</span> <span class="o">=</span> <span class="n">preprocess_for_embed</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">,</span> <span class="n">preprocess</span><span class="p">)</span>
+
+<span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span><span class="p">,</span> <span class="n">left_sing_vals</span><span class="p">,</span> <span class="n">left_elbow_inds</span> <span class="o">=</span> <span class="n">embed</span><span class="p">(</span>
+    <span class="n">ll_adj_to_embed</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">align_n_components</span>
+<span class="p">)</span>
+<span class="n">X_rr</span><span class="p">,</span> <span class="n">Y_rr</span><span class="p">,</span> <span class="n">right_sing_vals</span><span class="p">,</span> <span class="n">right_elbow_inds</span> <span class="o">=</span> <span class="n">embed</span><span class="p">(</span>
+    <span class="n">rr_adj_to_embed</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">align_n_components</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/JHU_code/maggot/graspologic/graspologic/embed/ase.py:166: UserWarning:
+
+Input graph is not fully connected. Results may notbe optimal. You can compute the largest connected component byusing ``graspologic.utils.largest_connected_component``.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">joint_procrustes</span><span class="p">(</span>
+    <span class="n">data1</span><span class="p">,</span>
+    <span class="n">data2</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;orthogonal&quot;</span><span class="p">,</span>
+    <span class="n">paired_inds1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">paired_inds2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">swap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;orthogonal&quot;</span><span class="p">:</span>
+        <span class="n">procruster</span> <span class="o">=</span> <span class="n">OrthogonalProcrustes</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;seedless&quot;</span><span class="p">:</span>
+        <span class="n">procruster</span> <span class="o">=</span> <span class="n">SeedlessProcrustes</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s2">&quot;sign_flips&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;seedless-oracle&quot;</span><span class="p">:</span>
+        <span class="n">X1_paired</span> <span class="o">=</span> <span class="n">data1</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">paired_inds1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">X2_paired</span> <span class="o">=</span> <span class="n">data2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">paired_inds2</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">if</span> <span class="n">swap</span><span class="p">:</span>
+            <span class="n">Y1_paired</span> <span class="o">=</span> <span class="n">data1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">paired_inds2</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">Y2_paired</span> <span class="o">=</span> <span class="n">data2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">paired_inds1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Y1_paired</span> <span class="o">=</span> <span class="n">data1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">paired_inds1</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">Y2_paired</span> <span class="o">=</span> <span class="n">data2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">paired_inds2</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">data1_paired</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X1_paired</span><span class="p">,</span> <span class="n">Y1_paired</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">data2_paired</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X2_paired</span><span class="p">,</span> <span class="n">Y2_paired</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="n">OrthogonalProcrustes</span><span class="p">()</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data1_paired</span><span class="p">,</span> <span class="n">data2_paired</span><span class="p">)</span>
+        <span class="n">procruster</span> <span class="o">=</span> <span class="n">SeedlessProcrustes</span><span class="p">(</span>
+            <span class="n">init</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+            <span class="n">initial_Q</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="n">Q_</span><span class="p">,</span>
+            <span class="n">optimal_transport_eps</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">optimal_transport_num_reps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">iterative_num_reps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">data1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">data2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">currtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">data1_mapped</span> <span class="o">=</span> <span class="n">procruster</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">currtime</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds elapsed for SeedlessProcrustes.&quot;</span><span class="p">)</span>
+    <span class="n">data1</span> <span class="o">=</span> <span class="p">(</span><span class="n">data1_mapped</span><span class="p">[:</span><span class="n">n</span><span class="p">],</span> <span class="n">data1_mapped</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span>
+    <span class="k">return</span> <span class="n">data1</span>
+
+
+<span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span> <span class="o">=</span> <span class="n">joint_procrustes</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">X_rr</span><span class="p">,</span> <span class="n">Y_rr</span><span class="p">),</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;seedless-oracle&quot;</span><span class="p">,</span>
+    <span class="n">paired_inds1</span><span class="o">=</span><span class="n">left_paired_inds</span><span class="p">,</span>
+    <span class="n">paired_inds2</span><span class="o">=</span><span class="n">right_paired_inds_shifted</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="hypothesis-testing-on-the-embeddings">
+<h2>Hypothesis testing on the embeddings<a class="headerlink" href="#hypothesis-testing-on-the-embeddings" title="Permalink to this headline">¶</a></h2>
+<p>To test whether the distribution of latent positions is different, we use the approach
+of the “nonpar” test, also called the latent distribution test. Here, for the backend
+2-sample test, we use distance correlation (Dcorr).</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="s2">&quot;dcorr&quot;</span>
+<span class="n">workers</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">auto</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">if</span> <span class="n">auto</span><span class="p">:</span>
+    <span class="n">n_bootstraps</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">n_bootstraps</span> <span class="o">=</span> <span class="mi">500</span>
+
+
+<span class="k">def</span> <span class="nf">run_test</span><span class="p">(</span>
+    <span class="n">X1</span><span class="p">,</span>
+    <span class="n">X2</span><span class="p">,</span>
+    <span class="n">rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">info</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">auto</span><span class="o">=</span><span class="n">auto</span><span class="p">,</span>
+    <span class="n">n_bootstraps</span><span class="o">=</span><span class="n">n_bootstraps</span><span class="p">,</span>
+    <span class="n">workers</span><span class="o">=</span><span class="n">workers</span><span class="p">,</span>
+    <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">,</span>
+    <span class="n">print_out</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">currtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">test_obj</span> <span class="o">=</span> <span class="n">KSample</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+    <span class="n">tstat</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="n">test_obj</span><span class="o">.</span><span class="n">test</span><span class="p">(</span>
+        <span class="n">X1</span><span class="p">,</span>
+        <span class="n">X2</span><span class="p">,</span>
+        <span class="n">reps</span><span class="o">=</span><span class="n">n_bootstraps</span><span class="p">,</span>
+        <span class="n">workers</span><span class="o">=</span><span class="n">workers</span><span class="p">,</span>
+        <span class="n">auto</span><span class="o">=</span><span class="n">auto</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">currtime</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;pvalue&quot;</span><span class="p">:</span> <span class="n">pvalue</span><span class="p">,</span>
+        <span class="s2">&quot;tstat&quot;</span><span class="p">:</span> <span class="n">tstat</span><span class="p">,</span>
+        <span class="s2">&quot;elapsed&quot;</span><span class="p">:</span> <span class="n">elapsed</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">print_out</span><span class="p">:</span>
+        <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">row</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="run-the-two-sample-test-for-varying-embedding-dimension">
+<h3>Run the two-sample test for varying embedding dimension<a class="headerlink" href="#run-the-two-sample-test-for-varying-embedding-dimension" title="Permalink to this headline">¶</a></h3>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">n_components</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">align_n_components</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">left_composite_latent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">X_ll</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">Y_ll</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+    <span class="n">right_composite_latent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">X_rr</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">Y_rr</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+
+    <span class="n">run_test</span><span class="p">(</span>
+        <span class="n">left_composite_latent</span><span class="p">,</span>
+        <span class="n">right_composite_latent</span><span class="p">,</span>
+        <span class="n">rows</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;alignment&quot;</span><span class="p">:</span> <span class="s2">&quot;SOP&quot;</span><span class="p">,</span> <span class="s2">&quot;n_components&quot;</span><span class="p">:</span> <span class="n">n_components</span><span class="p">},</span>
+    <span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-2-sample-test-p-values-by-varying-dimension">
+<h3>Plot the 2-sample test p-values by varying dimension<a class="headerlink" href="#plot-the-2-sample-test-p-values-by-varying-dimension" title="Permalink to this headline">¶</a></h3>
+<p>Note: these are on a log y-scale.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_pvalues</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">line_locs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.0005</span><span class="p">]):</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">styles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">]</span>
+    <span class="n">line_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># plot p-values by embedding dimension</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="s2">&quot;n_components&quot;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;pvalue&quot;</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+        <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+    <span class="n">styles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">]</span>
+    <span class="n">line_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">loc</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">line_locs</span><span class="p">,</span> <span class="n">styles</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="o">**</span><span class="n">line_kws</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Dimension&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;p-value&quot;</span><span class="p">)</span>
+    <span class="c1"># ax.get_legend().remove()</span>
+    <span class="c1"># ax.legend(bbox_to_anchor=(1.15, 1), loc=&quot;upper left&quot;, title=&quot;Alignment&quot;)</span>
+
+    <span class="n">xlim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgrey&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+
+<span class="n">plot_pvalues</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;naive-pvalues-test=</span><span class="si">{</span><span class="n">test</span><span class="si">}</span><span class="s2">-n_bootstraps=</span><span class="si">{</span><span class="n">n_bootstraps</span><span class="si">}</span><span class="s2">-preprocess=</span><span class="si">{</span><span class="n">preprocess</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/latent_distribution_test_13_0.png" src="_images/latent_distribution_test_13_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="end">
+<h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Script took </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completed at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
+Script took 0:01:25.071304
+Completed at 2021-05-11 15:15:32.009607
+----
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+    <a class='left-prev' id="prev-link" href="look_at_rdpg.html" title="previous page">Look at RDPG models</a>
+    <a class='right-next' id="next-link" href="simple_statistics.html" title="next page">Simple summary statistics</a>
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By NeuroData<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>
