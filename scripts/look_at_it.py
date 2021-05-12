@@ -46,6 +46,8 @@ from giskard.utils import get_paired_inds
 
 from src.visualization import adjplot  # TODO fix graspologic version and replace here
 from giskard.plot import graphplot
+from matplotlib.colors import LinearSegmentedColormap
+from scipy.stats import binom
 
 
 def stashfig(name, **kwargs):
@@ -88,32 +90,6 @@ def calculate_weighted_degrees(adj):
     return np.sum(adj, axis=0) + np.sum(adj, axis=1)
 
 
-# def plot_adjs(left, right, title=""):
-
-#     fig, axs = plt.subplots(1, 2, figsize=(15, 7))
-#     adjplot(
-#         left,
-#         item_order=-calculate_weighted_degrees(left),
-#         plot_type="scattermap",
-#         sizes=(2, 2),
-#         ax=axs[0],
-#         title=r"Left $\to$ left",
-#         color=network_palette["Left"],
-#     )
-#     adjplot(
-#         right,
-#         item_order=-calculate_weighted_degrees(right),
-#         plot_type="scattermap",
-#         sizes=(2, 2),
-#         ax=axs[1],
-#         title=r"Right $\to$ right",
-#         color=network_palette["Right"],
-#     )
-#     fig.suptitle(title, ha="center", x=0.51)
-#     return fig, axs
-
-
-# plot_adjs(ll_adj, rr_adj, title="Ipsilateral adjacencies, ordered by degree")
 color_matrix = np.zeros_like(adj)
 color_matrix[np.ix_(left_inds, left_inds)] = 0
 color_matrix[np.ix_(right_inds, right_inds)] = 1
@@ -134,6 +110,94 @@ adjplot(
 )
 
 stashfig("adj-degree-sort")
+
+#%% [markdown]
+# ## Fit a 2-block model
+#%%
+n_left = len(left_inds)
+n_right = len(right_inds)
+# Note: graspologic has some code to do most of this but I wanted everything here to be
+# above ground so to speak
+# TODO ignore loops?
+ll_n_edges = np.count_nonzero(adj[np.ix_(left_inds, left_inds)])
+rr_n_edges = np.count_nonzero(adj[np.ix_(right_inds, right_inds)])
+lr_n_edges = np.count_nonzero(adj[np.ix_(left_inds, right_inds)])
+rl_n_edges = np.count_nonzero(adj[np.ix_(right_inds, left_inds)])
+n_edges_matrix = np.array([[ll_n_edges, lr_n_edges], [rl_n_edges, rr_n_edges]])
+
+ll_p_edge = ll_n_edges / (n_left ** 2)
+rr_p_edge = rr_n_edges / (n_right ** 2)
+lr_p_edge = lr_n_edges / (n_left * n_right)
+rl_p_edge = rl_n_edges / (n_left * n_right)
+p_edge_matrix = np.array([[ll_p_edge, lr_p_edge], [rl_p_edge, rr_p_edge]])
+
+#%% [markdown]
+# ## Plot the connection probability matrix
+#%%
+colors = sns.color_palette("Set2")
+
+
+def make_custom_cmap(to_rgb, from_rgb=(1, 1, 1)):
+    # REF: https://stackoverflow.com/questions/16267143/matplotlib-single-colored-colormap-with-saturation
+    # from color r,g,b
+    r1, g1, b1 = from_rgb
+
+    # to color r,g,b
+    r2, g2, b2 = to_rgb
+
+    cdict = {
+        "red": ((0, r1, r1), (1, r2, r2)),
+        "green": ((0, g1, g1), (1, g2, g2)),
+        "blue": ((0, b1, b1), (1, b2, b2)),
+    }
+
+    cmap = LinearSegmentedColormap("custom_cmap", cdict)
+    return cmap
+
+
+# forgive me god for what I'm about to do
+fig, axs = plt.subplots(2, 2, figsize=(4, 4), gridspec_kw=dict(hspace=0, wspace=0))
+heatmap_kws = dict(
+    vmin=0, vmax=0.02, annot=True, cbar=False, xticklabels=False, yticklabels=False
+)
+
+
+def plot_heatmap_element(value, color, ax):
+    cmap = make_custom_cmap(color)
+    sns.heatmap(np.array([[value]]), cmap=cmap, ax=ax, **heatmap_kws)
+
+
+values = [ll_p_edge, lr_p_edge, rl_p_edge, rr_p_edge]
+ordered_colors = [colors[0], colors[2], colors[3], colors[1]]
+
+for i, (val, col) in enumerate(zip(values, ordered_colors)):
+    plot_heatmap_element(val, col, axs.flat[i])
+axs[0, 0].set_ylabel("L", rotation=0, labelpad=10)
+axs[1, 0].set_ylabel("R", rotation=0, labelpad=10)
+axs[1, 0].set_xlabel("L")
+axs[1, 1].set_xlabel("R")
+fig.suptitle("Connection probabilities")
+fig.text(0, 0.385, "Presynaptic", ha="center", rotation=90)
+fig.text(0.52, -0.02, "Postsynaptic", ha="center")
+stashfig("connection-probabilities")
+
+#%% [markdown]
+# ## Plot the number of edges for each lateral type with 99% confidence intervals
+#%%
+
+fig, ax = plt.subplots(1, 1, figsize=(6, 3))
+ns = [n_left ** 2, n_right ** 2, n_left * n_right, n_left * n_right]
+edge_counts = [ll_n_edges, rr_n_edges, lr_n_edges, rl_n_edges]
+for i, (n_edges, n) in enumerate(zip(edge_counts, ns)):
+    p_edge = n_edges / n
+    err = binom(n, p_edge).interval(0.99)
+    err = np.array(err)
+    ax.bar(i, n_edges, color=colors[i])
+    ax.plot([i, i], err, color="black", zorder=90)
+names = [r"L $\to$ L", r"R $\to$ R", r"L $\to$ R", r"R $\to$ L"]
+ax.xaxis.set_major_locator(plt.FixedLocator(np.arange(4)))
+ax.set(ylabel="# of edges", xticklabels=names)
+stashfig("n_edges_plot")
 
 #%% [markdown]
 # ## Plot a network layout of the whole network
