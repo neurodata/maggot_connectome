@@ -1,5 +1,5 @@
 #%% [markdown]
-# # Look at it (left vs. right induced subgraphs)
+# # Look at it
 
 #%% [markdown]
 # ## Preliminaries
@@ -87,33 +87,52 @@ def calculate_weighted_degrees(adj):
     return np.sum(adj, axis=0) + np.sum(adj, axis=1)
 
 
-def plot_adjs(left, right, title=""):
+# def plot_adjs(left, right, title=""):
 
-    fig, axs = plt.subplots(1, 2, figsize=(15, 7))
-    adjplot(
-        left,
-        item_order=-calculate_weighted_degrees(left),
-        plot_type="scattermap",
-        sizes=(2, 2),
-        ax=axs[0],
-        title=r"Left $\to$ left",
-        color=network_palette["Left"],
-    )
-    adjplot(
-        right,
-        item_order=-calculate_weighted_degrees(right),
-        plot_type="scattermap",
-        sizes=(2, 2),
-        ax=axs[1],
-        title=r"Right $\to$ right",
-        color=network_palette["Right"],
-    )
-    fig.suptitle(title, ha="center", x=0.51)
-    return fig, axs
+#     fig, axs = plt.subplots(1, 2, figsize=(15, 7))
+#     adjplot(
+#         left,
+#         item_order=-calculate_weighted_degrees(left),
+#         plot_type="scattermap",
+#         sizes=(2, 2),
+#         ax=axs[0],
+#         title=r"Left $\to$ left",
+#         color=network_palette["Left"],
+#     )
+#     adjplot(
+#         right,
+#         item_order=-calculate_weighted_degrees(right),
+#         plot_type="scattermap",
+#         sizes=(2, 2),
+#         ax=axs[1],
+#         title=r"Right $\to$ right",
+#         color=network_palette["Right"],
+#     )
+#     fig.suptitle(title, ha="center", x=0.51)
+#     return fig, axs
 
 
-plot_adjs(ll_adj, rr_adj, title="Ipsilateral adjacencies, ordered by degree")
-stashfig("ipsilateral-adj-degree")
+# plot_adjs(ll_adj, rr_adj, title="Ipsilateral adjacencies, ordered by degree")
+color_matrix = np.zeros_like(adj)
+color_matrix[np.ix_(left_inds, left_inds)] = 0
+color_matrix[np.ix_(right_inds, right_inds)] = 1
+color_matrix[np.ix_(left_inds, right_inds)] = 2
+color_matrix[np.ix_(right_inds, left_inds)] = 3
+edge_palette = dict(zip(np.arange(4), sns.color_palette("Set2")))
+nodes["degree"] = -calculate_weighted_degrees(adj)
+adjplot(
+    adj,
+    plot_type="scattermap",
+    sizes=(1, 1),
+    meta=nodes,
+    sort_class=["hemisphere"],
+    item_order=["simple_group", "degree"],
+    tick_fontsize=20,
+    color_matrix=color_matrix,
+    edge_palette=edge_palette,
+)
+
+stashfig("adj-degree-sort")
 
 #%%
 

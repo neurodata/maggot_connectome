@@ -23,7 +23,6 @@
   chapters: 
   - file: plot_pairs
 
-
 - part: Look at it
   chapters:
   - file: simple_statistics
