@@ -375,6 +375,21 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fit-a-2-block-model">
+   Fit a 2-block model
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plot-the-connection-probability-matrix">
+   Plot the connection probability matrix
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plot-the-number-of-edges-for-each-lateral-type-with-99-confidence-intervals">
+   Plot the number of edges for each lateral type with 99% confidence intervals
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#plot-a-network-layout-of-the-whole-network">
    Plot a network layout of the whole network
   </a>
@@ -458,6 +473,8 @@
 
 <span class="kn">from</span> <span class="nn">src.visualization</span> <span class="kn">import</span> <span class="n">adjplot</span>  <span class="c1"># TODO fix graspologic version and replace here</span>
 <span class="kn">from</span> <span class="nn">giskard.plot</span> <span class="kn">import</span> <span class="n">graphplot</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LinearSegmentedColormap</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">binom</span>
 
 
 <span class="k">def</span> <span class="nf">stashfig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -512,32 +529,6 @@ Removed 0 nodes when taking the largest connected component.
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 
-<span class="c1"># def plot_adjs(left, right, title=&quot;&quot;):</span>
-
-<span class="c1">#     fig, axs = plt.subplots(1, 2, figsize=(15, 7))</span>
-<span class="c1">#     adjplot(</span>
-<span class="c1">#         left,</span>
-<span class="c1">#         item_order=-calculate_weighted_degrees(left),</span>
-<span class="c1">#         plot_type=&quot;scattermap&quot;,</span>
-<span class="c1">#         sizes=(2, 2),</span>
-<span class="c1">#         ax=axs[0],</span>
-<span class="c1">#         title=r&quot;Left $\to$ left&quot;,</span>
-<span class="c1">#         color=network_palette[&quot;Left&quot;],</span>
-<span class="c1">#     )</span>
-<span class="c1">#     adjplot(</span>
-<span class="c1">#         right,</span>
-<span class="c1">#         item_order=-calculate_weighted_degrees(right),</span>
-<span class="c1">#         plot_type=&quot;scattermap&quot;,</span>
-<span class="c1">#         sizes=(2, 2),</span>
-<span class="c1">#         ax=axs[1],</span>
-<span class="c1">#         title=r&quot;Right $\to$ right&quot;,</span>
-<span class="c1">#         color=network_palette[&quot;Right&quot;],</span>
-<span class="c1">#     )</span>
-<span class="c1">#     fig.suptitle(title, ha=&quot;center&quot;, x=0.51)</span>
-<span class="c1">#     return fig, axs</span>
-
-
-<span class="c1"># plot_adjs(ll_adj, rr_adj, title=&quot;Ipsilateral adjacencies, ordered by degree&quot;)</span>
 <span class="n">color_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
 <span class="n">color_matrix</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">left_inds</span><span class="p">,</span> <span class="n">left_inds</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">color_matrix</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">right_inds</span><span class="p">,</span> <span class="n">right_inds</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -566,6 +557,114 @@ Removed 0 nodes when taking the largest connected component.
 </div>
 </div>
 </div>
+<div class="section" id="fit-a-2-block-model">
+<h2>Fit a 2-block model<a class="headerlink" href="#fit-a-2-block-model" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_left</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">left_inds</span><span class="p">)</span>
+<span class="n">n_right</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">right_inds</span><span class="p">)</span>
+<span class="c1"># Note: graspologic has some code to do most of this but I wanted everything here to be</span>
+<span class="c1"># above ground so to speak</span>
+<span class="c1"># TODO ignore loops?</span>
+<span class="n">ll_n_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">left_inds</span><span class="p">,</span> <span class="n">left_inds</span><span class="p">)])</span>
+<span class="n">rr_n_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">right_inds</span><span class="p">,</span> <span class="n">right_inds</span><span class="p">)])</span>
+<span class="n">lr_n_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">left_inds</span><span class="p">,</span> <span class="n">right_inds</span><span class="p">)])</span>
+<span class="n">rl_n_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">adj</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">right_inds</span><span class="p">,</span> <span class="n">left_inds</span><span class="p">)])</span>
+<span class="n">n_edges_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">ll_n_edges</span><span class="p">,</span> <span class="n">lr_n_edges</span><span class="p">],</span> <span class="p">[</span><span class="n">rl_n_edges</span><span class="p">,</span> <span class="n">rr_n_edges</span><span class="p">]])</span>
+
+<span class="n">ll_p_edge</span> <span class="o">=</span> <span class="n">ll_n_edges</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_left</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">rr_p_edge</span> <span class="o">=</span> <span class="n">rr_n_edges</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_right</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">lr_p_edge</span> <span class="o">=</span> <span class="n">lr_n_edges</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_left</span> <span class="o">*</span> <span class="n">n_right</span><span class="p">)</span>
+<span class="n">rl_p_edge</span> <span class="o">=</span> <span class="n">rl_n_edges</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_left</span> <span class="o">*</span> <span class="n">n_right</span><span class="p">)</span>
+<span class="n">p_edge_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">ll_p_edge</span><span class="p">,</span> <span class="n">lr_p_edge</span><span class="p">],</span> <span class="p">[</span><span class="n">rl_p_edge</span><span class="p">,</span> <span class="n">rr_p_edge</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-connection-probability-matrix">
+<h2>Plot the connection probability matrix<a class="headerlink" href="#plot-the-connection-probability-matrix" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;Set2&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">make_custom_cmap</span><span class="p">(</span><span class="n">to_rgb</span><span class="p">,</span> <span class="n">from_rgb</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
+    <span class="c1"># REF: https://stackoverflow.com/questions/16267143/matplotlib-single-colored-colormap-with-saturation</span>
+    <span class="c1"># from color r,g,b</span>
+    <span class="n">r1</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">b1</span> <span class="o">=</span> <span class="n">from_rgb</span>
+
+    <span class="c1"># to color r,g,b</span>
+    <span class="n">r2</span><span class="p">,</span> <span class="n">g2</span><span class="p">,</span> <span class="n">b2</span> <span class="o">=</span> <span class="n">to_rgb</span>
+
+    <span class="n">cdict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;red&quot;</span><span class="p">:</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">r1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">r2</span><span class="p">)),</span>
+        <span class="s2">&quot;green&quot;</span><span class="p">:</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">g1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">g2</span><span class="p">,</span> <span class="n">g2</span><span class="p">)),</span>
+        <span class="s2">&quot;blue&quot;</span><span class="p">:</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">b2</span><span class="p">)),</span>
+    <span class="p">}</span>
+
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">LinearSegmentedColormap</span><span class="p">(</span><span class="s2">&quot;custom_cmap&quot;</span><span class="p">,</span> <span class="n">cdict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmap</span>
+
+
+<span class="c1"># forgive me god for what I&#39;m about to do</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">heatmap_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">plot_heatmap_element</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">make_custom_cmap</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">value</span><span class="p">]]),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">heatmap_kws</span><span class="p">)</span>
+
+
+<span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">ll_p_edge</span><span class="p">,</span> <span class="n">lr_p_edge</span><span class="p">,</span> <span class="n">rl_p_edge</span><span class="p">,</span> <span class="n">rr_p_edge</span><span class="p">]</span>
+<span class="n">ordered_colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">ordered_colors</span><span class="p">)):</span>
+    <span class="n">plot_heatmap_element</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Connection probabilities&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.385</span><span class="p">,</span> <span class="s2">&quot;Presynaptic&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.52</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.02</span><span class="p">,</span> <span class="s2">&quot;Postsynaptic&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;connection-probabilities&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/look_at_it_10_0.png" src="_images/look_at_it_10_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="plot-the-number-of-edges-for-each-lateral-type-with-99-confidence-intervals">
+<h2>Plot the number of edges for each lateral type with 99% confidence intervals<a class="headerlink" href="#plot-the-number-of-edges-for-each-lateral-type-with-99-confidence-intervals" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ns</span> <span class="o">=</span> <span class="p">[</span><span class="n">n_left</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_right</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_left</span> <span class="o">*</span> <span class="n">n_right</span><span class="p">,</span> <span class="n">n_left</span> <span class="o">*</span> <span class="n">n_right</span><span class="p">]</span>
+<span class="n">edge_counts</span> <span class="o">=</span> <span class="p">[</span><span class="n">ll_n_edges</span><span class="p">,</span> <span class="n">rr_n_edges</span><span class="p">,</span> <span class="n">lr_n_edges</span><span class="p">,</span> <span class="n">rl_n_edges</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">n_edges</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">edge_counts</span><span class="p">,</span> <span class="n">ns</span><span class="p">)):</span>
+    <span class="n">p_edge</span> <span class="o">=</span> <span class="n">n_edges</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="n">binom</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p_edge</span><span class="p">)</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="mf">0.99</span><span class="p">)</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">n_edges</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">err</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;L $\to$ L&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;R $\to$ R&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;L $\to$ R&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;R $\to$ L&quot;</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">FixedLocator</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;# of edges&quot;</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span><span class="s2">&quot;n_edges_plot&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/look_at_it_12_0.png" src="_images/look_at_it_12_0.png" />
+</div>
+</div>
+</div>
 <div class="section" id="plot-a-network-layout-of-the-whole-network">
 <h2>Plot a network layout of the whole network<a class="headerlink" href="#plot-a-network-layout-of-the-whole-network" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
@@ -590,7 +689,7 @@ Removed 0 nodes when taking the largest connected component.
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/look_at_it_8_0.png" src="_images/look_at_it_8_0.png" />
+<img alt="_images/look_at_it_14_0.png" src="_images/look_at_it_14_0.png" />
 </div>
 </div>
 </div>
@@ -632,7 +731,7 @@ Removed 0 nodes when taking the largest connected component.
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/look_at_it_10_0.png" src="_images/look_at_it_10_0.png" />
+<img alt="_images/look_at_it_16_0.png" src="_images/look_at_it_16_0.png" />
 </div>
 </div>
 </div>
@@ -815,7 +914,7 @@ Removed 0 nodes when taking the largest connected component.
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/look_at_it_16_0.png" src="_images/look_at_it_16_0.png" />
+<img alt="_images/look_at_it_22_0.png" src="_images/look_at_it_22_0.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -831,8 +930,8 @@ Removed 0 nodes when taking the largest connected component.
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:02:17.618148
-Completed at 2021-05-12 16:51:55.763598
+Script took 0:02:39.102026
+Completed at 2021-05-12 18:58:23.461493
 ----
 </pre></div>
 </div>
