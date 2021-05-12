@@ -98,10 +98,14 @@ def load_network_palette():
     return palette, "Side"
 
 
-def load_node_palette():
-    from src.visualization import CLASS_COLOR_DICT
+def load_node_palette(key="simple_group"):
+    if key == "merge_class":
+        from src.visualization import CLASS_COLOR_DICT
 
-    return CLASS_COLOR_DICT, "merge_class"
+        return CLASS_COLOR_DICT, "merge_class"
+    elif key == "simple_group":
+        palette = load_palette()
+        return palette, "simple_group"
 
 
 def load_navis_neurons(ids=None, path=None, version=None):

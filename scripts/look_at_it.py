@@ -45,6 +45,7 @@ from pkg.plot import set_theme
 from giskard.utils import get_paired_inds
 
 from src.visualization import adjplot  # TODO fix graspologic version and replace here
+from giskard.plot import graphplot
 
 
 def stashfig(name, **kwargs):
@@ -134,6 +135,74 @@ adjplot(
 
 stashfig("adj-degree-sort")
 
+#%% [markdown]
+# ## Plot a network layout of the whole network
+#%%
+
+ax = graphplot(
+    network=adj,
+    meta=nodes,
+    n_components=64,
+    n_neighbors=64,
+    min_dist=0.8,
+    hue=NODE_KEY,
+    node_palette=node_palette,
+    random_state=888888,
+    sizes=(10, 40),
+    hue_labels="radial",
+    hue_label_fontsize="xx-small",
+    adjust_labels=True,
+    # verbose=True,
+)
+stashfig("whole-network-layout")
+
+#%% [markdown]
+# ## Plot the network split out by left/right
+#%%
+
+side_palette = dict(zip(["L", "R"], sns.color_palette("Set2")))
+# edge_palette = dict(
+#     zip([("L", "L"), ("R", "R"), ("L", "R"), ("R", "L")], sns.color_palette("Set2"))
+# )
+ax = graphplot(
+    network=adj,
+    meta=nodes,
+    n_components=64,
+    n_neighbors=64,
+    min_dist=0.8,
+    hue="hemisphere",
+    node_palette=side_palette,
+    random_state=888888,
+    sizes=(10, 40),
+    hue_label_fontsize="xx-small",
+    tile="hemisphere",
+    tile_layout=[["L", "R"]],
+    figsize=(20, 10),
+    edge_linewidth=0.2,
+    edge_alpha=0.2,
+    subsample_edges=0.2,
+    # edge_hue="prepost",
+    # edge_palette=edge_palette,
+    # hue_labels="radial",
+    # adjust_labels=True,
+    # verbose=True,
+)
+ax.text(0, 1, "Left", fontsize="x-large")
+ax.text(2, 1, "Right", fontsize="x-large")
+stashfig("split-network-layout")
+
+#%% [markdown]
+# ## Simple statistics for the left hemisphere induced subgraph
+#%%
+ll_mg, rr_mg, _, _ = mg.bisect(paired=False)
+ll_mg.sum
+#%% [markdown]
+# ## Simple statistics for the right hemisphere induced subgraph
+#%%
+rr_mg.sum
+
+#%% [markdown]
+# ## [Experimental] Plot a graph layout for each hemisphere using aligned UMAP
 #%%
 
 
@@ -152,9 +221,6 @@ def prescale_for_embed(adjs):
     return adjs
 
 
-#%% [markdown]
-# ## Plot a graph layout for each hemisphere
-#%%
 n_components = 16  # 24 looked fine
 power = True
 normed = False
@@ -196,7 +262,7 @@ graphplot(
     embedding=umap_embeds[0],
     meta=left_nodes,
     hue="merge_class",
-    palette=CLASS_COLOR_DICT,
+    node_palette=CLASS_COLOR_DICT,
     ax=axs[0],
     **graphplot_kws,
 )
@@ -205,21 +271,12 @@ graphplot(
     embedding=umap_embeds[1],
     meta=right_nodes,
     hue="merge_class",
-    palette=CLASS_COLOR_DICT,
+    node_palette=CLASS_COLOR_DICT,
     ax=axs[1],
     **graphplot_kws,
 )
 stashfig("aligned-umap-layout")
 
-#%% [markdown]
-# ## Simple statistics for the left hemisphere induced subgraph
-#%%
-ll_mg, rr_mg, _, _ = mg.bisect(paired=False)
-ll_mg.sum
-#%% [markdown]
-# ## Simple statistics for the right hemisphere induced subgraph
-#%%
-rr_mg.sum
 
 #%%
 elapsed = time.time() - t0
