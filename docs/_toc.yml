@@ -11,17 +11,15 @@
   chapters:
   - file: look_at_it
 
-- part: Figure 2 - RDPG modeling
+- part: Figure 2 - RDPG modeling and testing
   chapters:
   - file: look_at_rdpg
-
-- part: Figure 3 - Latent distribution test
-  chapters: 
   - file: latent_distribution_test
 
-- part: Figure 4 - A set of node-paired networks
+- part: Figure 3 - A set of node-paired networks
   chapters: 
   - file: plot_pairs
+  - file: introduce_node_matching
 
 - part: Look at it
   chapters:
