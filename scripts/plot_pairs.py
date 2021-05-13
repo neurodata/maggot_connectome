@@ -35,7 +35,7 @@ from src.visualization import simple_plot_neurons
 
 
 def stashfig(name, **kwargs):
-    foldername = "latent_distribution_test"
+    foldername = "plot_pairs"
     savefig(name, foldername=foldername, **kwargs)
 
 
@@ -76,102 +76,130 @@ neurons = load_navis_neurons()
 # - The third columns shows the same idea as the second, but for inputs instead of
 #   outputs.
 #%%
-n_show_pairs = 10
+def rgb2hex(r, g, b):
+    r = int(255 * r)
+    g = int(255 * g)
+    b = int(255 * b)
+
+    return "#{:02x}{:02x}{:02x}".format(r, g, b)
+
+
+n_show_pairs = 5
 n_col = 3
-fig = plt.figure(figsize=(12, 2 * n_show_pairs))
-gs = plt.GridSpec(
-    n_show_pairs, n_col, figure=fig, hspace=0, width_ratios=[0.2, 0.4, 0.4]
-)
-# axs = np.empty((n_rows, n_cols), dtype=object)
-skeleton_color_dict = dict(
-    zip(nodes.index, np.vectorize(node_palette.get)(nodes[NODE_KEY]))
-)
-# 8888888
-rng = np.random.default_rng(8888)
-pair_ids = nodes[nodes["pair_id"] > 2]["pair_id"]
-show_pair_ids = rng.choice(pair_ids, size=n_show_pairs)
-for i, pair_id in enumerate(show_pair_ids):
-    plot_neuron_ids = nodes[nodes["pair_id"] == pair_id].index
-    plot_neuron_list = neurons.idx[plot_neuron_ids]
-    # inds = np.unravel_index(i, shape=(n_show_pairs, n_col))
-    inds = (i, 0)
-    ax = fig.add_subplot(gs[inds], projection="3d")
-    if i == 0:
-        ax.set_title("Morphology")
-
-    simple_plot_neurons(
-        plot_neuron_list,
-        palette=skeleton_color_dict,
-        ax=ax,
-        azim=-90,
-        elev=-90,
-        dist=5,
-        axes_equal=True,
-        use_x=True,
-        use_y=False,
-        use_z=True,
-        force_bounds=True,
+seeds = [8888, 88888, 888888, 8888888]
+for s, seed in enumerate(seeds):
+    if s == 0:
+        label_first = True
+    else:
+        label_first = False
+    rng = np.random.default_rng(seed)
+    fig = plt.figure(figsize=(12, 2 * n_show_pairs))
+    gs = plt.GridSpec(
+        n_show_pairs, n_col, figure=fig, hspace=0, width_ratios=[0.2, 0.4, 0.4]
     )
 
-    left_paired_ind = left_paired_inds[plot_neuron_ids[0]]
-    right_paired_ind = right_paired_inds[plot_neuron_ids[1]]
+    pair_ids = nodes[nodes["pair_id"] > 2]["pair_id"]
+    show_pair_ids = rng.choice(pair_ids, size=n_show_pairs)
+    for i, pair_id in enumerate(show_pair_ids):
+        plot_neuron_ids = nodes[nodes["pair_id"] == pair_id].index
+        plot_neuron_list = neurons.idx[plot_neuron_ids]
+        palette = dict(
+            zip(
+                plot_neuron_ids,
+                [rgb2hex(*network_palette["Left"]), rgb2hex(*network_palette["Right"])],
+            )
+        )
+        # inds = np.unravel_index(i, shape=(n_show_pairs, n_col))
+        inds = (i, 0)
+        ax = fig.add_subplot(gs[inds], projection="3d")
+        if i == 0:
+            ax.set_title("Morphology")
 
-    inds = (i, 1)
-    ax = fig.add_subplot(gs[inds])
-    left_row = adj[left_paired_ind, left_paired_inds]
-    right_row = adj[right_paired_ind, right_paired_inds]
-    stacked_rows = np.stack((left_row, right_row), axis=0)
-    any_used = np.any(stacked_rows, axis=0)
-    stacked_rows = stacked_rows[:, any_used]
-    sns.heatmap(
-        stacked_rows,
-        ax=ax,
-        cbar=False,
-        xticklabels=False,
-        yticklabels=False,
-        cmap="RdBu_r",
-        center=0,
-    )
-    ax.set_ylim((3, -1))
-    if i == 0:
-        ax.set(yticks=[0.5, 1.5], yticklabels=["L", "R"], title="Ipsilateral outputs")
+        simple_plot_neurons(
+            plot_neuron_list,
+            palette=palette,
+            ax=ax,
+            azim=-90,
+            elev=-90,
+            dist=5,
+            axes_equal=True,
+            use_x=True,
+            use_y=False,
+            use_z=True,
+            force_bounds=True,
+        )
 
-    n_contacts = stacked_rows.shape[1]
-    text = str(n_contacts)
-    if i == 0:
-        text = r"$|$Union of contacts$|$ = " + text
-    ax.text(stacked_rows.shape[1], 2.1, text, va="top", ha="right")
-    cos_sim = cosine_similarity(left_row.reshape(1, -1), right_row.reshape(1, -1))[0][0]
-    text = f"{cos_sim:0.2f}"
-    if i == 0:
-        text = "Cosine similaity = " + text
-    ax.text(n_contacts / 2, 0, text, ha="center", va="bottom")
+        left_paired_ind = left_paired_inds[plot_neuron_ids[0]]
+        right_paired_ind = right_paired_inds[plot_neuron_ids[1]]
 
-    inds = (i, 2)
-    ax = fig.add_subplot(gs[inds])
-    left_row = adj.T[left_paired_ind, left_paired_inds]
-    right_row = adj.T[right_paired_ind, right_paired_inds]
-    stacked_rows = np.stack((left_row, right_row), axis=0)
-    any_used = np.any(stacked_rows, axis=0)
-    stacked_rows = stacked_rows[:, any_used]
-    sns.heatmap(
-        stacked_rows,
-        ax=ax,
-        cbar=False,
-        xticklabels=False,
-        yticklabels=False,
-        cmap="RdBu_r",
-        center=0,
-    )
-    ax.set_ylim((3, -1))
-    if i == 0:
-        ax.set(title="Ipsilateral inputs")
-    n_contacts = stacked_rows.shape[1]
-    ax.text(n_contacts, 2.1, n_contacts, va="top", ha="right")
-    cos_sim = cosine_similarity(left_row.reshape(1, -1), right_row.reshape(1, -1))[0][0]
-    ax.text(n_contacts / 2, 0, f"{cos_sim:0.2f}", ha="center", va="bottom")
+        inds = (i, 1)
+        ax = fig.add_subplot(gs[inds])
+        left_row = adj[left_paired_ind, left_paired_inds]
+        right_row = adj[right_paired_ind, right_paired_inds]
+        stacked_rows = np.stack((left_row, right_row), axis=0)
+        any_used = np.any(stacked_rows, axis=0)
+        stacked_rows = stacked_rows[:, any_used]
+        mean = np.mean(stacked_rows, axis=0)
+        sort_inds = np.argsort(-mean)
+        stacked_rows = stacked_rows[:, sort_inds]
+        sns.heatmap(
+            stacked_rows,
+            ax=ax,
+            cbar=False,
+            xticklabels=False,
+            yticklabels=False,
+            cmap="RdBu_r",
+            center=0,
+        )
+        ax.set_ylim((3, -1))
+        if i == 0:
+            ax.set(
+                yticks=[0.5, 1.5], yticklabels=["L", "R"], title="Ipsilateral outputs"
+            )
 
-stashfig("pair-comparison-plot")
+        n_contacts = stacked_rows.shape[1]
+        text = str(n_contacts)
+        if i == 0 and label_first:
+            text = r"$|$Union of contacts$|$ = " + text
+        ax.text(stacked_rows.shape[1], 2.1, text, va="top", ha="right")
+        cos_sim = cosine_similarity(left_row.reshape(1, -1), right_row.reshape(1, -1))[
+            0
+        ][0]
+        text = f"{cos_sim:0.2f}"
+        if i == 0 and label_first:
+            text = "Cosine similaity = " + text
+        ax.text(n_contacts / 2, 0, text, ha="center", va="bottom")
+
+        inds = (i, 2)
+        ax = fig.add_subplot(gs[inds])
+        left_row = adj.T[left_paired_ind, left_paired_inds]
+        right_row = adj.T[right_paired_ind, right_paired_inds]
+        stacked_rows = np.stack((left_row, right_row), axis=0)
+        any_used = np.any(stacked_rows, axis=0)
+        stacked_rows = stacked_rows[:, any_used]
+        mean = np.mean(stacked_rows, axis=0)
+        sort_inds = np.argsort(-mean)
+        stacked_rows = stacked_rows[:, sort_inds]
+        sns.heatmap(
+            stacked_rows,
+            ax=ax,
+            cbar=False,
+            xticklabels=False,
+            yticklabels=False,
+            cmap="RdBu_r",
+            center=0,
+        )
+        ax.set_ylim((3, -1))
+        if i == 0:
+            ax.set(title="Ipsilateral inputs")
+        n_contacts = stacked_rows.shape[1]
+        ax.text(n_contacts, 2.1, n_contacts, va="top", ha="right")
+        cos_sim = cosine_similarity(left_row.reshape(1, -1), right_row.reshape(1, -1))[
+            0
+        ][0]
+        ax.text(n_contacts / 2, 0, f"{cos_sim:0.2f}", ha="center", va="bottom")
+
+    stashfig(f"pair-comparison-plot-seed={seed}")
 
 #%% [markdown]
 # ## End

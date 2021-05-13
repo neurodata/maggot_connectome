@@ -5,6 +5,8 @@
 #%% [markdown]
 # ## Preliminaries
 #%%
+from pkg.data.load_data import load_network_palette
+from maggot_connectome.scripts.look_at_rdpg import NETWORK_KEY
 from pkg.utils import set_warnings
 
 import datetime
@@ -25,7 +27,7 @@ from pkg.match import quadratic_assignment
 from pkg.match.qap import _doubly_stochastic
 from pkg.plot import set_theme
 from src.visualization import adjplot  # TODO fix graspologic version and replace here
-
+from pkg.data import load_network_palette
 
 t0 = time.time()
 
@@ -36,7 +38,8 @@ def stashfig(name, **kwargs):
 
 
 colors = sns.color_palette("Set1")
-palette = dict(zip(["Left", "Right"], colors))
+# palette = dict(zip(["Left", "Right"], colors))
+palette, NETWORK_KEY = load_network_palette()
 set_theme()
 
 # %% [markdown]
@@ -69,7 +72,7 @@ def plot_adjs(left, right, title=""):
         plot_type="scattermap",
         sizes=(2, 2),
         ax=axs[0],
-        title=r"Left $\to$ left",
+        title=r"L $\to$ L",
         color=palette["Left"],
     )
     adjplot(
@@ -77,7 +80,7 @@ def plot_adjs(left, right, title=""):
         plot_type="scattermap",
         sizes=(2, 2),
         ax=axs[1],
-        title=r"Right $\to$ right",
+        title=r"R $\to$ R",
         color=palette["Right"],
     )
     fig.suptitle(title, ha="center", x=0.51)

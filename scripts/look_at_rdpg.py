@@ -40,6 +40,8 @@ from src.visualization import matrixplot
 from matplotlib.colors import Normalize, SymLogNorm
 from matplotlib import cm
 from giskard.utils import get_paired_inds
+from giskard.align import joint_procrustes
+from pkg.data import load_network_palette, load_node_palette, select_nice_nodes
 
 t0 = time.time()
 
@@ -56,39 +58,35 @@ set_theme()
 
 # %% [markdown]
 # ## Load and process data
-
 #%%
-CLASS_KEY = "merge_class"
-node_palette = CLASS_COLOR_DICT
+
+
+def calculate_weighted_degrees(adj):
+    return np.sum(adj, axis=0) + np.sum(adj, axis=1)
+
+
+t0 = time.time()
+set_theme()
+
+NETWORK_PALETTE, NETWORK_KEY = load_network_palette()
+NODE_PALETTE, NODE_KEY = load_node_palette()
+
 mg = load_maggot_graph()
-mg = mg[mg.nodes["paper_clustered_neurons"] | mg.nodes["accessory_neurons"]]
-mg = mg[mg.nodes["hemisphere"].isin(["L", "R"])]
-mg.to_largest_connected_component(verbose=True)
-out_degrees = np.count_nonzero(mg.sum.adj, axis=0)
-in_degrees = np.count_nonzero(mg.sum.adj, axis=1)
-max_in_out_degree = np.maximum(out_degrees, in_degrees)
-# TODO ideally we would OOS these back in?
-keep_inds = np.arange(len(mg.nodes))[max_in_out_degree > 2]
-remove_ids = np.setdiff1d(mg.nodes.index, mg.nodes.index[keep_inds])
-print(f"Removed {len(remove_ids)} nodes when removing pendants.")
-mg.nodes = mg.nodes.iloc[keep_inds]
-mg.g.remove_nodes_from(remove_ids)
-mg.to_largest_connected_component(verbose=True)
-mg.nodes.sort_values("hemisphere", inplace=True)
-mg.nodes["_inds"] = range(len(mg.nodes))
+mg = select_nice_nodes(mg)
 nodes = mg.nodes
-
-raw_adj = mg.sum.adj.copy()
-
-left_nodes = mg.nodes[mg.nodes["hemisphere"] == "L"]
+nodes["sum_signal_flow"] = -nodes["sum_signal_flow"]
+adj = mg.sum.adj
+nodes["degree"] = -calculate_weighted_degrees(adj)
+left_nodes = nodes[nodes["hemisphere"] == "L"]
 left_inds = left_nodes["_inds"]
-right_nodes = mg.nodes[mg.nodes["hemisphere"] == "R"]
+right_nodes = nodes[nodes["hemisphere"] == "R"]
 right_inds = right_nodes["_inds"]
-
 left_paired_inds, right_paired_inds = get_paired_inds(
-    mg.nodes, pair_key="predicted_pair", pair_id_key="predicted_pair_id"
+    nodes, pair_key="predicted_pair", pair_id_key="predicted_pair_id"
 )
 right_paired_inds_shifted = right_paired_inds - len(left_inds)
+ll_adj = adj[np.ix_(left_inds, left_inds)]
+rr_adj = adj[np.ix_(right_inds, right_inds)]
 
 
 #%% [markdown]
@@ -144,6 +142,7 @@ def ase(adj, n_components=None):
 max_n_components = 40
 preprocess = ["binarize", "rescale"]
 
+raw_adj = mg.sum.adj.copy()
 
 ll_adj, rr_adj, _, _ = split_adj(raw_adj)
 
@@ -186,50 +185,6 @@ stashfig(f"screeplot")
 #%%
 
 
-def joint_procrustes(
-    data1,
-    data2,
-    method="orthogonal",
-    paired_inds1=None,
-    paired_inds2=None,
-    swap=False,
-    verbose=False,
-):
-    n = len(data1[0])
-    if method == "orthogonal":
-        procruster = OrthogonalProcrustes()
-    elif method == "seedless":
-        procruster = SeedlessProcrustes(init="sign_flips")
-    elif method == "seedless-oracle":
-        X1_paired = data1[0][paired_inds1, :]
-        X2_paired = data2[0][paired_inds2, :]
-        if swap:
-            Y1_paired = data1[1][paired_inds2, :]
-            Y2_paired = data2[1][paired_inds1, :]
-        else:
-            Y1_paired = data1[1][paired_inds1, :]
-            Y2_paired = data2[1][paired_inds2, :]
-        data1_paired = np.concatenate((X1_paired, Y1_paired), axis=0)
-        data2_paired = np.concatenate((X2_paired, Y2_paired), axis=0)
-        op = OrthogonalProcrustes()
-        op.fit(data1_paired, data2_paired)
-        procruster = SeedlessProcrustes(
-            init="custom",
-            initial_Q=op.Q_,
-            optimal_transport_eps=1.0,
-            optimal_transport_num_reps=100,
-            iterative_num_reps=10,
-        )
-    data1 = np.concatenate(data1, axis=0)
-    data2 = np.concatenate(data2, axis=0)
-    currtime = time.time()
-    data1_mapped = procruster.fit_transform(data1, data2)
-    if verbose > 1:
-        print(f"{time.time() - currtime:.3f} seconds elapsed for SeedlessProcrustes.")
-    data1 = (data1_mapped[:n], data1_mapped[n:])
-    return data1
-
-
 def ase(adj, n_components=None):
     U, S, Vt = selectSVD(adj, n_components=n_components, algorithm="full")
     S_sqrt = np.diag(np.sqrt(S))
@@ -239,17 +194,16 @@ def ase(adj, n_components=None):
 
 
 n_align_components = 32
-X_ll = X_ll[:, :n_align_components]
-Y_ll = Y_ll[:, :n_align_components]
+X_ll_unaligned = X_ll[:, :n_align_components]
+Y_ll_unaligned = Y_ll[:, :n_align_components]
 X_rr = X_rr[:, :n_align_components]
 Y_rr = Y_rr[:, :n_align_components]
 
 X_ll, Y_ll = joint_procrustes(
-    (X_ll, Y_ll),
+    (X_ll_unaligned, Y_ll_unaligned),
     (X_rr, Y_rr),
-    method="seedless-oracle",
-    paired_inds1=left_paired_inds,
-    paired_inds2=right_paired_inds_shifted,
+    method="seeded",
+    seeds=(left_paired_inds, right_paired_inds_shifted),
 )
 
 XY_ll = np.concatenate((X_ll, Y_ll), axis=1)
@@ -289,8 +243,9 @@ def plot_latents(
     right,
     title="",
     n_show=4,
-    alpha=0.3,
+    alpha=0.6,
     linewidth=0.4,
+    s=10,
     connections=False,
     palette=None,
 ):
@@ -299,7 +254,7 @@ def plot_latents(
     plot_data = np.concatenate([left, right], axis=0)
     labels = np.array(["Left"] * len(left) + ["Right"] * len(right))
     pg = pairplot(
-        plot_data[:, :n_show], labels=labels, title=title, size=5, palette=palette
+        plot_data[:, :n_show], labels=labels, title=title, size=s, palette=palette
     )
     if connections:
         axs = pg.axes
@@ -320,8 +275,11 @@ def plot_latents(
     return pg
 
 
-plot_latents(X_ll, X_rr, palette=palette, connections=False)
+plot_latents(X_ll_unaligned, X_rr, palette=palette, connections=False)
+stashfig("out-latent-unaligned")
 
+plot_latents(X_ll, X_rr, palette=palette, connections=False)
+stashfig("out-latent-aligned")
 #%% [markdown]
 # ## Examine the models
 
@@ -342,22 +300,67 @@ P_ll[P_ll < 0] = 0
 P_rr = X_rr[:, :n_components] @ Y_rr[:, :n_components].T
 P_rr[P_rr < 0] = 0
 
+
+fig, axs = plt.subplots(2, 2, figsize=(20, 20))
 adjplot_kws = dict(
-    colors="merge_class",
-    palette=CLASS_COLOR_DICT,
+    colors=NODE_KEY,
+    palette=NODE_PALETTE,
+    sort_class=NODE_KEY,
+    class_order="sum_signal_flow",
+    item_order="degree",
+    ticks=False,
+    gridline_kws=dict(linewidth=0),
+)
+scattermap_kws = dict(sizes=(1, 1))
+ax = axs[0, 0]
+_, _, top_ax, left_ax = adjplot(
+    ll_adj,
+    plot_type="scattermap",
+    meta=left_nodes,
+    color=NETWORK_PALETTE["Left"],
+    ax=ax,
+    **adjplot_kws,
+    **scattermap_kws,
+)
+top_ax.set_title(r"L $\to$ L", fontsize="xx-large")
+left_ax.set_ylabel("Observed network", fontsize="xx-large")
+ax = axs[0, 1]
+_, _, top_ax, _ = adjplot(
+    rr_adj,
+    plot_type="scattermap",
+    meta=right_nodes,
+    color=NETWORK_PALETTE["Right"],
+    ax=ax,
+    **adjplot_kws,
+    **scattermap_kws,
+)
+top_ax.set_title(r"R $\to$ R", fontsize="xx-large")
+heatmap_kws = dict(
     cmap=cmap,
     norm=norm,
     center=0,
     vmin=vmin,
     vmax=vmax,
-    item_order="merge_class",
     cbar=False,
 )
-fig, axs = plt.subplots(1, 2, figsize=(20, 10))
-ax = axs[0]
-adjplot(P_ll, meta=left_nodes, ax=ax, title=r"Left $\to$ left", **adjplot_kws)
-ax = axs[1]
-adjplot(P_rr, meta=right_nodes, ax=ax, title=r"Right $\to$ right", **adjplot_kws)
+ax = axs[1, 0]
+_, _, _, left_ax = adjplot(
+    P_ll,
+    meta=left_nodes,
+    ax=ax,
+    **adjplot_kws,
+    **heatmap_kws,
+)
+left_ax.set_ylabel(f"RDPG model (d={n_components})", fontsize="xx-large")
+ax = axs[1, 1]
+adjplot(
+    P_rr,
+    meta=right_nodes,
+    ax=ax,
+    **adjplot_kws,
+    **heatmap_kws,
+)
+plt.tight_layout()
 stashfig("phat-comparison")
 
 #%% [markdown]
