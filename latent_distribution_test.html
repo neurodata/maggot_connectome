@@ -392,6 +392,11 @@
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#now-do-a-synthetic-alternative-experiment">
+   Now do a synthetic alternative experiment
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#end">
    End
   </a>
@@ -440,6 +445,7 @@
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">pkg.io</span> <span class="kn">import</span> <span class="n">savefig</span>
 <span class="kn">from</span> <span class="nn">pkg.plot</span> <span class="kn">import</span> <span class="n">set_theme</span>
+<span class="kn">from</span> <span class="nn">giskard.align</span> <span class="kn">import</span> <span class="n">joint_procrustes</span>
 
 
 <span class="k">def</span> <span class="nf">stashfig</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -541,65 +547,19 @@ Removed 0 nodes when taking the largest connected component.
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/JHU_code/maggot/graspologic/graspologic/embed/ase.py:166: UserWarning:
-
-Input graph is not fully connected. Results may notbe optimal. You can compute the largest connected component byusing ``graspologic.utils.largest_connected_component``.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/JHU_code/maggot/graspologic/graspologic/embed/ase.py:166: UserWarning: Input graph is not fully connected. Results may notbe optimal. You can compute the largest connected component byusing ``graspologic.utils.largest_connected_component``.
+  warnings.warn(msg, UserWarning)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">joint_procrustes</span><span class="p">(</span>
-    <span class="n">data1</span><span class="p">,</span>
-    <span class="n">data2</span><span class="p">,</span>
-    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;orthogonal&quot;</span><span class="p">,</span>
-    <span class="n">paired_inds1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">paired_inds2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">swap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">):</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;orthogonal&quot;</span><span class="p">:</span>
-        <span class="n">procruster</span> <span class="o">=</span> <span class="n">OrthogonalProcrustes</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;seedless&quot;</span><span class="p">:</span>
-        <span class="n">procruster</span> <span class="o">=</span> <span class="n">SeedlessProcrustes</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s2">&quot;sign_flips&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;seedless-oracle&quot;</span><span class="p">:</span>
-        <span class="n">X1_paired</span> <span class="o">=</span> <span class="n">data1</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">paired_inds1</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="n">X2_paired</span> <span class="o">=</span> <span class="n">data2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">paired_inds2</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="k">if</span> <span class="n">swap</span><span class="p">:</span>
-            <span class="n">Y1_paired</span> <span class="o">=</span> <span class="n">data1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">paired_inds2</span><span class="p">,</span> <span class="p">:]</span>
-            <span class="n">Y2_paired</span> <span class="o">=</span> <span class="n">data2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">paired_inds1</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">Y1_paired</span> <span class="o">=</span> <span class="n">data1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">paired_inds1</span><span class="p">,</span> <span class="p">:]</span>
-            <span class="n">Y2_paired</span> <span class="o">=</span> <span class="n">data2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">paired_inds2</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="n">data1_paired</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X1_paired</span><span class="p">,</span> <span class="n">Y1_paired</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">data2_paired</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X2_paired</span><span class="p">,</span> <span class="n">Y2_paired</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">op</span> <span class="o">=</span> <span class="n">OrthogonalProcrustes</span><span class="p">()</span>
-        <span class="n">op</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data1_paired</span><span class="p">,</span> <span class="n">data2_paired</span><span class="p">)</span>
-        <span class="n">procruster</span> <span class="o">=</span> <span class="n">SeedlessProcrustes</span><span class="p">(</span>
-            <span class="n">init</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
-            <span class="n">initial_Q</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="n">Q_</span><span class="p">,</span>
-            <span class="n">optimal_transport_eps</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-            <span class="n">optimal_transport_num_reps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-            <span class="n">iterative_num_reps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="n">data1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">data2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">currtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">data1_mapped</span> <span class="o">=</span> <span class="n">procruster</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">currtime</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds elapsed for SeedlessProcrustes.&quot;</span><span class="p">)</span>
-    <span class="n">data1</span> <span class="o">=</span> <span class="p">(</span><span class="n">data1_mapped</span><span class="p">[:</span><span class="n">n</span><span class="p">],</span> <span class="n">data1_mapped</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span>
-    <span class="k">return</span> <span class="n">data1</span>
-
-
-<span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span> <span class="o">=</span> <span class="n">joint_procrustes</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span> <span class="o">=</span> <span class="n">joint_procrustes</span><span class="p">(</span>
     <span class="p">(</span><span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span><span class="p">),</span>
     <span class="p">(</span><span class="n">X_rr</span><span class="p">,</span> <span class="n">Y_rr</span><span class="p">),</span>
-    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;seedless-oracle&quot;</span><span class="p">,</span>
-    <span class="n">paired_inds1</span><span class="o">=</span><span class="n">left_paired_inds</span><span class="p">,</span>
-    <span class="n">paired_inds2</span><span class="o">=</span><span class="n">right_paired_inds_shifted</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;seeded&quot;</span><span class="p">,</span>
+    <span class="n">seeds</span><span class="o">=</span><span class="p">(</span><span class="n">left_paired_inds</span><span class="p">,</span> <span class="n">right_paired_inds_shifted</span><span class="p">),</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -735,6 +695,315 @@ of the “nonpar” test, also called the latent distribution test. Here, for th
 </div>
 </div>
 </div>
+<div class="section" id="now-do-a-synthetic-alternative-experiment">
+<h2>Now do a synthetic alternative experiment<a class="headerlink" href="#now-do-a-synthetic-alternative-experiment" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">normalize</span>
+
+<span class="n">align_n_components</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">n_perturb</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">do_normalize</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">groups</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;MBONs&quot;</span><span class="p">,</span> <span class="s2">&quot;MBINs&quot;</span><span class="p">,</span> <span class="s2">&quot;PNs&quot;</span><span class="p">,</span> <span class="s2">&quot;KCs&quot;</span><span class="p">,</span> <span class="s2">&quot;sensories&quot;</span><span class="p">,</span> <span class="s2">&quot;LNs&quot;</span><span class="p">]</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+    <span class="n">ll_adj_perturbed</span> <span class="o">=</span> <span class="n">ll_adj_to_embed</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">group</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+        <span class="n">group_nodes</span> <span class="o">=</span> <span class="n">left_nodes</span><span class="p">[</span><span class="n">left_nodes</span><span class="p">[</span><span class="s2">&quot;simple_group&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group</span><span class="p">]</span>
+        <span class="n">effective_n_perturb</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_perturb</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_nodes</span><span class="p">))</span>
+        <span class="n">perturb_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+            <span class="n">group_nodes</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">effective_n_perturb</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">perturb_inds</span> <span class="o">=</span> <span class="n">group_nodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">perturb_index</span><span class="p">,</span> <span class="s2">&quot;_inds&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">perturb_inds</span><span class="p">:</span>
+            <span class="n">perm_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">))</span>
+            <span class="n">ll_adj_perturbed</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ll_adj_perturbed</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">perm_inds</span><span class="p">]</span>
+            <span class="n">perm_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">))</span>
+            <span class="n">ll_adj_perturbed</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ll_adj_perturbed</span><span class="p">[</span><span class="n">perm_inds</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">effective_n_perturb</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span><span class="p">,</span> <span class="n">left_sing_vals</span><span class="p">,</span> <span class="n">left_elbow_inds</span> <span class="o">=</span> <span class="n">embed</span><span class="p">(</span>
+        <span class="n">ll_adj_perturbed</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">align_n_components</span>
+    <span class="p">)</span>
+    <span class="n">X_rr</span><span class="p">,</span> <span class="n">Y_rr</span><span class="p">,</span> <span class="n">right_sing_vals</span><span class="p">,</span> <span class="n">right_elbow_inds</span> <span class="o">=</span> <span class="n">embed</span><span class="p">(</span>
+        <span class="n">rr_adj_to_embed</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="n">align_n_components</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">do_normalize</span><span class="p">:</span>
+        <span class="n">X_ll</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">X_ll</span><span class="p">)</span>
+        <span class="n">Y_ll</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">Y_ll</span><span class="p">)</span>
+        <span class="n">X_rr</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">X_rr</span><span class="p">)</span>
+        <span class="n">Y_rr</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">Y_rr</span><span class="p">)</span>
+    <span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span> <span class="o">=</span> <span class="n">joint_procrustes</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">X_ll</span><span class="p">,</span> <span class="n">Y_ll</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">X_rr</span><span class="p">,</span> <span class="n">Y_rr</span><span class="p">),</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;seeded&quot;</span><span class="p">,</span>
+        <span class="n">seeds</span><span class="o">=</span><span class="p">(</span><span class="n">left_paired_inds</span><span class="p">,</span> <span class="n">right_paired_inds_shifted</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">n_components</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">align_n_components</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">left_composite_latent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">X_ll</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">Y_ll</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="c1"># left_composite_latent = normalize(left_composite_latent)</span>
+        <span class="n">right_composite_latent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">X_rr</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">Y_rr</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_components</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="c1"># right_composite_latent = normalize(right_composite_latent)</span>
+
+        <span class="n">run_test</span><span class="p">(</span>
+            <span class="n">left_composite_latent</span><span class="p">,</span>
+            <span class="n">right_composite_latent</span><span class="p">,</span>
+            <span class="n">rows</span><span class="p">,</span>
+            <span class="n">info</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;alignment&quot;</span><span class="p">:</span> <span class="s2">&quot;SOP&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;n_components&quot;</span><span class="p">:</span> <span class="n">n_components</span><span class="p">,</span>
+                <span class="s2">&quot;perturb_group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
+                <span class="s2">&quot;n_perturb&quot;</span><span class="p">:</span> <span class="n">effective_n_perturb</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+<span class="n">results</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>None
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/JHU_code/maggot/graspologic/graspologic/embed/ase.py:166: UserWarning: Input graph is not fully connected. Results may notbe optimal. You can compute the largest connected component byusing ``graspologic.utils.largest_connected_component``.
+  warnings.warn(msg, UserWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MBONs
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/JHU_code/maggot/graspologic/graspologic/embed/ase.py:166: UserWarning: Input graph is not fully connected. Results may notbe optimal. You can compute the largest connected component byusing ``graspologic.utils.largest_connected_component``.
+  warnings.warn(msg, UserWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MBINs
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/JHU_code/maggot/graspologic/graspologic/embed/ase.py:166: UserWarning: Input graph is not fully connected. Results may notbe optimal. You can compute the largest connected component byusing ``graspologic.utils.largest_connected_component``.
+  warnings.warn(msg, UserWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PNs
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/JHU_code/maggot/graspologic/graspologic/embed/ase.py:166: UserWarning: Input graph is not fully connected. Results may notbe optimal. You can compute the largest connected component byusing ``graspologic.utils.largest_connected_component``.
+  warnings.warn(msg, UserWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KCs
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/JHU_code/maggot/graspologic/graspologic/embed/ase.py:166: UserWarning: Input graph is not fully connected. Results may notbe optimal. You can compute the largest connected component byusing ``graspologic.utils.largest_connected_component``.
+  warnings.warn(msg, UserWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>sensories
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/JHU_code/maggot/graspologic/graspologic/embed/ase.py:166: UserWarning: Input graph is not fully connected. Results may notbe optimal. You can compute the largest connected component byusing ``graspologic.utils.largest_connected_component``.
+  warnings.warn(msg, UserWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LNs
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/bpedigo/JHU_code/maggot/graspologic/graspologic/embed/ase.py:166: UserWarning: Input graph is not fully connected. Results may notbe optimal. You can compute the largest connected component byusing ``graspologic.utils.largest_connected_component``.
+  warnings.warn(msg, UserWarning)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pvalue</th>
+      <th>tstat</th>
+      <th>elapsed</th>
+      <th>alignment</th>
+      <th>n_components</th>
+      <th>perturb_group</th>
+      <th>n_perturb</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.606708</td>
+      <td>-0.000248</td>
+      <td>0.899064</td>
+      <td>SOP</td>
+      <td>1</td>
+      <td>None</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.000000</td>
+      <td>-0.000479</td>
+      <td>0.783196</td>
+      <td>SOP</td>
+      <td>2</td>
+      <td>None</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1.000000</td>
+      <td>-0.000662</td>
+      <td>0.797197</td>
+      <td>SOP</td>
+      <td>3</td>
+      <td>None</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.000000</td>
+      <td>-0.000716</td>
+      <td>0.828584</td>
+      <td>SOP</td>
+      <td>4</td>
+      <td>None</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.000000</td>
+      <td>-0.000573</td>
+      <td>0.784464</td>
+      <td>SOP</td>
+      <td>5</td>
+      <td>None</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>107</th>
+      <td>0.002860</td>
+      <td>0.002664</td>
+      <td>0.759584</td>
+      <td>SOP</td>
+      <td>12</td>
+      <td>LNs</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>108</th>
+      <td>0.003563</td>
+      <td>0.002529</td>
+      <td>0.769080</td>
+      <td>SOP</td>
+      <td>13</td>
+      <td>LNs</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>109</th>
+      <td>0.000889</td>
+      <td>0.003391</td>
+      <td>0.767693</td>
+      <td>SOP</td>
+      <td>14</td>
+      <td>LNs</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>110</th>
+      <td>0.000226</td>
+      <td>0.004253</td>
+      <td>0.767576</td>
+      <td>SOP</td>
+      <td>15</td>
+      <td>LNs</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>111</th>
+      <td>0.000408</td>
+      <td>0.003880</td>
+      <td>0.776073</td>
+      <td>SOP</td>
+      <td>16</td>
+      <td>LNs</td>
+      <td>10</td>
+    </tr>
+  </tbody>
+</table>
+<p>112 rows × 7 columns</p>
+</div></div></div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">node_palette</span><span class="p">[</span><span class="s2">&quot;None&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;#808080&quot;</span>  <span class="c1"># grey</span>
+<span class="n">n_perturbs</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;perturb_group&quot;</span><span class="p">)[</span><span class="s2">&quot;n_perturb&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;n_components&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;pvalue&quot;</span><span class="p">,</span>
+    <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;perturb_group&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="n">node_palette</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">handles</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+<span class="n">new_labels</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+    <span class="n">new_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; (</span><span class="si">{</span><span class="n">n_perturbs</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+    <span class="n">handles</span><span class="o">=</span><span class="n">handles</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">new_labels</span><span class="p">,</span>
+    <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.15</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Perturb</span><span class="se">\n</span><span class="s2">group&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">styles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">]</span>
+<span class="n">line_locs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.0005</span><span class="p">]</span>
+<span class="n">line_kws</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">loc</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">line_locs</span><span class="p">,</span> <span class="n">styles</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="o">**</span><span class="n">line_kws</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;# of dimensions&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;p-value&#39;</span><span class="p">)</span>
+<span class="n">stashfig</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;perturb-p-values-n_perturb=</span><span class="si">{</span><span class="n">n_perturb</span><span class="si">}</span><span class="s2">-align_n_component=</span><span class="si">{</span><span class="n">align_n_components</span><span class="si">}</span><span class="s2">-normalize=</span><span class="si">{</span><span class="n">do_normalize</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/latent_distribution_test_16_0.png" src="_images/latent_distribution_test_16_0.png" />
+</div>
+</div>
+</div>
 <div class="section" id="end">
 <h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
@@ -750,8 +1019,8 @@ of the “nonpar” test, also called the latent distribution test. Here, for th
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
-Script took 0:01:25.071304
-Completed at 2021-05-11 15:15:32.009607
+Script took 0:05:07.648001
+Completed at 2021-05-13 11:19:00.387545
 ----
 </pre></div>
 </div>
