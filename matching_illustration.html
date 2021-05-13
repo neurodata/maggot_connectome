@@ -408,9 +408,7 @@ between the nodes of the left side of the brain and the nodes of the right side.
 <h2>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pkg.data.load_data</span> <span class="kn">import</span> <span class="n">load_network_palette</span>
-<span class="kn">from</span> <span class="nn">maggot_connectome.scripts.look_at_rdpg</span> <span class="kn">import</span> <span class="n">NETWORK_KEY</span>
-<span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">set_warnings</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pkg.utils</span> <span class="kn">import</span> <span class="n">set_warnings</span>
 
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -453,7 +451,7 @@ between the nodes of the left side of the brain and the nodes of the right side.
 <h2>Load and process data<a class="headerlink" href="#load-and-process-data" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mg</span> <span class="o">=</span> <span class="n">load_maggot_graph</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mg</span> <span class="o">=</span> <span class="n">load_maggot_graph</span><span class="p">()</span>
 <span class="n">mg</span> <span class="o">=</span> <span class="n">mg</span><span class="p">[</span><span class="n">mg</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;paper_clustered_neurons&quot;</span><span class="p">]]</span>
 
 <span class="n">ll_mg</span><span class="p">,</span> <span class="n">rr_mg</span><span class="p">,</span> <span class="n">lr_mg</span><span class="p">,</span> <span class="n">rl_mg</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">bisect</span><span class="p">(</span><span class="n">paired</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -499,15 +497,21 @@ between the nodes of the left side of the brain and the nodes of the right side.
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;Figure size 1080x504 with 2 Axes&gt;,
+ array([&lt;AxesSubplot:title={&#39;center&#39;:&#39;L $\\to$ L&#39;}&gt;,
+        &lt;AxesSubplot:title={&#39;center&#39;:&#39;R $\\to$ R&#39;}&gt;], dtype=object))
+</pre></div>
+</div>
+<img alt="_images/matching_illustration_4_1.png" src="_images/matching_illustration_4_1.png" />
+</div>
 </div>
 </div>
 <div class="section" id="run-several-restarts-of-graph-matching-to-understand-the-variance-in-solutions">
 <h2>Run several restarts of graph matching to understand the variance in solutions<a class="headerlink" href="#run-several-restarts-of-graph-matching-to-understand-the-variance-in-solutions" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-
-<span class="k">def</span> <span class="nf">generate_random_doubly_stochastic</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_random_doubly_stochastic</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
     <span class="n">J</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span> <span class="o">/</span> <span class="n">n</span>
     <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
     <span class="c1"># Sinkhorn balancing</span>
@@ -547,14 +551,66 @@ between the nodes of the left side of the brain and the nodes of the right side.
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10.431 seconds elapsed for restart 1.
+Restart 1 did 30 iterations.
+Final score: 826668.0
+Match ratio: 0.8018166804293972
+
+10.279 seconds elapsed for restart 2.
+Restart 2 did 26 iterations.
+Final score: 835306.0
+Match ratio: 0.7745664739884393
+
+13.261 seconds elapsed for restart 3.
+Restart 3 did 30 iterations.
+Final score: 834678.0
+Match ratio: 0.791907514450867
+
+13.670 seconds elapsed for restart 4.
+Restart 4 did 30 iterations.
+Final score: 813866.0
+Match ratio: 0.7720891824938068
+
+12.878 seconds elapsed for restart 5.
+Restart 5 did 30 iterations.
+Final score: 824108.0
+Match ratio: 0.7745664739884393
+
+11.989 seconds elapsed for restart 6.
+Restart 6 did 28 iterations.
+Final score: 822726.0
+Match ratio: 0.7861271676300579
+
+11.302 seconds elapsed for restart 7.
+Restart 7 did 26 iterations.
+Final score: 827739.0
+Match ratio: 0.7795210569777044
+
+11.782 seconds elapsed for restart 8.
+Restart 8 did 30 iterations.
+Final score: 822873.0
+Match ratio: 0.7927332782824112
+
+11.304 seconds elapsed for restart 9.
+Restart 9 did 30 iterations.
+Final score: 830558.0
+Match ratio: 0.7803468208092486
+
+11.620 seconds elapsed for restart 10.
+Restart 10 did 28 iterations.
+Final score: 825977.0
+Match ratio: 0.7902559867877786
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 <div class="section" id="illustrate-graph-matching-progress-by-iteration">
 <h2>Illustrate graph matching progress by iteration<a class="headerlink" href="#illustrate-graph-matching-progress-by-iteration" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-<span class="n">currtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">currtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 <span class="n">max_iter</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;nit&quot;</span><span class="p">]</span>
 <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">maximize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shuffle_input</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
 <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">)</span>
@@ -589,14 +645,37 @@ between the nodes of the left side of the brain and the nodes of the right side.
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12.034 seconds elapsed.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:xlabel=&#39;iteration&#39;, ylabel=&#39;match_ratio&#39;&gt;
+</pre></div>
+</div>
+<img alt="_images/matching_illustration_8_2.png" src="_images/matching_illustration_8_2.png" />
+<img alt="_images/matching_illustration_8_3.png" src="_images/matching_illustration_8_3.png" />
+<img alt="_images/matching_illustration_8_4.png" src="_images/matching_illustration_8_4.png" />
+<img alt="_images/matching_illustration_8_5.png" src="_images/matching_illustration_8_5.png" />
+<img alt="_images/matching_illustration_8_6.png" src="_images/matching_illustration_8_6.png" />
+<img alt="_images/matching_illustration_8_7.png" src="_images/matching_illustration_8_7.png" />
+<img alt="_images/matching_illustration_8_8.png" src="_images/matching_illustration_8_8.png" />
+<img alt="_images/matching_illustration_8_9.png" src="_images/matching_illustration_8_9.png" />
+<img alt="_images/matching_illustration_8_10.png" src="_images/matching_illustration_8_10.png" />
+<img alt="_images/matching_illustration_8_11.png" src="_images/matching_illustration_8_11.png" />
+<img alt="_images/matching_illustration_8_12.png" src="_images/matching_illustration_8_12.png" />
+<img alt="_images/matching_illustration_8_13.png" src="_images/matching_illustration_8_13.png" />
+<img alt="_images/matching_illustration_8_14.png" src="_images/matching_illustration_8_14.png" />
+<img alt="_images/matching_illustration_8_15.png" src="_images/matching_illustration_8_15.png" />
+<img alt="_images/matching_illustration_8_16.png" src="_images/matching_illustration_8_16.png" />
+<img alt="_images/matching_illustration_8_17.png" src="_images/matching_illustration_8_17.png" />
+</div>
 </div>
 </div>
 <div class="section" id="start-graph-matching-from-the-known-pairs-to-see-if-we-can-improve">
 <h2>Start graph matching from the known pairs to see if we can improve<a class="headerlink" href="#start-graph-matching-from-the-known-pairs-to-see-if-we-can-improve" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-<span class="n">gm</span> <span class="o">=</span> <span class="n">GraphMatch</span><span class="p">(</span><span class="n">n_init</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">shuffle_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gm</span> <span class="o">=</span> <span class="n">GraphMatch</span><span class="p">(</span><span class="n">n_init</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">shuffle_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
 <span class="n">gm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">ll_adj</span><span class="p">,</span> <span class="n">rr_adj</span><span class="p">)</span>
 <span class="n">perm_inds</span> <span class="o">=</span> <span class="n">gm</span><span class="o">.</span><span class="n">perm_inds_</span>
 <span class="n">match_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">perm_inds</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -609,18 +688,36 @@ between the nodes of the left side of the brain and the nodes of the right side.
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Match ratio when initializing from known pairs:
+0.8860445912469034
+GMP objective function after initializing from known pairs:
+868447.0
+GMP objective function from known pairs:
+865969.0
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 <div class="section" id="end">
 <h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
 <span class="n">delta</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Script took </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Completed at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>----
+Script took 0:15:31.255236
+Completed at 2021-05-13 14:58:07.099221
+----
 </pre></div>
 </div>
 </div>
