@@ -30,6 +30,7 @@ from pkg.data import (
 )
 from pkg.io import savefig
 from pkg.plot import set_theme
+from giskard.align import joint_procrustes
 
 
 def stashfig(name, **kwargs):
@@ -117,56 +118,11 @@ X_rr, Y_rr, right_sing_vals, right_elbow_inds = embed(
 #%%
 
 
-def joint_procrustes(
-    data1,
-    data2,
-    method="orthogonal",
-    paired_inds1=None,
-    paired_inds2=None,
-    swap=False,
-    verbose=False,
-):
-    n = len(data1[0])
-    if method == "orthogonal":
-        procruster = OrthogonalProcrustes()
-    elif method == "seedless":
-        procruster = SeedlessProcrustes(init="sign_flips")
-    elif method == "seedless-oracle":
-        X1_paired = data1[0][paired_inds1, :]
-        X2_paired = data2[0][paired_inds2, :]
-        if swap:
-            Y1_paired = data1[1][paired_inds2, :]
-            Y2_paired = data2[1][paired_inds1, :]
-        else:
-            Y1_paired = data1[1][paired_inds1, :]
-            Y2_paired = data2[1][paired_inds2, :]
-        data1_paired = np.concatenate((X1_paired, Y1_paired), axis=0)
-        data2_paired = np.concatenate((X2_paired, Y2_paired), axis=0)
-        op = OrthogonalProcrustes()
-        op.fit(data1_paired, data2_paired)
-        procruster = SeedlessProcrustes(
-            init="custom",
-            initial_Q=op.Q_,
-            optimal_transport_eps=1.0,
-            optimal_transport_num_reps=100,
-            iterative_num_reps=10,
-        )
-    data1 = np.concatenate(data1, axis=0)
-    data2 = np.concatenate(data2, axis=0)
-    currtime = time.time()
-    data1_mapped = procruster.fit_transform(data1, data2)
-    if verbose > 1:
-        print(f"{time.time() - currtime:.3f} seconds elapsed for SeedlessProcrustes.")
-    data1 = (data1_mapped[:n], data1_mapped[n:])
-    return data1
-
-
 X_ll, Y_ll = joint_procrustes(
     (X_ll, Y_ll),
     (X_rr, Y_rr),
-    method="seedless-oracle",
-    paired_inds1=left_paired_inds,
-    paired_inds2=right_paired_inds_shifted,
+    method="seeded",
+    seeds=(left_paired_inds, right_paired_inds_shifted),
 )
 
 #%% [markdown]
@@ -285,6 +241,111 @@ stashfig(
     f"naive-pvalues-test={test}-n_bootstraps={n_bootstraps}-preprocess={preprocess}"
 )
 
+#%% [markdown]
+# ## Now do a synthetic alternative experiment
+#%%
+from sklearn.preprocessing import normalize
+
+align_n_components = 16
+n_perturb = 10
+do_normalize = True
+groups = ["None", "MBONs", "MBINs", "PNs", "KCs", "sensories", "LNs"]
+rows = []
+for group in groups:
+    print(group)
+    ll_adj_perturbed = ll_adj_to_embed.copy()
+    if group != "None":
+        group_nodes = left_nodes[left_nodes["simple_group"] == group]
+        effective_n_perturb = min(n_perturb, len(group_nodes))
+        perturb_index = np.random.choice(
+            group_nodes.index, size=effective_n_perturb, replace=False
+        )
+        perturb_inds = group_nodes.loc[perturb_index, "_inds"]
+        for i in perturb_inds:
+            perm_inds = np.random.permutation(len(ll_adj))
+            ll_adj_perturbed[i] = ll_adj_perturbed[i, perm_inds]
+            perm_inds = np.random.permutation(len(ll_adj))
+            ll_adj_perturbed[:, i] = ll_adj_perturbed[perm_inds, i]
+    else:
+        effective_n_perturb = 0
+    X_ll, Y_ll, left_sing_vals, left_elbow_inds = embed(
+        ll_adj_perturbed, n_components=align_n_components
+    )
+    X_rr, Y_rr, right_sing_vals, right_elbow_inds = embed(
+        rr_adj_to_embed, n_components=align_n_components
+    )
+    if do_normalize:
+        X_ll = normalize(X_ll)
+        Y_ll = normalize(Y_ll)
+        X_rr = normalize(X_rr)
+        Y_rr = normalize(Y_rr)
+    X_ll, Y_ll = joint_procrustes(
+        (X_ll, Y_ll),
+        (X_rr, Y_rr),
+        method="seeded",
+        seeds=(left_paired_inds, right_paired_inds_shifted),
+    )
+
+    for n_components in np.arange(1, align_n_components + 1):
+        left_composite_latent = np.concatenate(
+            (X_ll[:, :n_components], Y_ll[:, :n_components]), axis=1
+        )
+        # left_composite_latent = normalize(left_composite_latent)
+        right_composite_latent = np.concatenate(
+            (X_rr[:, :n_components], Y_rr[:, :n_components]), axis=1
+        )
+        # right_composite_latent = normalize(right_composite_latent)
+
+        run_test(
+            left_composite_latent,
+            right_composite_latent,
+            rows,
+            info={
+                "alignment": "SOP",
+                "n_components": n_components,
+                "perturb_group": group,
+                "n_perturb": effective_n_perturb,
+            },
+        )
+
+results = pd.DataFrame(rows)
+results
+
+#%%
+
+node_palette["None"] = "#808080"  # grey
+n_perturbs = results.groupby("perturb_group")["n_perturb"].first()
+fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+sns.lineplot(
+    data=results,
+    x="n_components",
+    y="pvalue",
+    hue="perturb_group",
+    palette=node_palette,
+)
+ax.set_yscale("log")
+handles, labels = ax.get_legend_handles_labels()
+new_labels = []
+for label in labels:
+    new_labels.append(label + f" ({n_perturbs[label]})")
+ax.get_legend().remove()
+ax.legend(
+    handles=handles,
+    labels=new_labels,
+    bbox_to_anchor=(1.15, 1),
+    loc="upper left",
+    title="Perturb\ngroup",
+)
+styles = ["-", "--", ":"]
+line_locs = [0.05, 0.005, 0.0005]
+line_kws = dict(color="black", alpha=0.7, linewidth=1.5, zorder=-1)
+for loc, style in zip(line_locs, styles):
+    ax.axhline(loc, linestyle=style, **line_kws)
+    ax.text(ax.get_xlim()[-1] + 0.1, loc, loc, ha="left", va="center")
+ax.set(xlabel="# of dimensions", ylabel='p-value')
+stashfig(
+    f"perturb-p-values-n_perturb={n_perturb}-align_n_component={align_n_components}-normalize={do_normalize}"
+)
 #%% [markdown]
 # ## End
 #%%
