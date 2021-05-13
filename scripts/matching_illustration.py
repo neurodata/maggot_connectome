@@ -5,8 +5,6 @@
 #%% [markdown]
 # ## Preliminaries
 #%%
-from pkg.data.load_data import load_network_palette
-from maggot_connectome.scripts.look_at_rdpg import NETWORK_KEY
 from pkg.utils import set_warnings
 
 import datetime
