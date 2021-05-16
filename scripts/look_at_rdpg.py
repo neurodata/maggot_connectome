@@ -366,7 +366,7 @@ stashfig("phat-comparison")
 #%% [markdown]
 # ### Experimental: try to make sense of the individual components
 #%%
-n_components = 20
+n_components = 16
 
 
 def varimax(X):
@@ -416,37 +416,26 @@ for dimension in X_rr_varimax.T[:16]:
 nodes = right_nodes.copy()
 alpha = 10
 quantile = 0.99
-for i in range(16):
+for i in range(n_components):
     x = X_rr_varimax[:, i]
     y = Y_rr_varimax[:, i]
     Phat = x[:, None] @ y[:, None].T
-    abs_Phat = np.abs(Phat)
-    q = np.quantile(abs_Phat, quantile)
-    mask = abs_Phat > q
-    row_used = mask.any(axis=0)
-    col_used = mask.any(axis=1)
-    col_nodes = nodes.iloc[col_used].copy()
-    row_nodes = nodes.iloc[row_used].copy()
-    sub_Phat = Phat[row_used][:, col_used]
-    expected_out_degree = np.sum(np.abs(sub_Phat), axis=1)
-    expected_in_degree = np.sum(np.abs(sub_Phat), axis=0)
-    row_nodes["expected_out_degree"] = -expected_out_degree
-    col_nodes["expected_in_degree"] = -expected_in_degree
-    matrixplot(
-        sub_Phat,
-        row_meta=row_nodes,
-        col_meta=col_nodes,
-        row_colors="merge_class",
-        col_colors="merge_class",
-        row_palette=CLASS_COLOR_DICT,
-        col_palette=CLASS_COLOR_DICT,
-        row_item_order="expected_out_degree",
-        col_item_order="expected_in_degree",
+    adjplot(
+        Phat,
+        meta=nodes,
+        colors=NODE_KEY,
+        palette=NODE_PALETTE,
+        sort_class=NODE_KEY,
+        class_order="sum_signal_flow",
+        item_order="degree",
         cmap=cmap,
         norm=norm,
         center=0,
         vmin=vmin,
         vmax=vmax,
+        gridline_kws=dict(lw=0),
+        cbar=False,
+        tick_rot=45,
     )
     stashfig(f"right-phat-component-{i}")
 

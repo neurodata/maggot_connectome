@@ -4,6 +4,7 @@
 #%% [markdown]
 # ## Preliminaries
 #%%
+from json import load
 from pkg.utils import set_warnings
 
 import datetime
@@ -38,12 +39,15 @@ t0 = time.time()
 
 
 def stashfig(name, **kwargs):
-    foldername = "paired_embeddings"
+    foldername = "look_at_paired_embeddings"
     savefig(name, foldername=foldername, **kwargs)
 
 
 colors = sns.color_palette("Set1")
-palette = dict(zip(["Left", "Right"], colors))
+# palette = dict(zip(["Left", "Right"], colors))
+from pkg.data import load_network_palette
+
+palette, _ = load_network_palette()
 set_theme()
 
 # %% [markdown]
@@ -413,7 +417,7 @@ def compute_nn_ranks(
 
 
 frames = []
-metrics = ["jaccard", "euclidean", "cosine"]
+metrics = ["jaccard", "cosine"]
 thresholds = [0, 1, 2, 3, 4]
 for metric in metrics:
     for threshold in thresholds:
@@ -459,7 +463,7 @@ ax.set(
     xticks=vals,
     xlabel="K (# of nearest neighbors)",
     ylabel="Recall @ K",
-    title=f"Threshold = {threshold}",
+    # title=f"Threshold = {threshold}",
 )
 select_results = results[
     (results["metric"] == "cosine") & (results["threshold"] == threshold)
