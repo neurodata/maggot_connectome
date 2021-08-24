@@ -358,7 +358,7 @@ stashfig(
 #%%
 
 align_n_components = 16
-n_perturb = 10
+n_perturb = 50
 do_normalize = True
 groups = ["None", "MBONs", "MBINs", "PNs", "KCs", "sensories"]
 rows = []
