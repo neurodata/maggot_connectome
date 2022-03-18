@@ -342,7 +342,7 @@ line_kws = dict(color="black", alpha=0.7, linewidth=1.5, zorder=-1)
 for loc, style in zip(line_locs, styles):
     ax.axhline(loc, linestyle=style, **line_kws)
     ax.text(ax.get_xlim()[-1] + 0.1, loc, loc, ha="left", va="center")
-ax.set(xlabel="# of dimensions", ylabel="p-value")
+ax.set(xlabel="# of dimensions", ylabel="p-value", title=f'Normalize = {do_normalize}')
 stashfig(
     f"perturb-p-values-n_perturb={n_perturb}-align_n_component={align_n_components}-normalize={do_normalize}"
 )

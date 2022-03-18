@@ -30,8 +30,6 @@ from pkg.data import (
 from pkg.io import savefig
 from pkg.plot import set_theme
 from sklearn.metrics.pairwise import cosine_similarity
-from src.pymaid import start_instance
-from src.visualization import simple_plot_neurons
 from pkg.plot import set_theme
 from graspologic.simulations import er_corr
 import networkx as nx
@@ -43,6 +41,7 @@ from graspologic.plot import heatmap
 
 def stashfig(name, **kwargs):
     foldername = "introduce_node_matching"
+    savefig(name, foldername=foldername, **kwargs)
     savefig(name, foldername=foldername, **kwargs)
 
 
@@ -160,7 +159,8 @@ heatmap(
 )
 set_light_border(ax)
 
-print(np.linalg.norm(A1 - A2_shuffled)**2)
+print(np.linalg.norm(A1 - A2_shuffled) ** 2)
+
 
 def color_edges(g1, g2):
     edge_colors = []
@@ -226,7 +226,7 @@ heatmap(
 )
 set_light_border(ax)
 
-print(np.linalg.norm(A1 - A2_perm, ord='fro')**2)
+print(np.linalg.norm(A1 - A2_perm, ord="fro") ** 2)
 
 # plot the second network after alignment, color edges based on matchedness
 
@@ -250,11 +250,17 @@ import matplotlib as mpl
 
 bounds = [0, 1, 2, 3, 4]
 norm = mpl.colors.BoundaryNorm(bounds, diff_cmap.N)
-cbar = fig.colorbar(mpl.cm.ScalarMappable(cmap=diff_cmap, norm=norm), ax=axs.ravel().tolist(), shrink=0.3, fraction=0.05, aspect=8)
+cbar = fig.colorbar(
+    mpl.cm.ScalarMappable(cmap=diff_cmap, norm=norm),
+    ax=axs.ravel().tolist(),
+    shrink=0.3,
+    fraction=0.05,
+    aspect=8,
+)
 cbar.set_ticks([0.5, 1.5, 2.5, 3.5])
-cbar.set_ticklabels(["No edge", 'Edge in 1', 'Edge in 2', 'Edge in both'])
+cbar.set_ticklabels(["No edge", "Edge in 1", "Edge in 2", "Edge in both"])
 cbar.outline.set_linewidth(1.5)
-cbar.outline.set_edgecolor('lightgrey')
+cbar.outline.set_edgecolor("lightgrey")
 
 # set_light_border(cbar.ax)
 # cbar.ax.spines['left'].set_visible(False)
@@ -284,6 +290,7 @@ cbar.outline.set_edgecolor('lightgrey')
 
 
 stashfig("network-matching-explanation")
+stashfig("network-matching-explanation", format="svg", pad_inches=0)
 
 #%%
 

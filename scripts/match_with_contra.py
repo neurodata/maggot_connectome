@@ -51,7 +51,7 @@ mg = mg[mg.nodes["paper_clustered_neurons"]]
 #%%
 np.random.seed(8888)
 maxiter = 30
-verbose = False
+verbose = True
 ot = False
 maximize = True
 reg = np.nan  # TODO could try GOAT

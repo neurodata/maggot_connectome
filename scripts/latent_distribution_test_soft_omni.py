@@ -3,6 +3,20 @@
 #%% [markdown]
 # ## Preliminaries
 #%%
+
+from unittest.mock import MagicMock
+import sys
+
+# Mock vispy and relevant submodules
+sys.modules["vispy"] = MagicMock()
+sys.modules["vispy.util"] = MagicMock()
+sys.modules["vispy.gloo"] = MagicMock()
+sys.modules["vispy.gloo.util"] = MagicMock()
+sys.modules["vispy.util.transforms"] = MagicMock()
+sys.modules["vispy.util.quaternion"] = MagicMock()
+sys.modules["vispy.geometry"] = MagicMock()
+
+
 from pkg.utils import set_warnings
 
 import datetime
@@ -56,19 +70,30 @@ node_palette, NODE_KEY = load_node_palette()
 
 mg = load_maggot_graph()
 mg = select_nice_nodes(mg)
-nodes = mg.nodes
+
+#%%
+nodes = mg.nodes.copy()
 left_nodes = nodes[nodes["hemisphere"] == "L"]
 left_inds = left_nodes["_inds"]
 right_nodes = nodes[nodes["hemisphere"] == "R"]
 right_inds = right_nodes["_inds"]
 left_paired_inds, right_paired_inds = get_paired_inds(
-    nodes, pair_key="predicted_pair", pair_id_key="predicted_pair_id"
+    nodes, pair_key="pair", pair_id_key="pair_id"
 )
 right_paired_inds_shifted = right_paired_inds - len(left_inds)
 adj = mg.sum.adj
-ll_adj = adj[np.ix_(left_inds, left_inds)]
-rr_adj = adj[np.ix_(right_inds, right_inds)]
+ll_adj = adj[np.ix_(left_paired_inds, left_paired_inds)]
+rr_adj = adj[np.ix_(right_paired_inds, right_paired_inds)]
+print(len(ll_adj))
+print(len(rr_adj))
 
+#%%
+fig, axs = plt.subplots(1, 2, figsize=(20, 10))
+ax = axs[0]
+adjplot(ll_adj, ax=ax, plot_type="scattermap", sizes=(1, 1))
+
+ax = axs[1]
+adjplot(rr_adj, ax=ax, plot_type="scattermap", sizes=(1, 1))
 
 #%% [markdown]
 # ## Embed the network using adjacency spectral embedding
@@ -105,13 +130,15 @@ def split_adj(adj):
     return ll_adj, rr_adj, lr_adj, rl_adj
 
 
-preprocess = ["binarize", "rescale"]
+# preprocess = ["binarize", "rescale"]
 
-raw_adj = mg.sum.adj.copy()
+# raw_adj = mg.sum.adj.copy()
 
-ll_adj, rr_adj, _, _ = split_adj(raw_adj)
+# ll_adj, rr_adj, _, _ = split_adj(raw_adj)
+ll_adj_to_match = pass_to_ranks(ll_adj)
+rr_adj_to_match = pass_to_ranks(rr_adj)
 
-ll_adj_to_match, rr_adj_to_match = preprocess_for_embed(ll_adj, rr_adj, preprocess)
+# ll_adj_to_match, rr_adj_to_match = preprocess_for_embed(ll_adj, rr_adj, preprocess)
 
 # ll_adj_to_match = ll_adj_to_match[np.ix_(left_paired_inds, left_paired_inds)]
 # rr_adj_to_match = rr_adj_to_match[
@@ -120,11 +147,11 @@ ll_adj_to_match, rr_adj_to_match = preprocess_for_embed(ll_adj, rr_adj, preproce
 #%% [markdown]
 # ## Soft matching
 #%%
-gm = GraphMatch(padding="naive", init="barycenter")
-perm_inds = gm.fit_predict(ll_adj_to_match, rr_adj_to_match)
-transport_plan = gm.transport_plan_
-match_plan = np.eye(len(perm_inds))[perm_inds]
 
+# transport_plan = gm.transport_plan_
+# match_plan = np.eye(len(perm_inds))[perm_inds]
+# match_plan = transport_plan
+# match_plan = np.eye(n)
 #%% [markdown]
 # ### Construct the soft omni matrix
 #%%
@@ -135,18 +162,29 @@ n = max(n_left, n_right)
 ll_adj_padded = np.zeros((n, n))
 ll_adj_padded[:n_left, :n_left] = ll_adj_to_match
 
+gm = GraphMatch(padding="naive", init=np.eye(n))
+perm_inds = gm.fit_predict(ll_adj_padded, rr_adj_to_match)
+
+match_plan = np.eye(len(perm_inds))[perm_inds]
+transport_plan = gm.transport_plan_
+identity = np.eye(n)
+
+#%%
+aligner = transport_plan
+
 omni_matrix = np.zeros((2 * n, 2 * n))
 omni_matrix[:n, :n] = ll_adj_padded
-omni_matrix[n:, n:] = match_plan @ rr_adj_to_match @ match_plan.T
+omni_matrix[n:, n:] = aligner @ rr_adj_to_match @ aligner.T
 alpha = 0.5
 transport_average = (
-    alpha * ll_adj_padded + alpha * match_plan @ rr_adj_to_match @ match_plan.T
+    alpha * ll_adj_padded + alpha * aligner @ rr_adj_to_match @ aligner.T
 )
 omni_matrix[:n, n:] = transport_average
 omni_matrix[n:, :n] = transport_average
 
 #%% [markdown]
 # ### Embed the soft omni matrix
+#%%
 align_n_components = 16
 omni = AdjacencySpectralEmbed(n_components=align_n_components, diag_aug=True)
 out_joint_embedding, in_joint_embedding = omni.fit_transform(omni_matrix)
@@ -156,46 +194,6 @@ X_rr = out_joint_embedding[n:]
 
 Y_ll = in_joint_embedding[:n_left]
 Y_rr = in_joint_embedding[n:]
-
-
-#%%
-def soft_omni(ll_adj_to_match, rr_adj_to_match, n_components=16):
-    gm = GraphMatch(padding="naive", init="barycenter")
-    perm_inds = gm.fit_predict(ll_adj_to_match, rr_adj_to_match)
-    transport_plan = gm.transport_plan_
-    match_plan = np.eye(len(perm_inds))[perm_inds]
-
-    n_left = len(ll_adj_to_match)
-    n_right = len(rr_adj_to_match)
-    n = max(n_left, n_right)
-
-    ll_adj_padded = np.zeros((n, n))
-    ll_adj_padded[:n_left, :n_left] = ll_adj_to_match
-
-    omni_matrix = np.zeros((2 * n, 2 * n))
-    omni_matrix[:n, :n] = ll_adj_padded
-    omni_matrix[n:, n:] = match_plan @ rr_adj_to_match @ match_plan.T
-    alpha = 0.5
-    transport_average = (
-        alpha * ll_adj_padded + alpha * match_plan @ rr_adj_to_match @ match_plan.T
-    )
-    omni_matrix[:n, n:] = transport_average
-    omni_matrix[n:, :n] = transport_average
-
-    align_n_components = 16
-    omni = AdjacencySpectralEmbed(n_components=align_n_components, diag_aug=True)
-    out_joint_embedding, in_joint_embedding = omni.fit_transform(omni_matrix)
-
-    X_ll = out_joint_embedding[:n_left]
-    X_rr = out_joint_embedding[n:]
-
-    Y_ll = in_joint_embedding[:n_left]
-    Y_rr = in_joint_embedding[n:]
-    return X_ll, Y_ll, X_rr, Y_rr
-
-
-#%% [markdown]
-### Look at the soft omni embeddings
 
 #%%
 def plot_latents(
@@ -233,6 +231,69 @@ def plot_latents(
     #                 )
     pg._legend.remove()
     return pg
+
+
+plot_latents(X_ll, X_rr)
+
+#%%
+
+from graspologic.align import OrthogonalProcrustes
+
+X_ll_rotated = OrthogonalProcrustes().fit_transform(X_ll, X_rr)
+plot_latents(X_ll_rotated, X_rr)
+
+#%%
+
+D_inv = np.linalg.inv(transport_plan)
+X_rr_fixed = D_inv @ X_rr
+
+plot_latents(X_ll, X_rr_fixed)
+
+
+
+
+
+#%%
+def soft_omni(ll_adj_to_match, rr_adj_to_match, n_components=16):
+    gm = GraphMatch(padding="naive", init="barycenter")
+    perm_inds = gm.fit_predict(ll_adj_to_match, rr_adj_to_match)
+    transport_plan = gm.transport_plan_
+    match_plan = np.eye(len(perm_inds))[perm_inds]
+    match_plan = transport_plan
+
+    n_left = len(ll_adj_to_match)
+    n_right = len(rr_adj_to_match)
+    n = max(n_left, n_right)
+
+    ll_adj_padded = np.zeros((n, n))
+    ll_adj_padded[:n_left, :n_left] = ll_adj_to_match
+
+    omni_matrix = np.zeros((2 * n, 2 * n))
+    omni_matrix[:n, :n] = ll_adj_padded
+    omni_matrix[n:, n:] = match_plan @ rr_adj_to_match @ match_plan.T
+    alpha = 0.5
+    transport_average = (
+        alpha * ll_adj_padded + alpha * match_plan @ rr_adj_to_match @ match_plan.T
+    )
+    omni_matrix[:n, n:] = transport_average
+    omni_matrix[n:, :n] = transport_average
+
+    align_n_components = 16
+    omni = AdjacencySpectralEmbed(n_components=align_n_components, diag_aug=True)
+    out_joint_embedding, in_joint_embedding = omni.fit_transform(omni_matrix)
+
+    X_ll = out_joint_embedding[:n_left]
+    X_rr = out_joint_embedding[n:]
+
+    Y_ll = in_joint_embedding[:n_left]
+    Y_rr = in_joint_embedding[n:]
+    return X_ll, Y_ll, X_rr, Y_rr
+
+
+#%% [markdown]
+### Look at the soft omni embeddings
+
+#%%
 
 
 plot_latents(X_ll, X_rr)
